@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduSelf Teacher — "EduPlay 3D" UI Component Library</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       Global Showcase Header
+       ========================================================================== -->
+  <header class="showcase-header">
+    <div class="brand-badge">
+      <div class="logo-icon">✨</div>
+      <div>
+        <h1 class="brand-title">EduSelf — EduPlay 3D</h1>
+        <p class="brand-subtitle">Toy & Bento Grid Design System for Gamified Learning</p>
+      </div>
+    </div>
+
+    <div class="audio-controls">
+      <button class="audio-btn" id="muteToggleBtn" title="Tovushni yoqish / o'chirish">
+        <span>🔊</span> Tovush: Yoqilgan
+      </button>
+
+      <div class="coin-reward-pill" style="margin-bottom: 0; padding: 6px 16px; font-size: 15px;">
+        <span>🪙</span>
+        <span id="globalCoinCount">1,420</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       Main 2-Column Showcase Layout
+       ========================================================================== -->
+  <main class="showcase-layout">
+    
+    <!-- LEFT COLUMN: Component Library & Design Tokens Explorer -->
+    <section class="explorer-column">
+      
+      <!-- 01. Design Tokens -->
+      <div class="explorer-section">
+        <p class="section-tag">01 / Ranglar Tizimi</p>
+        <h2 class="section-heading">Claymorphic & Bento Rang Palitrasi</h2>
+        <div class="component-card-box">
+          <div class="token-grid">
+            <div class="token-chip">
+              <div class="token-swatch" style="background: #FF7527;"></div>
+              <span class="token-name">Primary Orange</span>
+              <span class="token-hex">#FF7527</span>
+            </div>
+            <div class="token-chip">
+              <div class="token-swatch" style="background: #00A3FF;"></div>
+              <span class="token-name">Bento Blue</span>
+              <span class="token-hex">#00A3FF</span>
+            </div>
+            <div class="token-chip">
+              <div class="token-swatch" style="background: #8B5CF6;"></div>
+              <span class="token-name">Bento Purple</span>
+              <span class="token-hex">#8B5CF6</span>
+            </div>
+            <div class="token-chip">
+              <div class="token-swatch" style="background: #F59E0B;"></div>
+              <span class="token-name">Bento Gold</span>
+              <span class="token-hex">#F59E0B</span>
+            </div>
+            <div class="token-chip">
+              <div class="token-swatch" style="background: #FF6B35;"></div>
+              <span class="token-name">Podium 1st Rank</span>
+              <span class="token-hex">#FF6B35</span>
+            </div>
+            <div class="token-chip">
+              <div class="token-swatch" style="background: #60A5FA;"></div>
+              <span class="token-name">Podium 2nd Rank</span>
+              <span class="token-hex">#60A5FA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02. Procedural Audio Synthesizer (Sound Board) -->
+      <div class="explorer-section">
+        <p class="section-tag">02 / Protsedurali Tovushlar</p>
+        <h2 class="section-heading">Web Audio API Sound Board (Zero MP3s)</h2>
+        <div class="component-card-box">
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            Har bir tugmani bosing va brauzer osillyatorlari orqali real vaqtda generatsiya qilinadigan o‘yin tovushlarini eshiting:
+          </p>
+          <div class="sound-grid">
+            <div class="sound-card-btn" data-sound="coin">
+              <div class="sound-icon">🪙</div>
+              <div class="sound-name">Coin Chime</div>
+              <div class="sound-hz">987Hz → 1318Hz</div>
+            </div>
+            <div class="sound-card-btn" data-sound="correct">
+              <div class="sound-icon">✨</div>
+              <div class="sound-name">Correct Answer</div>
+              <div class="sound-hz">C-Major Triad (C5-C6)</div>
+            </div>
+            <div class="sound-card-btn" data-sound="wrong">
+              <div class="sound-icon">❌</div>
+              <div class="sound-name">Gentle Error</div>
+              <div class="sound-hz">220Hz → 160Hz</div>
+            </div>
+            <div class="sound-card-btn" data-sound="tick">
+              <div class="sound-icon">⏱️</div>
+              <div class="sound-name">Timer Tick</div>
+              <div class="sound-hz">Woodblock 40ms</div>
+            </div>
+            <div class="sound-card-btn" data-sound="streak">
+              <div class="sound-icon">🔥</div>
+              <div class="sound-name">Streak Swoosh</div>
+              <div class="sound-hz">Filtered White Noise</div>
+            </div>
+            <div class="sound-card-btn" data-sound="victory">
+              <div class="sound-icon">🎺</div>
+              <div class="sound-name">Victory Fanfare</div>
+              <div class="sound-hz">Brass Triad Resolution</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03. Pill Buttons & Controls -->
+      <div class="explorer-section">
+        <p class="section-tag">03 / Tugmalar & Boshqaruv</p>
+        <h2 class="section-heading">Pill Tugmalar & Micro-Interactions</h2>
+        <div class="component-card-box">
+          <div style="display: flex; flex-direction: column; gap: 14px; max-width: 320px;">
+            <button class="pill-btn btn-primary-orange" onclick="window.eduAudio && window.eduAudio.playCoin()">
+              Boshlash (Primary Orange) →
+            </button>
+            <button class="pill-btn btn-outline-white" onclick="window.eduAudio && window.eduAudio.playTick()">
+              Menda hisob bor (Outline)
+            </button>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <span class="bento-dark-badge">🔥 3 Kunlik Streak</span>
+              <span class="bento-dark-badge" style="background: #00A3FF;">⚡ 1,240 XP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04. Dual-Coded Live Quiz Options -->
+      <div class="explorer-section">
+        <p class="section-tag">04 / Dual-Coded Quiz Variantlari</p>
+        <h2 class="section-heading">Rang + Geometrik Shakl Variantlari</h2>
+        <div class="component-card-box">
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+            Rang ko‘rligi bo‘lgan o‘quvchilar uchun shakl va rang uyg‘unligi:
+          </p>
+          <div class="options-interactive-grid">
+            <button class="quiz-option-btn opt-red" data-correct="false">
+              <span class="opt-shape">▲</span>
+              <span>Samarqand</span>
+            </button>
+            <button class="quiz-option-btn opt-blue" data-correct="true">
+              <span class="opt-shape">◆</span>
+              <span>Toshkent (To‘g‘ri)</span>
+            </button>
+            <button class="quiz-option-btn opt-yellow" data-correct="false">
+              <span class="opt-shape">●</span>
+              <span>Buxoro</span>
+            </button>
+            <button class="quiz-option-btn opt-green" data-correct="false">
+              <span class="opt-shape">■</span>
+              <span>Xiva</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05. Victory Modal Trigger -->
+      <div class="explorer-section">
+        <p class="section-tag">05 / Mukofot Modali</p>
+        <h2 class="section-heading">Perfect Scorer & Victory Modal</h2>
+        <div class="component-card-box">
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+            O‘yin tugaganda yoki mukammal ball to‘planganda 3D kubok va fanfara bilan chiqadigan modal:
+          </p>
+          <button class="pill-btn btn-primary-orange" style="max-width: 280px;" onclick="window.openVictoryModal(100)">
+            🏆 Modalni Ochish
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN: Interactive Mobile Simulator (Matching Reference Design) -->
+    <aside class="simulator-column">
+      <div class="mobile-frame">
+        
+        <!-- Status Bar -->
+        <div class="mobile-notch">
+          <span>9:41</span>
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <span>📶</span>
+            <span>🔋</span>
+          </div>
+        </div>
+
+        <!-- Simulator Screen Tabs -->
+        <div style="padding: 0 16px;">
+          <div class="sim-tab-bar">
+            <button class="sim-tab-btn active" data-tab="home">📱 Asosiy</button>
+            <button class="sim-tab-btn" data-tab="podium">🏆 Shohsupa</button>
+            <button class="sim-tab-btn" data-tab="quiz">⚡ Quiz</button>
+          </div>
+        </div>
+
+        <!-- Screen Content Container -->
+        <div class="mobile-content">
+          
+          <!-- ================= SCREEN 1: BENTO HOME ================= -->
+          <div class="sim-screen-view" id="screen-home">
+            <div class="bento-grid">
+              
+              <!-- Blue Tall Card -->
+              <div class="bento-card bento-blue">
+                <span class="bento-dark-badge">RoboPlay 3D</span>
+                <div style="margin-top: 10px;">
+                  <h3 class="bento-title">Smart AI Quiz</h3>
+                  <p class="bento-sub">Tezkor savollar</p>
+                </div>
+                <img src="assets/student_home.jpg" alt="3D Robot Character" class="bento-character-img">
+              </div>
+
+              <!-- Purple Card -->
+              <div class="bento-card bento-purple">
+                <span class="bento-dark-badge" style="background: rgba(0,0,0,0.25);">Matematika</span>
+                <div style="margin-top: auto;">
+                  <h4 style="font-size: 15px; font-weight: 800;">12-Bob</h4>
+                  <p style="font-size: 11px; opacity: 0.9;">Tenglamalar</p>
+                </div>
+              </div>
+
+              <!-- Gold Card -->
+              <div class="bento-card bento-gold">
+                <span class="bento-dark-badge" style="background: rgba(0,0,0,0.25);">🏆 Top Liga</span>
+                <div style="margin-top: auto;">
+                  <h4 style="font-size: 15px; font-weight: 800;">Oltin Kubok</h4>
+                  <p style="font-size: 11px; opacity: 0.9;">+500 Tanga</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Hero Action Text Block -->
+            <div class="hero-text-block">
+              <h2>O‘rganishga tayyormisiz?</h2>
+              <p>Har bir to‘g‘ri javob uchun tangalar to‘plang va shohsupaga chiqing!</p>
+              
+              <button class="pill-btn btn-primary-orange" onclick="window.switchSimulatorTab('quiz')">
+                Boshlash (Get Started) →
+              </button>
+              
+              <button class="pill-btn btn-outline-white" onclick="window.switchSimulatorTab('podium')">
+                Menda hisob bor
+              </button>
+            </div>
+          </div>
+
+          <!-- ================= SCREEN 2: 3D LEADERBOARD PODIUM ================= -->
+          <div class="sim-screen-view" id="screen-podium" style="display: none;">
+            
+            <div class="leaderboard-top-nav">
+              <button class="nav-circle-btn" onclick="window.switchSimulatorTab('home')">←</button>
+              <h3 style="font-size: 16px; font-weight: 800;">Haftalik Liderlar</h3>
+              <button class="nav-circle-btn">↗</button>
+            </div>
+
+            <!-- 3D Podium Stands -->
+            <div class="podium-section">
+              
+              <!-- 2nd Place (Blue) -->
+              <div class="podium-column">
+                <div class="avatar-wrapper">
+                  <div class="avatar-circle">🦊</div>
+                </div>
+                <div class="podium-user-name">Madina K.</div>
+                <div class="podium-block podium-blue">
+                  <span class="podium-rank-num">2</span>
+                  <span class="podium-coins">1,120 🪙</span>
+                </div>
+              </div>
+
+              <!-- 1st Place (Orange Tallest with Crown) -->
+              <div class="podium-column">
+                <div class="avatar-wrapper">
+                  <span class="crown-badge">👑</span>
+                  <div class="avatar-circle rank1-avatar">🦁</div>
+                </div>
+                <div class="podium-user-name" style="font-weight: 800; color: #E65D0F;">Sardorbek</div>
+                <div class="podium-block podium-orange">
+                  <span class="podium-rank-num">1</span>
+                  <span class="podium-coins">1,420 🪙</span>
+                </div>
+              </div>
+
+              <!-- 3rd Place (Yellow) -->
+              <div class="podium-column">
+                <div class="avatar-wrapper">
+                  <div class="avatar-circle">🐼</div>
+                </div>
+                <div class="podium-user-name">Temur A.</div>
+                <div class="podium-block podium-yellow">
+                  <span class="podium-rank-num">3</span>
+                  <span class="podium-coins">980 🪙</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Bottom Sheet Rank List -->
+            <div class="leaderboard-sheet">
+              <div class="sheet-handle"></div>
+              
+              <div class="rank-item-row">
+                <span style="font-weight: 800; width: 16px; font-size: 13px;">4</span>
+                <div class="rank-avatar-small">🐯</div>
+                <div class="rank-user-info">
+                  <div class="rank-user-name">Jasurbek B.</div>
+                  <div class="rank-user-coins">890 tanga</div>
+                </div>
+                <span class="rank-delta-pill delta-up">▲ +2</span>
+              </div>
+
+              <div class="rank-item-row">
+                <span style="font-weight: 800; width: 16px; font-size: 13px;">5</span>
+                <div class="rank-avatar-small">🐨</div>
+                <div class="rank-user-info">
+                  <div class="rank-user-name">Rayhona O.</div>
+                  <div class="rank-user-coins">840 tanga</div>
+                </div>
+                <span class="rank-delta-pill delta-down">▼ -1</span>
+              </div>
+
+              <div class="rank-item-row">
+                <span style="font-weight: 800; width: 16px; font-size: 13px;">6</span>
+                <div class="rank-avatar-small">🦄</div>
+                <div class="rank-user-info">
+                  <div class="rank-user-name">Azizbek Sh.</div>
+                  <div class="rank-user-coins">790 tanga</div>
+                </div>
+                <span class="rank-delta-pill delta-up">▲ +1</span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ================= SCREEN 3: LIVE QUIZ ================= -->
+          <div class="sim-screen-view" id="screen-quiz" style="display: none;">
+            
+            <!-- Timer Bar -->
+            <div class="quiz-timer-wrap">
+              <div class="quiz-timer-header">
+                <span style="color: var(--text-muted);">Savol 4/10</span>
+                <span id="quizTimerText" style="color: var(--primary-orange);">15s</span>
+              </div>
+              <div class="timer-bar-track">
+                <div class="timer-bar-fill" id="quizTimerBar"></div>
+              </div>
+            </div>
+
+            <!-- Question Prompt Box -->
+            <div class="quiz-question-box">
+              <span class="quiz-badge">Geografiya • 50 Tanga</span>
+              <h3 class="quiz-prompt-text">O‘zbekiston Respublikasining poytaxti qaysi shahar?</h3>
+            </div>
+
+            <!-- 4 Dual-Coded Options Grid -->
+            <div class="options-interactive-grid">
+              <button class="quiz-option-btn opt-red" data-correct="false">
+                <span class="opt-shape">▲</span>
+                <span>Samarqand</span>
+              </button>
+              
+              <button class="quiz-option-btn opt-blue" data-correct="true">
+                <span class="opt-shape">◆</span>
+                <span>Toshkent</span>
+              </button>
+              
+              <button class="quiz-option-btn opt-yellow" data-correct="false">
+                <span class="opt-shape">●</span>
+                <span>Buxoro</span>
+              </button>
+              
+              <button class="quiz-option-btn opt-green" data-correct="false">
+                <span class="opt-shape">■</span>
+                <span>Xiva</span>
+              </button>
+            </div>
+
+            <button class="pill-btn btn-outline-white" style="margin-top: 20px;" onclick="window.resetQuizSimulator()">
+              🔄 Qayta Boshlash
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- ================= FLOATING VICTORY MODAL OVERLAY ================= -->
+        <div class="modal-backdrop-blur" id="victoryModal">
+          <div class="victory-card">
+            
+            <div class="victory-character-float">
+              <div class="character-glow"></div>
+              <img src="assets/victory_reward.jpg" alt="Victory Trophy" class="character-trophy-img">
+            </div>
+
+            <h3 class="victory-title">Perfect Scorer!</h3>
+            <p class="victory-sub">
+              Siz barcha savollarga eng yuqori tezlikda benuqson javob berdingiz!
+            </p>
+
+            <div class="coin-reward-pill" id="modalCoinReward">
+              <span>🪙</span>
+              <span>+100 Tangalar</span>
+            </div>
+
+            <button class="pill-btn btn-primary-orange" onclick="window.closeVictoryModal(true)">
+              Mukofotni Olish (Claim) 🎁
+            </button>
+
+            <button class="pill-btn btn-outline-white" onclick="window.closeVictoryModal(false)">
+              Yopish
+            </button>
+
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Load Scripts -->
+  <script src="audio.js"></script>
+  <script src="components.js"></script>
+</body>
+</html>
