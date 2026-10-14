@@ -243,7 +243,8 @@ class GeneratedQuizPayload(BaseModel):
 
 ## 4. Sprintlar Bo‘yicha Parallel Ish Taqsimoti (Sprints 1 – 6)
 
-Loyiha har biri **2 haftalik** bo‘lgan 6 ta sprintga bo‘lingan. Jami ishlab chiqish davri: **12 hafta (3 oy)**.
+Loyiha har biri **2 haftalik** bo‘lgan 6 ta sprintga bo‘lingan. Jami ishlab chiqish davri: **12 hafta (3 oy)**.  
+Har bir dasturchi o‘z vazifasini boshlashdan oldin ko‘rsatilgan branch nomini ochadi va belgilangan fayllar doirasida ishlaydi.
 
 ---
 
@@ -251,142 +252,358 @@ Loyiha har biri **2 haftalik** bo‘lgan 6 ta sprintga bo‘lingan. Jami ishlab 
 
 **Sprint Maqsadi:** Barcha muhitlar (Docker, Postgres, Redis), umumiy interfeys shartnomalari (`core/contracts/`) va har bir dasturchining boshlang‘ich ilova skeletlarini yo‘lga qo‘yish.
 
-```text
-SPRINT 1 VAZIFALARI TAQSIMOTI:
-├── Tech Lead : Docker Compose, CI/CD GitHub Actions, requirements.txt, CODEOWNERS
-├── Dev 1     : Custom User (UUID), Organization modeli, Base Auth sozlamalari
-├── Dev 2     : BaseQuestionType abstrakt sinfi, QuestionTypeRegistry, 7 ta asosiy savol turi
-├── Dev 3     : Django Channels arxitekturasi, routing.py, WebSocket Echo Consumer
-├── Dev 4     : BaseGameMode interfeysi, ScoringEngine formulasi (speed decay, streaks)
-├── Dev 5     : BaseAIAdapter interfeysi, AES-256-GCM crypto moduli (BYOK shifrlash)
-└── Dev 6     : "EduPlay 3D" design tokenlari, styles.css va Web Audio API audio.js
-```
+#### 1. Tech Lead (Maintainer)
+- **Branch:** `feat/lead-sprint1-infra-contracts`
+- **O‘qilishi shart:** [Backend.md#1](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/Backend.md), [TECH_STACK.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/TECH_STACK.md)
+- **Vazifalar:**
+  1. `Dockerfile.backend` (Python 3.12, non-root user) va `docker-compose.yml` (PostgreSQL 16, Redis 7.2) ni yaratish.
+  2. `core/settings/` paketini ajratish (`base.py`, `local.py`, `production.py`) va `.env.example` ni tayyorlash.
+  3. `core/contracts/` papkasida 3 ta umumiy shartnomani (`quiz_contract.py`, `scoring_contract.py`, `ai_contract.py`) yaratish.
+  4. `.github/workflows/ci.yml` (Flake8 linter, Pytest) va `.github/CODEOWNERS` ni sozlash.
+- **Fayllar:** `Dockerfile.backend`, `docker-compose.yml`, `requirements.txt`, `core/settings/{base,local,production}.py`, `core/contracts/*`, `.github/workflows/ci.yml`.
+- **Verifikatsiya:** `docker compose up -d && python manage.py check && pytest`
 
-- **Tech Lead:**
-  - `Dockerfile.backend`, `docker-compose.yml`, `pytest.ini` yaratish.
-  - GitHub Actions da Linter va Pytest workflow'larini sozlash.
-  - `core/contracts/` papkasida yuqoridagi 3 ta umumiy interfeysni e'lon qilish.
-- **Dev 1 (Auth):**
-  - `apps/authentication/models.py` da `User` va `Organization` yaratish.
-  - Test: `pytest apps/authentication/tests/test_models.py`.
-- **Dev 2 (Quiz):**
-  - `apps/questions_registry/base.py` va `types/single_choice.py`, `types/multiple_choice.py`.
-  - Test: `pytest apps/questions_registry/tests/`.
-- **Dev 3 (Real-Time):**
-  - `core/routing.py`, `core/asgi.py`, `apps/live_sessions/consumers.py` da `EchoConsumer`.
-  - Test: `pytest apps/live_sessions/tests/test_echo.py`.
-- **Dev 4 (Game Engine):**
-  - `apps/game_engine/scoring.py` da ball hisoblash formulasi.
-  - Test: `pytest apps/game_engine/tests/test_scoring.py`.
-- **Dev 5 (AI):**
-  - `apps/ai_gateway/base.py`, `apps/ai_gateway/crypto.py` (AES-256-GCM kalit shifrlash).
-  - Test: `pytest apps/ai_gateway/tests/test_crypto.py`.
-- **Dev 6 (Frontend):**
-  - `ui_components/` dagi dizayn tizimi, CSS va Web Audio API sintezatorini `static/` ga ko‘chirish.
-  - Test: `python manage.py collectstatic --noinput`.
+#### 2. Dev 1 (Auth & Security)
+- **Branch:** `feat/dev1-sprint1-user-models`
+- **O‘qilishi shart:** [Backend.md#2.1](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/Backend.md), [SECURITY.md#1](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/SECURITY.md)
+- **Vazifalar:**
+  1. `apps/authentication/models.py` da `Organization` (UUID, nom, obuna rejasi, oylik AI token byudjeti) modelini yaratish.
+  2. `User` (AbstractUser, UUID primary key, `role`: teacher/school_admin/system_admin, `telegram_id` index, `preferred_locale`, `avatar_url`) modelini yozish.
+  3. `apps/authentication/admin.py` da modellar uchun Django Admin interfeysini sozlash.
+  4. Dastlabki migratsiyani yaratish va modellarni test qilish.
+- **Fayllar:** `apps/authentication/models.py`, `apps/authentication/admin.py`, `apps/authentication/tests/test_models.py`.
+- **Verifikatsiya:** `python manage.py makemigrations authentication && pytest apps/authentication/tests/test_models.py`
 
-**Sprint 1 Demo Natijasi:** Barcha 6 dasturchining boshlang‘ich PR'lari `develop`ga birlashadi, CI sinovlari yashil, Docker barcha xizmatlarni xatosiz ko‘taradi.
+#### 3. Dev 2 (Quiz & Registry)
+- **Branch:** `feat/dev2-sprint1-question-registry`
+- **O‘qilishi shart:** [QUIZ_ENGINE.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/QUIZ_ENGINE.md), [QUESTION_TYPES.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/QUESTION_TYPES.md)
+- **Vazifalar:**
+  1. `apps/questions_registry/base.py` da `BaseQuestionType` abstrakt klassini e'lon qilish (`validate_payload`, `check_answer`, `get_schema`).
+  2. `apps/questions_registry/registry.py` da plaginlarni ro‘yxatga oluvchi `QuestionTypeRegistry` klassini qurish.
+  3. Dastlabki 7 ta asosiy savol turi plaginlarini yozish: `single_choice.py`, `multiple_choice.py`, `true_false.py`, `ordering.py`, `categorization.py`, `cloze.py`, `open_short.py`.
+  4. Har bir savol turi uchun to‘g‘ri/noto‘g‘ri payload yuborilganda xatolikni ushlovchi testlar yozish.
+- **Fayllar:** `apps/questions_registry/{base.py, registry.py, types/*.py, tests/test_registry.py}`.
+- **Verifikatsiya:** `pytest apps/questions_registry/tests/`
+
+#### 4. Dev 3 (Real-Time Channels)
+- **Branch:** `feat/dev3-sprint1-channels-echo`
+- **O‘qilishi shart:** [LIVE_SESSION.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/LIVE_SESSION.md), [REALTIME_PROTOCOL.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/REALTIME_PROTOCOL.md)
+- **Vazifalar:**
+  1. Daphne ASGI serverini `core/asgi.py` orqali sozlash va `core/routing.py` marshrutini Channels'ga ulash.
+  2. Redis Channel Layer (`channels_redis.core.RedisChannelLayer`) sozlamalarini tekshirish.
+  3. `apps/live_sessions/consumers.py` da ikki tomonlama sinov uchun `EchoConsumer` (ping/pong) iste'molchisini yozish.
+  4. `WebsocketCommunicator` yordamida WebSocket ulanishini sinovchi avtomatlashgan test yozish.
+- **Fayllar:** `core/routing.py`, `core/asgi.py`, `apps/live_sessions/consumers.py`, `apps/live_sessions/tests/test_echo.py`.
+- **Verifikatsiya:** `pytest apps/live_sessions/tests/test_echo.py`
+
+#### 5. Dev 4 (Game Engine)
+- **Branch:** `feat/dev4-sprint1-scoring-engine`
+- **O‘qilishi shart:** [SCORING.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/SCORING.md), [GAME_PLUGIN_ARCHITECTURE.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/GAME_PLUGIN_ARCHITECTURE.md)
+- **Vazifalar:**
+  1. `apps/game_engine/base.py` da `BaseGameMode` abstrakt sinfini yaratish (`on_round_start`, `on_answer_submitted`, `on_round_end`).
+  2. `apps/game_engine/scoring.py` da ball hisoblash formulasini yozish: $S = \text{base} \times [1 - (t / 2T)] \times \text{multiplier}$.
+  3. Ketma-ket to‘g‘ri javoblar (Streak: 1.0x dan 1.5x gacha) va qisman ball berish (Partial credit) algoritmini yozish.
+  4. Chegara holatlari (0-soniyada javob, so‘nggi millisekundda javob, noto‘g‘ri javob) bo‘yicha to‘liq unit testlar.
+- **Fayllar:** `apps/game_engine/{base.py, scoring.py, tests/test_scoring.py}`.
+- **Verifikatsiya:** `pytest apps/game_engine/tests/test_scoring.py`
+
+#### 6. Dev 5 (AI & MCP)
+- **Branch:** `feat/dev5-sprint1-ai-crypto-base`
+- **O‘qilishi shart:** [AI_ADAPTERS.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ai/AI_ADAPTERS.md), [BYOK.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ai/BYOK.md)
+- **Vazifalar:**
+  1. `apps/ai_gateway/base.py` da yagona `BaseAIAdapter` protokolini e'lon qilish (`complete`, `stream`, `count_tokens`).
+  2. `apps/ai_gateway/crypto.py` da o‘qituvchilarning BYOK shaxsiy API kalitlarini shifrlash uchun `AES-256-GCM` yordamchi funksiyalarini yozish.
+  3. `apps/ai_gateway/models.py` da `UserApiKey` (shifrlangan kalit) va `TokenUsageLog` modellarini yaratish.
+  4. Shifrlash va kalitni qayta ochish (decrypt) bo‘yicha xavfsizlik testlarini yozish.
+- **Fayllar:** `apps/ai_gateway/{base.py, crypto.py, models.py, tests/test_crypto.py}`.
+- **Verifikatsiya:** `python manage.py makemigrations ai_gateway && pytest apps/ai_gateway/tests/test_crypto.py`
+
+#### 7. Dev 6 (Frontend & Audio)
+- **Branch:** `feat/dev6-sprint1-design-audio`
+- **O‘qilishi shart:** [DESIGN_SYSTEM.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ui/DESIGN_SYSTEM.md), [COMPONENTS.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ui/COMPONENTS.md)
+- **Vazifalar:**
+  1. `ui_components/styles.css` dagi "EduPlay 3D" Claymorphic dizayn tizimini `static/css/eduplay_3d.css` ga joylashtirish.
+  2. `ui_components/audio.js` dagi Web Audio API protsedurali ovoz generatorini (Coin, Correct, Wrong, Tick, Fanfare) `static/js/audio.js` ga integratsiya qilish.
+  3. `templates/base.html` shablonini Google Fonts (Plus Jakarta Sans, Poppins) va statik fayllar bilan yaratish.
+  4. Statik fayllarni to‘plash va brauzer konsolida audio sinovini o‘tkazish.
+- **Fayllar:** `static/css/eduplay_3d.css`, `static/js/audio.js`, `templates/base.html`.
+- **Verifikatsiya:** `python manage.py collectstatic --noinput`
+
+**Sprint 1 Demo Natijasi:** Barcha 6 dasturchining PR'lari `develop`ga birlashadi, CI sinovlari yashil, Docker barcha xizmatlarni xatosiz ko‘taradi.
 
 ---
 
 ### Sprint 2: Yadroviy Biznes Mantiq va API Endpointlar
 
-**Sprint Maqsadi:** Autentifikatsiya, viktorinalar CRUD'i, xonalar ochish, o‘yin rejimlari va birinchi AI provayderi ulanishi.
+**Sprint Maqsadi:** Autentifikatsiya (Telegram/Google), viktorinalar CRUD'i, jonli xonalar ochish FSM holatlari, klassik o‘yin rejimi va OpenAI/Gemini adapterlari.
 
-- **Tech Lead:** PR'larni ko‘rib chiqish, Postgres migratsiyalarini sinxronlash, Staging serverini ko‘tarish.
-- **Dev 1 (Auth):**
-  - Telegram Widget login callback (HMAC-SHA256 tekshiruvi) va Google OAuth2 token almashish.
-  - `apps/authentication/views.py` va `urls.py`.
-- **Dev 2 (Quiz):**
-  - `apps/quizzes/models.py` da `Quiz`, `Question` modellarini yaratish va `QuestionTypeRegistry` bilan bog‘lash.
-  - Serializerlar va CRUD API endpointlari.
-- **Dev 3 (Real-Time):**
-  - `apps/live_sessions/fsm.py` da xona holat mashinasi (`draft` -> `lobby` -> `active`).
-  - `RoomCodeGenerator` (6 xonali takrorlanmas PIN kod va QR link).
-- **Dev 4 (Game Engine):**
-  - `apps/game_engine/modes/classic.py` (Kahoot uslubidagi klassik savol-javob rejimi).
-  - `apps/game_engine/teams.py` (jamoalarni shakllantirish).
-- **Dev 5 (AI):**
-  - `apps/ai_gateway/adapters/openai_adapter.py` va `gemini_adapter.py`.
-  - Provayderlarning yagona javob (`AIResponse`) qaytarishi.
-- **Dev 6 (Frontend):**
-  - `templates/base.html`, `templates/auth/login.html` (Google va Telegram tugmalari bilan).
-  - `templates/dashboard/teacher_home.html` (Bento Grid dizaynida).
+#### 1. Tech Lead (Maintainer)
+- **Branch:** `feat/lead-sprint2-staging-sync`
+- **Vazifalar:** Dasturchilarning PR'larini ko‘rib chiqish, migratsiyalar konfliktini tekshirish, Staging serverini sozlash, Redis monitoringini yoqish.
+- **Verifikatsiya:** Barcha PR'lar tekshirilib `develop`ga birlashtiriladi.
 
-**Sprint 2 Demo Natijasi:** O‘qituvchi Telegram/Google orqali tizimga kiradi, yangi test yaratadi va 6 xonali PIN kodli xona ochadi.
+#### 2. Dev 1 (Auth & Security)
+- **Branch:** `feat/dev1-sprint2-telegram-google-auth`
+- **O‘qilishi shart:** [Backend.md#3](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/Backend.md), [user_stories.md#US-01](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/user_stories.md)
+- **Vazifalar:**
+  1. `apps/authentication/services.py` da Telegram Login Widget ma'lumotlarini SHA-256 HMAC orqali tekshiruvchi `check_telegram_hash` funksiyasini yozish (24 soatlik muddat nazorati bilan).
+  2. Google OAuth2 token almashish va foydalanuvchini ro‘yxatga olish / login qilish xizmatini yozish.
+  3. `apps/authentication/views.py` da `/auth/telegram/callback/`, `/auth/google/` va `/auth/logout/` endpointlarini ochish.
+  4. Soxta Telegram hashlari yuborilganda `403 Forbidden` qaytishini tekshiruvchi testlar yozish.
+- **Fayllar:** `apps/authentication/{services.py, views.py, urls.py, tests/test_telegram_auth.py}`.
+- **Verifikatsiya:** `pytest apps/authentication/tests/test_telegram_auth.py`
+
+#### 3. Dev 2 (Quiz & Registry)
+- **Branch:** `feat/dev2-sprint2-quiz-crud`
+- **O‘qilishi shart:** [Backend.md#2.2](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/Backend.md), [QUIZ_ENGINE.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/QUIZ_ENGINE.md)
+- **Vazifalar:**
+  1. `apps/quizzes/models.py` da `Quiz` (title, subject, grade_level, status: draft/published, current_version) va `Question` (quiz, type, prompt, options, correct_answer JSONB, points, time_limit, is_locked) modellarini yaratish.
+  2. `apps/quizzes/serializers.py` da Quiz va Question serializerlarini yozish (`correct_answer` serializerda xavfsiz himoyalanishi shart!).
+  3. Savol yaratilayotganda `QuestionTypeRegistry` orqali options va correct_answerni validatsiya qilish xizmatini yozish.
+  4. Viktorina yaratish, yangilash va o‘chirish bo‘yicha to‘liq CRUD API yozish.
+- **Fayllar:** `apps/quizzes/{models.py, serializers.py, services.py, views.py, urls.py, tests/test_crud.py}`.
+- **Verifikatsiya:** `python manage.py makemigrations quizzes && pytest apps/quizzes/tests/test_crud.py`
+
+#### 4. Dev 3 (Real-Time Channels)
+- **Branch:** `feat/dev3-sprint2-room-fsm-pin`
+- **O‘qilishi shart:** [LIVE_SESSION.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/LIVE_SESSION.md), [EVENTS.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/EVENTS.md)
+- **Vazifalar:**
+  1. `apps/live_sessions/models.py` da `LiveSession` (room_code, quiz, host, status, game_mode) va `Participant` modellarini yaratish.
+  2. `services.py` da 6 ta belgili takrorlanmas unikal PIN kod (`RoomCodeGenerator`) va QR kod linki yaratish logikasini yozish.
+  3. `apps/live_sessions/fsm.py` da xona holat mashinasini (`draft` -> `lobby` -> `active` -> `paused` -> `completed`) xavfsiz o‘tkazuvchi sinf qurish.
+  4. O‘qituvchi xona ochganda va boshlaganda FSM holatlari to‘g‘ri o‘zgarishini tekshiruvchi testlar yozish.
+- **Fayllar:** `apps/live_sessions/{models.py, services.py, fsm.py, views.py, urls.py, tests/test_fsm.py}`.
+- **Verifikatsiya:** `python manage.py makemigrations live_sessions && pytest apps/live_sessions/tests/test_fsm.py`
+
+#### 5. Dev 4 (Game Engine)
+- **Branch:** `feat/dev4-sprint2-classic-team-mode`
+- **O‘qilishi shart:** [GAME_MODES.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/GAME_MODES.md), [TEAM_SYSTEM.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/TEAM_SYSTEM.md)
+- **Vazifalar:**
+  1. `apps/game_engine/modes/classic.py` da Kahoot uslubidagi klassik rejim plaginini yozish.
+  2. `apps/game_engine/teams.py` da o‘quvchilarni jamoalarga taqsimlash (avtomatik balansli yoki qo‘lda tanlash) mexanizmini yozish.
+  3. `TeamScoreAggregator` orqali jamoa a'zolarining umumiy ballarini jamlash va o‘rtacha ko‘rsatkichni hisoblash.
+  4. Jamoaviy o‘yin rejimi bo‘yicha unit testlar yozish.
+- **Fayllar:** `apps/game_engine/modes/classic.py`, `apps/game_engine/teams.py`, `apps/game_engine/tests/test_modes.py`.
+- **Verifikatsiya:** `pytest apps/game_engine/tests/test_modes.py`
+
+#### 6. Dev 5 (AI & MCP)
+- **Branch:** `feat/dev5-sprint2-openai-gemini-adapters`
+- **O‘qilishi shart:** [AI_PROVIDERS.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ai/AI_PROVIDERS.md), [MODEL_ROUTING.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ai/MODEL_ROUTING.md)
+- **Vazifalar:**
+  1. `apps/ai_gateway/adapters/openai_adapter.py` (GPT-4o va GPT-4o-mini uchun to‘liq implementatsiya).
+  2. `apps/ai_gateway/adapters/gemini_adapter.py` (Gemini 1.5 Flash va Pro uchun to‘liq implementatsiya).
+  3. `apps/ai_gateway/router.py` da kaskadli zaxira (fallback) mexanizmini yozish (agar OpenAI xato bersa, avtomatik Gemini'ga yo‘naltirish).
+  4. Mock javoblar orqali provayderlar va fallback mexanizmini test qilish.
+- **Fayllar:** `apps/ai_gateway/adapters/{openai_adapter.py, gemini_adapter.py}`, `apps/ai_gateway/router.py`, `tests/test_router.py`.
+- **Verifikatsiya:** `pytest apps/ai_gateway/tests/test_router.py`
+
+#### 7. Dev 6 (Frontend & Audio)
+- **Branch:** `feat/dev6-sprint2-auth-dashboard-ui`
+- **O‘qilishi shart:** [UI_UX_SPEC.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ui/UI_UX_SPEC.md), [WIREFRAMES.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ui/WIREFRAMES.md)
+- **Vazifalar:**
+  1. `templates/auth/login.html` (Google va Telegram tugmali, zamonaviy claymorphism uslubida).
+  2. `templates/dashboard/teacher_home.html` (Bento Grid kartalari, darslar ro‘yxati va "Yangi Viktorina" tugmasi).
+  3. `static/js/components.js` da modal oynalar, tugmalar bosilganda audio sintezatorini (`window.eduAudio.playTick()`) chaqirish.
+  4. Ekranlarning barcha brauzerlarda to‘g‘ri ochilishini vizual tekshirish.
+- **Fayllar:** `templates/auth/login.html`, `templates/dashboard/teacher_home.html`, `static/js/components.js`.
+- **Verifikatsiya:** Sahifalarni brauzerda ochib, tugmalar va dizaynni ko‘zdan kechirish.
+
+**Sprint 2 Demo Natijasi:** O‘qituvchi tizimga kiradi, yangi test yaratadi, 6 xonali PIN kodli xona ochadi va o‘yin rejimini tanlaydi.
 
 ---
 
 ### Sprint 3: Real-Time Dvigatel, Shohsupa va AI Integratsiyasi
 
-**Sprint Maqsadi:** O‘quvchilarning real-time ulanishi, savollarga javob berish, tezkor Redis shohsupasi va AI savol generatsiyasi.
+**Sprint Maqsadi:** O‘quvchilarning jonli ulanishi, savollarga javob berish, Redis shohsupasi (<5ms) va AI orqali test generatsiyasi.
 
-- **Tech Lead:** Redis klasterini yuklamaga tayyorlash, Channel Layer monitoringi.
-- **Dev 1 (Auth):**
-  - RBAC ruxsatlar (`IsTeacher`, `IsSchoolAdmin`), oylik AI token byudjeti nazorati.
-- **Dev 2 (Quiz):**
-  - Qolgan 22 ta savol turlari (ordering, categorization, cloze, geo_pin, open_short).
-  - Savollarni tahrirlashdan qulflash (`is_locked`) mantiqi.
-- **Dev 3 (Real-Time):**
-  - `ClassroomGameConsumer`: o‘quvchilar javoblarini qabul qilish, vaqtni tekshirish, savol ochish/yopish hodisalari.
-  - Qayta ulanish tokeni (Reconnection manager).
-- **Dev 4 (Game Engine):**
-  - `apps/game_engine/leaderboard.py` (Redis Sorted Sets yordamida <5ms reyting hisoblash).
-  - Rank Delta ko‘rsatkichlari (`▲ +2`, `▼ -1`).
-- **Dev 5 (AI):**
-  - `apps/ai_workspace/prompts.py` (v1.0 pedagogik promptlar).
-  - `apps/ai_workspace/generator.py` (mavzu bo‘yicha 10 ta savolli to‘liq viktorina generatsiya qilish).
-- **Dev 6 (Frontend):**
-  - `templates/player/student_game.html` (Dual-coded 4 ta rangli variantlar).
-  - `static/js/game_client.js` (WebSocket xabarlarini boshqarish va to‘g‘ri/xato ovozlarini yangratish).
+#### 1. Tech Lead (Maintainer)
+- **Branch:** `feat/lead-sprint3-redis-cluster`
+- **Vazifalar:** Redis Sorted Sets xotira yuklamasini optimallashtirish, Channels guruh xabarlari kechikishini (<100ms) o‘lchash.
+- **Verifikatsiya:** Redis benchmark testlari.
 
-**Sprint 3 Demo Natijasi:** 10 nafar o‘quvchi telefonidan PIN kod terib xonaga kiradi, test yechadi, har bir to‘g‘ri javob uchun tovush yangraydi va real-time shohsupada o‘rinlar almashadi.
+#### 2. Dev 1 (Auth & Security)
+- **Branch:** `feat/dev1-sprint3-rbac-quotas`
+- **O‘qilishi shart:** [Backend.md#2.1](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/Backend.md), [SECURITY.md#2](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/SECURITY.md)
+- **Vazifalar:**
+  1. `apps/authentication/permissions.py` da `IsTeacher`, `IsSchoolAdmin`, `IsSystemAdmin` ruxsatlarini yozish.
+  2. Tashkilotlarning oylik AI token limiti va o‘qituvchilarning kvotasini nazorat qiluvchi middleware/dekorator yozish.
+  3. Ruxsatlar va limitlar oshganda `403 Forbidden` qaytarilishini test qilish.
+- **Fayllar:** `apps/authentication/permissions.py`, `apps/authentication/services.py`, `tests/test_permissions.py`.
+- **Verifikatsiya:** `pytest apps/authentication/tests/test_permissions.py`
+
+#### 3. Dev 2 (Quiz & Registry)
+- **Branch:** `feat/dev2-sprint3-advanced-question-types`
+- **O‘qilishi shart:** [QUESTION_TYPES.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/QUESTION_TYPES.md)
+- **Vazifalar:**
+  1. Qolgan 22 ta savol turlari plaginlarini yozish (`geo_pin.py`, `code_snippet.py`, `drag_drop_match.py`, `matrix_sort.py` va b.).
+  2. Savollarni tahrirlashdan qulflash (`is_locked=True`) mexanizmini to‘liq ishga tushirish (AI qayta yozishidan himoya).
+  3. Barcha 29 ta savol turining validatsiya testlarini yakunlash.
+- **Fayllar:** `apps/questions_registry/types/*.py`, `apps/questions_registry/tests/test_all_types.py`.
+- **Verifikatsiya:** `pytest apps/questions_registry/tests/test_all_types.py`
+
+#### 4. Dev 3 (Real-Time Channels)
+- **Branch:** `feat/dev3-sprint3-gameplay-consumer`
+- **O‘qilishi shart:** [REALTIME_PROTOCOL.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/REALTIME_PROTOCOL.md), [RECONNECTION.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/RECONNECTION.md)
+- **Vazifalar:**
+  1. `ClassroomGameConsumer` ni to‘liq yozish: o‘quvchilar qo‘shilishi (`join`), savol ochilishi (`question_open`), javob qabul qilish (`submit_answer`), savol yopilishi (`question_closed`).
+  2. Server vaqti bo‘yicha tekshirish: taymer tugagandan so‘ng kelgan javoblarni avtomatik rad etish.
+  3. `ReconnectionManager` orqali interneti uzilgan o‘quvchini sessiya tokeni orqali qayta ulash logikasi.
+  4. Real-time testlar: 10 ta virtual o‘quvchi bir vaqtda javob berganda consumer to‘g‘ri ishlashi.
+- **Fayllar:** `apps/live_sessions/consumers.py`, `apps/live_sessions/services.py`, `tests/test_gameplay.py`.
+- **Verifikatsiya:** `pytest apps/live_sessions/tests/test_gameplay.py`
+
+#### 5. Dev 4 (Game Engine)
+- **Branch:** `feat/dev4-sprint3-redis-leaderboard`
+- **O‘qilishi shart:** [LEADERBOARD.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/LEADERBOARD.md)
+- **Vazifalar:**
+  1. `apps/game_engine/leaderboard.py` da Redis `ZADD`, `ZREVRANGE`, `ZREVRANK` orqali ishlovchi `RedisLeaderboard` klassini yozish.
+  2. Har bir raunddan keyin o‘quvchilarning o‘rin o‘zgarishini hisoblash (`Rank Delta`: `▲ +2`, `▼ -1`).
+  3. Top-5 va Top-10 o‘yinchilar ro‘yxatini <5ms ichida qaytarish xizmati.
+  4. Testlar: bir xil ball to‘plagan o‘quvchilarni vaqt bo‘yicha to‘g‘ri saralash.
+- **Fayllar:** `apps/game_engine/leaderboard.py`, `apps/game_engine/tests/test_leaderboard.py`.
+- **Verifikatsiya:** `pytest apps/game_engine/tests/test_leaderboard.py`
+
+#### 6. Dev 5 (AI & MCP)
+- **Branch:** `feat/dev5-sprint3-quiz-generator`
+- **O‘qilishi shart:** [AI_QUIZ_GENERATION.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ai/AI_QUIZ_GENERATION.md), [PROMPT_SPEC.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ai/PROMPT_SPEC.md)
+- **Vazifalar:**
+  1. `apps/ai_workspace/prompts.py` da pedagogik qoidalarga asoslangan tizimli prompt shablonlarini (v1.0) yozish.
+  2. `apps/ai_workspace/schemas.py` da Pydantic asosidagi `GeneratedQuizSchema` va `GeneratedQuestionSchema` ni belgilash.
+  3. `apps/ai_workspace/generator.py` da mavzu yoki matn berilganda 10 ta savolli to‘liq JSON qaytaruvchi generatorni yozish.
+  4. Format buzilganda avtomatik qayta tuzatish (Retry logic) bo‘yicha testlar yozish.
+- **Fayllar:** `apps/ai_workspace/{prompts.py, schemas.py, generator.py, tests/test_generator.py}`.
+- **Verifikatsiya:** `pytest apps/ai_workspace/tests/test_generator.py`
+
+#### 7. Dev 6 (Frontend & Audio)
+- **Branch:** `feat/dev6-sprint3-student-game-ui`
+- **O‘qilishi shart:** [ACCESSIBILITY.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ui/ACCESSIBILITY.md), [ui_components/](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/ui_components)
+- **Vazifalar:**
+  1. `templates/player/student_game.html` da mobil o‘quvchi interfeysini qurish (Dual-coded 4 ta rangli va shaklli variantlar: ▲ Qizil, ◆ Moviy, ● Sariq, ■ Yashil).
+  2. `static/js/game_client.js` orqali WebSocket aloqasini yo‘lga qo‘yish (javob bosilganda serverga xabar jo‘natish).
+  3. Javob to‘g‘ri bo‘lsa `playCorrect()`, xato bo‘lsa `playWrong()` ovozlarini yangratish va porlash/silkinish animatsiyalarini ulash.
+- **Fayllar:** `templates/player/student_game.html`, `static/js/game_client.js`.
+- **Verifikatsiya:** Brauzerda test o‘yinini o‘ynab, ovozlar va variantlar reaksiyasini tekshirish.
+
+**Sprint 3 Demo Natijasi:** O‘qituvchi AI yordamida yangi test generatsiya qiladi, 10 nafar o‘quvchi telefonidan ulanib test yechadi va jonli shohsupada o‘rinlar almashadi.
 
 ---
 
 ### Sprint 4: Murakkab Rejimlar, MCP Server va Tashqi Sinxronizatsiya
 
-**Sprint Maqsadi:** Blooket uslubidagi sandiqlar rejimi, rasmiy Python MCP Server va Google Sheets sinxronizatsiyasi.
+**Sprint Maqsadi:** Blooket Gold Quest rejimi, rasmiy Python MCP Server (12 Tools) va Google Sheets ikki tomonlama sinxronizatsiyasi.
 
-- **Tech Lead:** MCP server xavfsizlik auditi, SSE transporti yuklama testi.
-- **Dev 1 (Auth):**
-  - MCP uchun shaxsiy API tokenlar generatsiyasi va OAuth 2.0 PKCE ulanishi.
-- **Dev 2 (Quiz):**
-  - Viktorinalarni versiyalash (`QuizVersion`), testlarni JSON/Excel formatida eksport/import qilish.
-- **Dev 3 (Real-Time):**
-  - `templates/live/host_screen.html` (Sinf proyektori uchun katta ekran animatsiyalari, jonli shohsupa).
-- **Dev 4 (Game Engine):**
-  - `apps/game_engine/modes/gold_quest.py` (Oltin sandiqlar, o‘g‘irlash va mini-o‘yinlar).
-  - `apps/game_engine/modes/team_battle.py` (Jamoaviy ballar jangi).
-- **Dev 5 (AI & MCP):**
-  - Rasmiy `mcp` SDK orqali `apps/mcp_server/server.py` ni yaratish.
-  - 12 ta Core MCP Tools (`create_quiz`, `start_live_session`, `get_session_results` va b.).
-  - SSE va Stdio transportlarini yo‘lga qo‘yish.
-- **Dev 6 (Frontend & Sheets):**
-  - `apps/sheets_sync/` (Google Service Account va `gspread`).
-  - Dars tugashi bilan natijalarni o‘qituvchining Google Sheet jadvaliga avtomatik yozish.
+#### 1. Tech Lead (Maintainer)
+- **Branch:** `feat/lead-sprint4-mcp-sheets-audit`
+- **Vazifalar:** MCP SSE transporti xavfsizlik auditi, Celery Beat fon ishchi konteynerlarini sozlash.
+- **Verifikatsiya:** `celery -A core inspect ping`
 
-**Sprint 4 Demo Natijasi:** Claude Desktop yoki tashqi chatbot orqali MCP yordamida yangi viktorina ochiladi, sinfda Blooket Gold Quest o‘ynaladi va natijalar avtomatik Google Sheets'da paydo bo‘ladi.
+#### 2. Dev 1 (Auth & Security)
+- **Branch:** `feat/dev1-sprint4-mcp-tokens-oauth`
+- **O‘qilishi shart:** [MCP_AUTH.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/mcp/MCP_AUTH.md), [MCP_SCOPES.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/mcp/MCP_SCOPES.md)
+- **Vazifalar:**
+  1. O‘qituvchilar tashqi chatbotlar uchun shaxsiy API tokenlar yaratishi mumkin bo‘lgan `PersonalAccessToken` modelini yaratish.
+  2. OAuth 2.0 PKCE ulanishi va scope nazoratchisini (`quizzes:read`, `quizzes:write`, `session:host`) yozish.
+  3. Ruxsatsiz tokenlar rad etilishini test qilish.
+- **Fayllar:** `apps/authentication/models.py`, `apps/authentication/scopes.py`, `tests/test_tokens.py`.
+- **Verifikatsiya:** `pytest apps/authentication/tests/test_tokens.py`
+
+#### 3. Dev 2 (Quiz & Registry)
+- **Branch:** `feat/dev2-sprint4-versioning-export`
+- **O‘qilishi shart:** [Backend.md#2.2](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/Backend.md)
+- **Vazifalar:**
+  1. `apps/quizzes/models.py` da `QuizVersion` modelini yaratish (har bir o‘zgartirilgan versiyani saqlash).
+  2. Viktorinalarni JSON va Excel formatida eksport hamda import qilish xizmatlarini yozish.
+  3. Versiya bo‘yicha qaytish (rollback) testlarini yozish.
+- **Fayllar:** `apps/quizzes/{models.py, services.py, views.py, tests/test_versioning.py}`.
+- **Verifikatsiya:** `pytest apps/quizzes/tests/test_versioning.py`
+
+#### 4. Dev 3 (Real-Time Channels)
+- **Branch:** `feat/dev3-sprint4-host-projector-screen`
+- **O‘qilishi shart:** [UI_UX_SPEC.md#3](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ui/UI_UX_SPEC.md)
+- **Vazifalar:**
+  1. `templates/live/host_screen.html` da sinf proyektori uchun katta ekran ko‘rinishini yaratish (katta PIN kod, ulangan o‘quvchilar ro‘yxati, suzuvchi tojlar).
+  2. Raund tugaganda proyektor ekranida to‘g‘ri javob statistikasi va 3D shohsupani (1-2-3 o‘rinlar) ko‘rsatish hodisalarini yozish.
+  3. WebSocket orqali proyektor ekranini boshqaruvchi consumer logikasini yakunlash.
+- **Fayllar:** `templates/live/host_screen.html`, `apps/live_sessions/consumers.py`.
+- **Verifikatsiya:** Proyektor ekranida test o‘yinini o‘tkazib ko‘rish.
+
+#### 5. Dev 4 (Game Engine)
+- **Branch:** `feat/dev4-sprint4-gold-quest-blooket`
+- **O‘qilishi shart:** [GAME_MODES.md#2](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/engine/GAME_MODES.md)
+- **Vazifalar:**
+  1. `apps/game_engine/modes/gold_quest.py` da Blooket uslubidagi sandiqlar rejimini yozish (to‘g‘ri javob berganda 3 ta sandiqdan birini tanlash, tanga yutish yoki o‘g‘irlash).
+  2. O‘quvchilar balansi va xurujlarini (steal gold) xavfsiz boshqaruvchi server-authoritative logikasini yozish.
+  3. Mini-o‘yin hodisalarini sinovchi testlar yozish.
+- **Fayllar:** `apps/game_engine/modes/gold_quest.py`, `tests/test_gold_quest.py`.
+- **Verifikatsiya:** `pytest apps/game_engine/tests/test_gold_quest.py`
+
+#### 6. Dev 5 (AI & MCP)
+- **Branch:** `feat/dev5-sprint4-mcp-server-tools`
+- **O‘qilishi shart:** [MCP_SERVER.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/mcp/MCP_SERVER.md), [MCP_TOOLS.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/mcp/MCP_TOOLS.md)
+- **Vazifalar:**
+  1. Rasmiy Python `mcp` SDK orqali `apps/mcp_server/server.py` ni yaratish.
+  2. 12 ta Core MCP Tools (`create_quiz`, `list_quizzes`, `start_live_session`, `get_session_results` va b.) ni Django ORM bilan bog‘lash.
+  3. Claude Desktop uchun `stdio` va tashqi chatbotlar uchun `SSE` transportlarini yozish.
+  4. MCP asboblari chaqirilishini sinovchi to‘liq integratsion testlar yozish.
+- **Fayllar:** `apps/mcp_server/{server.py, auth.py, tools/*.py, transports/*.py, tests/test_mcp.py}`.
+- **Verifikatsiya:** `pytest apps/mcp_server/tests/test_mcp.py`
+
+#### 7. Dev 6 (Frontend & Sheets)
+- **Branch:** `feat/dev6-sprint4-sheets-sync-celery`
+- **O‘qilishi shart:** [Backend.md#1.1](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/Backend.md), [DATA_FLOWS.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/DATA_FLOWS.md)
+- **Vazifalar:**
+  1. `apps/sheets_sync/client.py` da Google Service Account orqali Google Sheets'ga ulanuvchi `gspread` mijozini yozish.
+  2. `apps/sheets_sync/tasks.py` da Celery vazifasini yaratish: dars tugaganda o‘quvchilar ballari va baholarini avtomatik jadvalga yozish.
+  3. Redis qulfi (`sync_lock_{quiz_id}`) orqali bir vaqtda ikkita sinxronizatsiya to‘qnashuvini oldini olish.
+  4. Mock Sheets API orqali testlar yozish.
+- **Fayllar:** `apps/sheets_sync/{client.py, tasks.py, services.py, tests/test_sheets.py}`.
+- **Verifikatsiya:** `pytest apps/sheets_sync/tests/test_sheets.py`
+
+**Sprint 4 Demo Natijasi:** Tashqi chatbotdan (Claude) MCP orqali dars yaratiladi, sinfda Blooket Gold Quest o‘ynaladi va o‘quvchilar bahosi avtomatik Google Sheets'ga tushadi.
 
 ---
 
 ### Sprint 5: Xavfsizlik Qat'iylashtiruvi, Yuklama Sinovlari va Bog‘lash
 
-**Sprint Maqsadi:** Xavfsizlik (OWASP, Rate Limiting), AI Diff Engine va 500 ta o‘quvchi ishtirokidagi yuklama (load) sinovi.
+**Sprint Maqsadi:** Xavfsizlik (OWASP, Rate Limiting), AI Diff Engine, mukofotlash modallari va 500 ta o‘quvchi ishtirokidagi stress-test.
 
-- **Tech Lead:** Locust / k6 orqali 500 ta parallel WebSocket ulanishlarini stress-test qilish.
-- **Dev 1 (Security):**
-  - `core/middleware/rate_limit.py` (Redis sliding window: login 5/min, AI 20/min).
-  - XSS sanitizatsiya (`bleach`), CSP va CORS sarlavhalari.
-- **Dev 2 & Dev 3 (Integratsiya):**
-  - Savollar vaqt chegarasi tugaganda xavfsiz avtomatik yopilish testlari.
-  - Tarmoq uzilganda sessiyaning xavfsiz saqlanib qolishi.
-- **Dev 4 & Dev 6 (UI Polish):**
-  - "Perfect Scorer" 3D kubok animatsiyasi va g‘alaba fanfarasi integratsiyasi.
-  - Mobil ekranlarda Thumb Zone va 60 FPS silliq animatsiyalar tekshiruvi.
-- **Dev 5 (AI Workspace):**
-  - `apps/ai_workspace/diff_engine.py` (AI taklif etgan o‘zgarishlarni o‘qituvchiga "Oldin / Keyin" ko‘rinishida tasdiqlash uchun chiqarish).
-  - `is_locked=True` bo‘lgan savollarni AI o‘chira olmasligini tekshirish.
+#### 1. Tech Lead (Maintainer)
+- **Branch:** `feat/lead-sprint5-stress-testing`
+- **Vazifalar:** Locust yoki k6 orqali 500 ta parallel WebSocket o‘yinchilari bilan stress-test o‘tkazish, Redis va Daphne CPU yuklamasini o‘lchash.
+- **Verifikatsiya:** 500 ta parallel ulanishda xatolar soni 0% bo‘lishi.
+
+#### 2. Dev 1 (Auth & Security)
+- **Branch:** `feat/dev1-sprint5-rate-limiting-owasp`
+- **O‘qilishi shart:** [SECURITY.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/SECURITY.md)
+- **Vazifalar:**
+  1. `core/middleware/rate_limit.py` da Redis asosidagi Sliding Window tezlik cheklovchisini yozish (login 5/min, AI 20/min).
+  2. Kiruvchi barcha matnlarni `bleach` orqali XSS tozalash.
+  3. `core/middleware/security_headers.py` da CSP, HSTS, X-Frame-Options sarlavhalarini ulash.
+- **Fayllar:** `core/middleware/{rate_limit.py, security_headers.py}`, `tests/test_security.py`.
+- **Verifikatsiya:** `pytest tests/test_security.py && python manage.py check --deploy`
+
+#### 3. Dev 2 & Dev 3 (Quiz & Real-Time Integratsiya)
+- **Branch:** `feat/dev2-dev3-sprint5-edge-cases`
+- **Vazifalar:**
+  1. Savol o‘rtasida o‘qituvchining interneti uzilsa xonani avtomatik pauzaga qo‘yish logikasi.
+  2. Barcha 29 ta savol turining real-time o‘yinda to‘g‘ri ochilishi va baholanishini birgalikda sinash.
+- **Verifikatsiya:** Integratsion testlar yashil bo‘lishi.
+
+#### 4. Dev 4 & Dev 6 (Gamifikatsiya & UI Polish)
+- **Branch:** `feat/dev4-dev6-sprint5-victory-modals`
+- **Vazifalar:**
+  1. "Perfect Scorer" 3D kubok animatsiyasi va g‘alaba fanfarasi modalini jonli o‘yin oxiriga ulash.
+  2. O‘quvchi mobil ekranida Thumb Zone qulayligi va 60 FPS silliq animatsiyalarni tekshirish.
+- **Verifikatsiya:** Brauzerda mukofot modalini sinash.
+
+#### 5. Dev 5 (AI Workspace)
+- **Branch:** `feat/dev5-sprint5-diff-engine`
+- **O‘qilishi shart:** [AI_AGENT.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/ai/AI_AGENT.md)
+- **Vazifalar:**
+  1. `apps/ai_workspace/diff_engine.py` ni yaratish (AI taklif etgan o‘zgartirishlarni o‘qituvchiga "Oldin / Keyin" ko‘rinishida tasdiqlash uchun chiqarish).
+  2. `is_locked=True` bo‘lgan savollarni AI o‘chira olmasligini tekshiruvchi guardrail testlarini yozish.
+- **Fayllar:** `apps/ai_workspace/diff_engine.py`, `tests/test_diff.py`.
+- **Verifikatsiya:** `pytest apps/ai_workspace/tests/test_diff.py`
 
 **Sprint 5 Demo Natijasi:** Tizim 500 ta concurrent o‘quvchi yuklamasida xatosiz ishlaydi, xavfsizlik skanerlari (`bandit`, `check --deploy`) hech qanday jiddiy zaiflik topmaydi.
 
@@ -396,14 +613,27 @@ SPRINT 1 VAZIFALARI TAQSIMOTI:
 
 **Sprint Maqsadi:** AWS EC2 infratuzilmasiga to‘liq o‘rnatish, Nginx, SSL, avtomatik zaxira nusxalash va Production Launch!
 
-- **Tech Lead:**
-  - AWS EC2 da `docker-compose.prod.yml` ni ko‘tarish, Nginx va Let's Encrypt SSL sozlash.
-  - Sentry xatoliklar monitoringi va har kunlik PostgreSQL backup skriptini yoqish.
-  - `develop` tarmog‘ini `main` ga birlashtirish va `v1.0.0` rasmiy reliz tegini qo‘yish.
-- **Barcha Dasturchilar (Dev 1 – Dev 6):**
-  - Foydalanuvchi qo‘llanmalari va API hujjatlarini to‘ldirish.
-  - Smoke testing (ishlab chiqarish muhitida barcha funksiyalarni jonli tekshirish).
-  - Topilgan mayda vizual va matn xatoliklarini hotfix qilish.
+#### 1. Tech Lead (Maintainer)
+- **Branch:** `feat/lead-sprint6-production-deploy`
+- **O‘qilishi shart:** [DEPLOYMENT_ARCHITECTURE.md](file:///c:/Users/Asus/Desktop/teacher-eduself-mcp/.docs/DEPLOYMENT_ARCHITECTURE.md)
+- **Vazifalar:**
+  1. AWS EC2 serverida `deploy/docker-compose.prod.yml` ni ko‘tarish (Daphne, Celery, Postgres, Redis).
+  2. `deploy/nginx/nginx.conf` da HTTP/2 va WebSocket Upgrade (`/ws/`) ni sozlash, Certbot orqali bepul Let's Encrypt SSL olish.
+  3. Har kunlik avtomatik PostgreSQL zaxira nusxalash skriptini (`deploy/scripts/backup_db.sh`) Cron'ga qo‘yish.
+  4. Sentry monitoringini yoqish va `/health/live` endpointini sozlash.
+  5. `develop` tarmog‘ini `main` ga birlashtirish va `v1.0.0` reliz tegini qo‘yish!
+- **Verifikatsiya:** Production domenida HTTPS orqali to‘liq ishga tushirish.
+
+#### 2. Barcha Dasturchilar (Dev 1 – Dev 6)
+- **Branch:** `fix/dev<N>-sprint6-polish`
+- **Vazifalar:**
+  1. Foydalanuvchi qo‘llanmalari va API hujjatlarini to‘ldirish.
+  2. Smoke Testing (ishlab chiqarish serverida barcha funksiyalarni jonli sinab ko‘rish).
+  3. Topilgan mayda matn va vizual xatoliklarni tezkorlik bilan tuzatish.
+- **Verifikatsiya:** Real muhitda barcha foydalanuvchi yo‘llari (User Stories) muvaffaqiyatli o‘tishi.
+
+---
+
 
 ---
 
