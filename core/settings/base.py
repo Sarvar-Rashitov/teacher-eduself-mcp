@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'apps.live_sessions',     # Phase 03: Real-Time Dvigatel va WebSockets
     'apps.ai_workspace',      # Phase 06: O'qituvchi AI Ish Joyi
     'apps.ai_gateway',        # Phase 05: AI Gateway va BYOK Shifrlash
-    # 'apps.mcp_server',        # Phase 07
+    'apps.mcp_server',        # Phase 07
     # 'apps.sheets_sync',       # Phase 09
     # 'apps.analytics',         # Phase 09
 ]
