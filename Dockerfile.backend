@@ -1,0 +1,66 @@
+# ============================================================
+# EduSelf Teacher — Dockerfile.backend
+# Python 3.12 slim asosida non-root xavfsiz Docker tasviri
+# Plan §T7 asosida: non-root user, daphne ASGI server
+# ============================================================
+
+FROM python:3.12-slim
+
+# ============================================================
+# Muhit o'zgaruvchilari
+# ============================================================
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DJANGO_SETTINGS_MODULE=core.settings.local
+
+# ============================================================
+# Tizim bog'liqliklar
+# libpq-dev: psycopg3 uchun
+# build-essential: C kengaytmalar uchun
+# ============================================================
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# ============================================================
+# Non-root foydalanuvchi yaratish (xavfsizlik!)
+# Production da root bo'lib ishlash xavfli
+# ============================================================
+RUN groupadd --gid 1000 appuser \
+    && useradd --uid 1000 --gid appuser --shell /bin/bash --no-create-home appuser
+
+# ============================================================
+# Ish papkasi
+# ============================================================
+WORKDIR /app
+
+# ============================================================
+# Python bog'liqliklar (alohida layer — kesh uchun qulay)
+# ============================================================
+COPY requirements.txt .
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# ============================================================
+# Loyiha kodini nusxalash va foydalanuvchiga huquq berish
+# ============================================================
+COPY --chown=appuser:appuser . .
+
+# ============================================================
+# Non-root foydalanuvchiga o'tish
+# ============================================================
+USER appuser
+
+# ============================================================
+# Port
+# ============================================================
+EXPOSE 8000
+
+# ============================================================
+# Daphne ASGI server — gunicorn emas!
+# WebSocket va HTTP ikkisini ham boshqaradi
+# TECH_STACK.md §3.2: Daphne ASGI Serveri
+# ============================================================
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "core.asgi:application"]

@@ -1,0 +1,50 @@
+# ============================================================
+# EduSelf Teacher — requirements.txt
+# TECH_STACK.md §10 asosida versiyalangan paketlar ro'yxati
+# ============================================================
+
+# Django va Asinxron Web Freymvork (ASGI)
+Django>=5.1,<5.2
+daphne>=4.1.2
+channels>=4.1.0
+channels-redis>=4.2.0
+djangorestframework>=3.15.2
+
+# Autentifikatsiya (Google OAuth + Telegram — Phase 01 uchun asos)
+django-allauth>=65.0.0
+requests>=2.32.0
+
+# Ma'lumotlar Bazasi va Kesh
+# psycopg3 — zamonaviy, to'liq asinxron PostgreSQL drayveri (TECH_STACK.md §5.1)
+psycopg[binary]>=3.2.0
+django-redis>=5.4.0,<6.0.0
+redis>=5.0.8
+
+# Asinxron Vazifalar (Celery)
+celery>=5.4.0
+django-celery-beat>=2.7.0
+
+# Google Sheets Integratsiyasi (Phase 09 uchun asos)
+gspread>=6.1.2
+google-api-python-client>=2.140.0
+google-auth>=2.34.0
+
+# Sun'iy Intellekt va MCP SDK (Phase 05–07 uchun asos)
+mcp>=1.0.0
+openai>=1.50.0
+google-genai>=0.1.0
+anthropic>=0.36.0
+pydantic>=2.9.2
+cryptography>=43.0.1
+
+# Frontend va Media (Phase 08–09 uchun asos)
+openpyxl>=3.1.5
+Pillow>=10.4.0
+
+# Xavfsizlik va Utillar
+python-dotenv>=1.0.0
+django-cors-headers>=4.3.0
+
+# Testlar
+pytest-django>=4.8.0
+pytest-asyncio>=0.23.0
