@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'apps.game_engine',       # Phase 04: O'yin Rejimlari va Shohsupa
     'apps.live_sessions',     # Phase 03: Real-Time Dvigatel va WebSockets
     # 'apps.ai_workspace',      # Phase 06
-    # 'apps.ai_gateway',        # Phase 05
+    'apps.ai_gateway',        # Phase 05: AI Gateway va BYOK Shifrlash
     # 'apps.mcp_server',        # Phase 07
     # 'apps.sheets_sync',       # Phase 09
     # 'apps.analytics',         # Phase 09
@@ -265,3 +265,14 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+# ============================================================
+# AI Gateway & BYOK Shifrlash Sozlamalari (Phase 05)
+# ============================================================
+BYOK_ENCRYPTION_KEY = os.environ.get('BYOK_ENCRYPTION_KEY', '')
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY', '')
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY', '')
+DEEPSEEK_API_KEY = os.environ.get('DEEPSEEK_API_KEY', '')
+
