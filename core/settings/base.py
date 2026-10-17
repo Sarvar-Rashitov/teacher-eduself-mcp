@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'apps.quizzes',           # Phase 02: Viktorinalar va savollar boshqaruvi
     'apps.game_engine',       # Phase 04: O'yin Rejimlari va Shohsupa
     'apps.live_sessions',     # Phase 03: Real-Time Dvigatel va WebSockets
-    # 'apps.ai_workspace',      # Phase 06
+    'apps.ai_workspace',      # Phase 06: O'qituvchi AI Ish Joyi
     'apps.ai_gateway',        # Phase 05: AI Gateway va BYOK Shifrlash
     # 'apps.mcp_server',        # Phase 07
     # 'apps.sheets_sync',       # Phase 09
