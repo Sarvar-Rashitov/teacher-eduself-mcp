@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'apps.authentication',    # Phase 01: Foydalanuvchilar va RBAC
     'apps.questions_registry',# Phase 02: 29 xil savol formati registri
     'apps.quizzes',           # Phase 02: Viktorinalar va savollar boshqaruvi
-    # 'apps.game_engine',       # Phase 04
+    'apps.game_engine',       # Phase 04: O'yin Rejimlari va Shohsupa
     'apps.live_sessions',     # Phase 03: Real-Time Dvigatel va WebSockets
     # 'apps.ai_workspace',      # Phase 06
     # 'apps.ai_gateway',        # Phase 05

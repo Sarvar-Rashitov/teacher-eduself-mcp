@@ -158,14 +158,38 @@ class SessionService:
 
         response_time_ms = int((now - client_ts) * 1000) if client_ts else 0
 
-        # 5. Ballarni hisoblash
-        awarded_points = eval_res.score
-        if eval_res.is_correct:
-            participant.score += awarded_points
-            participant.streak += 1
-        else:
-            participant.streak = 0
+        # 5. Ballarni hisoblash (ScoringEngine & RedisLeaderboard)
+        from apps.game_engine.scoring import ScoringEngine
+        from apps.game_engine.leaderboard import RedisLeaderboard
+
+        time_elapsed = None
+        time_limit = None
+        if session.current_question_deadline:
+            time_limit = float(question.time_limit_seconds)
+            time_remaining = max(0.0, session.current_question_deadline - now)
+            time_elapsed = max(0.0, time_limit - time_remaining)
+
+        partial_ratio = (eval_res.score / question.points) if question.points > 0 else 1.0
+        calc = ScoringEngine.calculate_score(
+            is_correct=eval_res.is_correct,
+            base_points=question.points,
+            time_elapsed=time_elapsed,
+            time_limit=time_limit,
+            streak=participant.streak,
+            scoring_mode='speed_accuracy',
+            partial_ratio=partial_ratio
+        )
+
+        awarded_points = calc['points_awarded']
+        participant.streak = calc['streak']
+        participant.score += awarded_points
         participant.save(update_fields=['score', 'streak'])
+
+        # Redis Shohsupasini (Leaderboard) real-vaqtda yangilash
+        try:
+            RedisLeaderboard().update_score(str(session.id), str(participant.id), participant.score)
+        except Exception as e:
+            logger.warning(f"Leaderboard yangilashda ogohlantirish: {e}")
 
         submission = AnswerSubmission.objects.create(
             session=session,
