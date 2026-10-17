@@ -44,8 +44,8 @@ INSTALLED_APPS = [
     'apps.authentication',          # Phase 01: Auth & RBAC
     'apps.questions_registry',      # Phase 02: 29 Question Formats Registry
     'apps.quizzes',                 # Phase 02: Quiz & Question CRUD & Engine
+    'apps.live_sessions',           # Phase 03: Real-Time Engine, WebSockets & FSM
     # 'apps.game_engine',           # Phase 04
-    # 'apps.live_sessions',         # Phase 03
 ]
 
 # Custom User Model (Phase 01)

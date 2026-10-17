@@ -40,7 +40,7 @@ class SingleChoiceQuestionType(BaseQuestionType):
         if isinstance(correct_answer, str):
             correct_id = correct_answer
         elif isinstance(correct_answer, dict):
-            correct_id = correct_answer.get('option_id') or correct_answer.get('id')
+            correct_id = correct_answer.get('option_id') or correct_answer.get('correct_option_id') or correct_answer.get('id')
 
         if not correct_id or str(correct_id) not in option_ids:
             raise QuestionValidationError(
@@ -57,10 +57,15 @@ class SingleChoiceQuestionType(BaseQuestionType):
         if isinstance(submitted_answer, str):
             submitted_id = submitted_answer.strip()
         elif isinstance(submitted_answer, dict):
-            submitted_id = submitted_answer.get('selected_option_id') or submitted_answer.get('id')
+            submitted_id = submitted_answer.get('selected_option_id') or submitted_answer.get('option_id') or submitted_answer.get('id')
 
-        expected_id = str(correct_answer).strip() if isinstance(correct_answer, str) else str(correct_answer.get('option_id', '')).strip()
+        expected_id = ""
+        if isinstance(correct_answer, str):
+            expected_id = correct_answer.strip()
+        elif isinstance(correct_answer, dict):
+            expected_id = str(correct_answer.get('option_id') or correct_answer.get('correct_option_id') or correct_answer.get('id', '')).strip()
 
         if submitted_id and str(submitted_id).strip() == expected_id:
             return True, 1.0
         return False, 0.0
+

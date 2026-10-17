@@ -37,3 +37,13 @@ if os.getenv('USE_IN_MEMORY_CHANNELS', 'False').lower() == 'true':
             'BACKEND': 'channels.layers.InMemoryChannelLayer',
         },
     }
+
+# Option for in-memory cache when running with SQLite locally / unit testing
+if os.getenv('USE_SQLITE', 'False').lower() == 'true':
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'eduself-local-cache',
+        }
+    }
+

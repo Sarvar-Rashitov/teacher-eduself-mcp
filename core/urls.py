@@ -9,4 +9,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('apps.authentication.urls')),
     path('api/v1/quizzes/', include('apps.quizzes.urls')),
+    path('api/v1/sessions/', include('apps.live_sessions.urls')),
 ]
