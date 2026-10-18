@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'apps.quizzes',                 # Phase 02: Quiz & Question CRUD & Engine
     'apps.live_sessions',           # Phase 03: Real-Time Engine, WebSockets & FSM
     'apps.game_engine',             # Phase 04: Game Modes Catalog & Engine
+    'apps.ai_gateway',              # Phase 05: Multi-Provider AI Gateway & BYOK
 ]
 
 # Custom User Model (Phase 01)
@@ -166,3 +167,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# AI Gateway & BYOK Encryption Settings (Phase 05)
+BYOK_ENCRYPTION_KEY = os.getenv('BYOK_ENCRYPTION_KEY', '')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY', '')
+GROQ_API_KEY = os.getenv('GROQ_API_KEY', '')
+DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY', '')
