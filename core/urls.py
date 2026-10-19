@@ -23,6 +23,7 @@ urlpatterns = [
     path('api/quizzes/', include('apps.quizzes.urls')),
     path('api/sessions/', include('apps.live_sessions.urls')),
     path('api/ai/', include('apps.ai_workspace.urls')),
+    path('api/sheets/', include('apps.sheets_sync.urls')),
     path('mcp/', include('apps.mcp_server.urls')),
     path('oauth/', include('apps.mcp_server.oauth_urls')),
 ]

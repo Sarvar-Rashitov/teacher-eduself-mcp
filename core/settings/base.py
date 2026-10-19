@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'apps.ai_workspace',      # Phase 06: O'qituvchi AI Ish Joyi
     'apps.ai_gateway',        # Phase 05: AI Gateway va BYOK Shifrlash
     'apps.mcp_server',        # Phase 07
-    # 'apps.sheets_sync',       # Phase 09
+    'apps.sheets_sync',       # Phase 09
     # 'apps.analytics',         # Phase 09
 ]
 
@@ -176,6 +176,7 @@ AUTH_USER_MODEL = 'authentication.User'
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET', '')
+GOOGLE_SHEETS_SERVICE_ACCOUNT_JSON = os.getenv('GOOGLE_SHEETS_SERVICE_ACCOUNT_JSON', '')
 
 # ============================================================
 # Xalqarolashtirish (Localization)
