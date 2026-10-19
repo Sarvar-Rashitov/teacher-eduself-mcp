@@ -139,6 +139,9 @@ def logout_view(request: HttpRequest) -> HttpResponse:
     Terminates the current authenticated session.
     """
     logout(request)
+    if request.headers.get('accept') and 'text/html' in request.headers.get('accept'):
+        from django.shortcuts import redirect
+        return redirect('/login/')
     return JsonResponse({'status': 'ok', 'message': 'Muvaffaqiyatli chiqildi'})
 
 
@@ -182,3 +185,24 @@ def me_view(request: HttpRequest) -> HttpResponse:
             'teacher_profile': profile_data,
         }
     })
+
+
+def login_page_view(request: HttpRequest) -> HttpResponse:
+    """
+    Renders the EduSelf login template.
+    """
+    from django.shortcuts import render, redirect
+    if request.user.is_authenticated:
+        return redirect('/dashboard/')
+    return render(request, 'auth/login.html')
+
+
+def profile_page_view(request: HttpRequest) -> HttpResponse:
+    """
+    Renders the teacher profile template.
+    """
+    from django.shortcuts import render, redirect
+    if not request.user.is_authenticated:
+        return redirect('/login/')
+    return render(request, 'auth/profile.html', {'user': request.user})
+

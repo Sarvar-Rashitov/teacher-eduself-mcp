@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <path d="M6 38C10 32 16 26 24 22C32 18 39 12 42 6C42 16 38 28 30 36C24 42 15 44 6 38Z" fill="url(#humo_grad1)" />
+  <path d="M12 36C17 30 23 25 30 20C34 17 38 12 40 8C38 16 34 25 27 31C22 35 16 37 12 36Z" fill="#FFF2EB" fill-opacity="0.9" />
+  <path d="M18 34C22 29 27 24 33 19C32 23 29 28 24 32C21 34 19 34 18 34Z" fill="url(#humo_grad2)" />
+  <circle cx="39" cy="8" r="2.5" fill="#FFE082" />
+  <defs>
+    <linearGradient id="humo_grad1" x1="42" y1="6" x2="6" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" />
+      <stop offset="0.4" stop-color="#FFD154" />
+      <stop offset="1" stop-color="#FF7527" />
+    </linearGradient>
+    <linearGradient id="humo_grad2" x1="33" y1="19" x2="18" y2="34" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE082" />
+      <stop offset="1" stop-color="#E65D0F" />
+    </linearGradient>
+  </defs>
+</svg>

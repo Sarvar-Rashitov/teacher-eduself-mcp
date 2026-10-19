@@ -1,0 +1,311 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduSelf — Sinf Proyektori Ekranı (Jonli O‘yin)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/eduplay_3d.css' %}">
+</head>
+<body style="background: #15151A; overflow: hidden; margin: 0; padding: 0;">
+
+<div class="projector-stage">
+  
+  <!-- Top Stage Bar: Room PIN & Audio -->
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="brand-logo-badge" style="width: 48px; height: 48px;">
+        <img src="{% static 'img/icons/sparkles.svg' %}" alt="EduSelf" class="svg-icon" style="filter: brightness(0) invert(1);">
+      </div>
+      <div>
+        <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; color: #FFFFFF;">EduSelf Live</span>
+        <span style="display: block; font-size: 12px; color: #A1A1AA;">Sinf Proyektor Sahnasi</span>
+      </div>
+    </div>
+
+    <!-- Center PIN Banner -->
+    <div class="projector-pin-banner">
+      <span style="font-size: 16px; font-weight: 700; color: #D4D4D8; text-transform: uppercase; letter-spacing: 1px;">Xona PIN Kodi:</span>
+      <span class="pin-code-large" id="roomPinDisplay">{{ session.room_code|default:'489 201' }}</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <button class="audio-toggle-btn" id="soundToggleBtn" style="background: rgba(255,255,255,0.12); color: white; border-color: rgba(255,255,255,0.2);">
+        <img src="{% static 'img/icons/speaker_on.svg' %}" alt="Ovoz" class="svg-icon svg-icon-sm" style="filter: brightness(0) invert(1);">
+        <span class="audio-text">Tovush: Yoqilgan</span>
+      </button>
+
+      <button class="pill-btn btn-primary-orange btn-sm" onclick="toggleStageView()">
+        <img src="{% static 'img/icons/play.svg' %}" alt="Keyingi" class="svg-icon svg-icon-sm" style="filter: brightness(0) invert(1);">
+        <span id="stageActionBtnText">O‘yinni Boshlash</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- STAGE VIEW 1: LOBBY SCREEN -->
+  <div id="stageLobby" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px 0;">
+    <p style="font-size: 22px; color: #E4E4E7; font-weight: 600; margin-bottom: 24px;">
+      Telefoningizda <strong style="color: var(--primary-orange);">eduself.uz/play</strong> manziliga kiring va PIN kodni tering!
+    </p>
+
+    <!-- Connected Students Grid -->
+    <div style="background: rgba(255, 255, 255, 0.05); border: 1.5px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-xl); padding: 28px 36px; width: 100%; max-width: 900px; min-height: 240px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <span style="font-size: 15px; font-weight: 700; color: #A1A1AA;">Uланган O‘quvchilar:</span>
+        <span class="bento-dark-badge" style="background: var(--primary-orange);">
+          <img src="{% static 'img/icons/user.svg' %}" alt="Ishtirokchilar" class="svg-icon svg-icon-sm" style="filter: brightness(0) invert(1);">
+          <span id="playerCount">6 nafar</span>
+        </span>
+      </div>
+
+      <div id="studentsGrid" style="display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;">
+        <div class="rank-delta-pill" style="background: rgba(255,255,255,0.1); color: white; padding: 8px 16px; font-size: 15px; border-radius: var(--radius-pill); display: flex; align-items: center; gap: 8px;">
+          <img src="{% static 'img/icons/avatar_1.svg' %}" alt="Sardorbek" style="width: 26px; height: 26px; border-radius: 50%;">
+          <span>Sardorbek</span>
+        </div>
+        <div class="rank-delta-pill" style="background: rgba(255,255,255,0.1); color: white; padding: 8px 16px; font-size: 15px; border-radius: var(--radius-pill); display: flex; align-items: center; gap: 8px;">
+          <img src="{% static 'img/icons/avatar_2.svg' %}" alt="Madina" style="width: 26px; height: 26px; border-radius: 50%;">
+          <span>Madina K.</span>
+        </div>
+        <div class="rank-delta-pill" style="background: rgba(255,255,255,0.1); color: white; padding: 8px 16px; font-size: 15px; border-radius: var(--radius-pill); display: flex; align-items: center; gap: 8px;">
+          <img src="{% static 'img/icons/avatar_3.svg' %}" alt="Temur" style="width: 26px; height: 26px; border-radius: 50%;">
+          <span>Temur A.</span>
+        </div>
+        <div class="rank-delta-pill" style="background: rgba(255,255,255,0.1); color: white; padding: 8px 16px; font-size: 15px; border-radius: var(--radius-pill); display: flex; align-items: center; gap: 8px;">
+          <img src="{% static 'img/icons/avatar_4.svg' %}" alt="Jasurbek" style="width: 26px; height: 26px; border-radius: 50%;">
+          <span>Jasurbek</span>
+        </div>
+        <div class="rank-delta-pill" style="background: rgba(255,255,255,0.1); color: white; padding: 8px 16px; font-size: 15px; border-radius: var(--radius-pill); display: flex; align-items: center; gap: 8px;">
+          <img src="{% static 'img/icons/avatar_5.svg' %}" alt="Rayhona" style="width: 26px; height: 26px; border-radius: 50%;">
+          <span>Rayhona</span>
+        </div>
+        <div class="rank-delta-pill" style="background: rgba(255,255,255,0.1); color: white; padding: 8px 16px; font-size: 15px; border-radius: var(--radius-pill); display: flex; align-items: center; gap: 8px;">
+          <img src="{% static 'img/icons/avatar_6.svg' %}" alt="Azizbek" style="width: 26px; height: 26px; border-radius: 50%;">
+          <span>Azizbek</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE VIEW 2: ACTIVE QUESTION SCREEN -->
+  <div id="stageQuestion" style="flex: 1; display: none; flex-direction: column; justify-content: space-between; padding: 20px 0;">
+    
+    <!-- Question Header & SVG Countdown Timer -->
+    <div style="text-align: center; max-width: 1000px; margin: 0 auto;">
+      
+      <!-- SVG Radial Countdown -->
+      <div style="position: relative; width: 100px; height: 100px; margin: 0 auto 16px;">
+        <svg viewBox="0 0 100 100" style="transform: rotate(-90deg); width: 100%; height: 100%;">
+          <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.15)" stroke-width="8" fill="none" />
+          <circle id="radialTimerCircle" cx="50" cy="50" r="42" stroke="#FF7527" stroke-width="8" stroke-dasharray="264" stroke-dashoffset="0" stroke-linecap="round" fill="none" style="transition: stroke-dashoffset 1s linear, stroke 0.3s;" />
+        </svg>
+        <div id="radialTimerSec" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 32px; font-weight: 800; color: #FFFFFF;">
+          30
+        </div>
+      </div>
+
+      <h1 style="font-size: clamp(26px, 3.5vw, 42px); font-weight: 800; line-height: 1.25; color: #FFFFFF; margin-bottom: 8px;">
+        Moddaning zichligini hisoblash formulasi qaysi javobda to‘g‘ri keltirilgan?
+      </h1>
+      <span style="font-size: 15px; font-weight: 700; color: #A1A1AA;">1-Savol • 1000 Ball</span>
+    </div>
+
+    <!-- 4 Uzbek Mythological Answer Cards -->
+    <div class="mythic-options-grid" style="max-width: 1100px; margin: 0 auto; width: 100%; gap: 18px;">
+      
+      <div class="answer-card answer-btn-humo">
+        <div class="mythic-icon-box">
+          <img src="{% static 'img/icons/humo_wing.svg' %}" alt="Humo" style="width: 32px; height: 32px;">
+        </div>
+        <div class="answer-card-content">
+          <span class="mythic-label">Humo Qanoti</span>
+          <span class="answer-text" style="font-size: 20px;">ρ = m / V</span>
+        </div>
+      </div>
+
+      <div class="answer-card answer-btn-tulpor">
+        <div class="mythic-icon-box">
+          <img src="{% static 'img/icons/winged_tulpor.svg' %}" alt="Tulpor" style="width: 32px; height: 32px;">
+        </div>
+        <div class="answer-card-content">
+          <span class="mythic-label">Qanotli Tulpor</span>
+          <span class="answer-text" style="font-size: 20px;">ρ = m · V</span>
+        </div>
+      </div>
+
+      <div class="answer-card answer-btn-olma">
+        <div class="mythic-icon-box">
+          <img src="{% static 'img/icons/golden_apple.svg' %}" alt="Olma" style="width: 32px; height: 32px;">
+        </div>
+        <div class="answer-card-content">
+          <span class="mythic-label">Oltin Olma</span>
+          <span class="answer-text" style="font-size: 20px;">ρ = V / m</span>
+        </div>
+      </div>
+
+      <div class="answer-card answer-btn-chinor">
+        <div class="mythic-icon-box">
+          <img src="{% static 'img/icons/chinor_leaf.svg' %}" alt="Chinor" style="width: 32px; height: 32px;">
+        </div>
+        <div class="answer-card-content">
+          <span class="mythic-label">Boqiy Chinor</span>
+          <span class="answer-text" style="font-size: 20px;">ρ = m + V</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- STAGE VIEW 3: 3D LEADERBOARD PODIUM (Exact benchmark) -->
+  <div id="stagePodium" style="flex: 1; display: none; flex-direction: column; align-items: center; justify-content: center;">
+    
+    <div style="text-align: center; margin-bottom: 20px;">
+      <h2 style="font-size: 36px; font-weight: 800; color: #FFFFFF; margin-bottom: 4px;">
+        Shohsupa G‘oliblari
+      </h2>
+      <p style="font-size: 15px; color: #A1A1AA;">Yakuniy Ballar va Reyting</p>
+    </div>
+
+    <!-- 3D Podium Stands Container -->
+    <div class="podium-section" style="width: 100%; max-width: 540px; margin-bottom: 24px;">
+      
+      <!-- 2nd Place (Blue) -->
+      <div class="podium-column" style="width: 140px;">
+        <div class="avatar-wrapper">
+          <div class="avatar-circle" style="width: 74px; height: 74px; border-color: #38BDF8;">
+            <img src="{% static 'img/icons/avatar_2.svg' %}" alt="Madina" class="podium-avatar-img">
+          </div>
+        </div>
+        <div class="podium-user-name" style="color: #FFFFFF; font-size: 15px;">Madina K.</div>
+        <div class="podium-block podium-blue" style="height: 140px;">
+          <span class="podium-rank-num" style="font-size: 36px;">2</span>
+          <span class="podium-coins" style="font-size: 13px;">3,980 coins</span>
+        </div>
+      </div>
+
+      <!-- 1st Place (Tall Orange with Royal Crown) -->
+      <div class="podium-column" style="width: 160px;">
+        <div class="avatar-wrapper">
+          <img src="{% static 'img/icons/royal_crown.svg' %}" alt="Toj" class="crown-badge" style="width: 44px; height: 44px; top: -28px;">
+          <div class="avatar-circle rank1-avatar" style="width: 88px; height: 88px; border-color: #F472B6;">
+            <img src="{% static 'img/icons/avatar_1.svg' %}" alt="Sardorbek" class="podium-avatar-img">
+          </div>
+        </div>
+        <div class="podium-user-name" style="color: #FCD34D; font-size: 18px; font-weight: 800;">Sardorbek</div>
+        <div class="podium-block podium-orange" style="height: 190px;">
+          <span class="podium-rank-num" style="font-size: 44px;">1</span>
+          <span class="podium-coins" style="font-size: 14px;">4,250 coins</span>
+        </div>
+      </div>
+
+      <!-- 3rd Place (Yellow) -->
+      <div class="podium-column" style="width: 140px;">
+        <div class="avatar-wrapper">
+          <div class="avatar-circle" style="width: 74px; height: 74px; border-color: #FBBF24;">
+            <img src="{% static 'img/icons/avatar_3.svg' %}" alt="Temur" class="podium-avatar-img">
+          </div>
+        </div>
+        <div class="podium-user-name" style="color: #FFFFFF; font-size: 15px;">Temur A.</div>
+        <div class="podium-block podium-yellow" style="height: 110px;">
+          <span class="podium-rank-num" style="font-size: 36px;">3</span>
+          <span class="podium-coins" style="font-size: 13px;">3,720 coins</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Bottom Stage Status -->
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 14px;">
+    <div style="font-size: 13px; color: #71717A;">
+      EduSelf Real-Time Engine • 0 ta xato
+    </div>
+    <div style="font-size: 13px; color: #71717A;">
+      To‘liq ekran (F11) tavsiya etiladi
+    </div>
+  </div>
+
+</div>
+
+<!-- Core Scripts -->
+<script src="{% static 'js/audio.js' %}"></script>
+<script src="{% static 'js/components.js' %}"></script>
+<script src="{% static 'js/game_client.js' %}"></script>
+
+<script>
+  let currentStageIndex = 0; // 0: Lobby, 1: Question, 2: Podium
+  let timerInterval = null;
+  let remainingSec = 30;
+
+  function toggleStageView() {
+    currentStageIndex = (currentStageIndex + 1) % 3;
+    const lobby = document.getElementById('stageLobby');
+    const question = document.getElementById('stageQuestion');
+    const podium = document.getElementById('stagePodium');
+    const btnText = document.getElementById('stageActionBtnText');
+
+    if (currentStageIndex === 0) {
+      lobby.style.display = 'flex';
+      question.style.display = 'none';
+      podium.style.display = 'none';
+      btnText.textContent = 'O‘yinni Boshlash';
+      stopCountdown();
+    } else if (currentStageIndex === 1) {
+      lobby.style.display = 'none';
+      question.style.display = 'flex';
+      podium.style.display = 'none';
+      btnText.textContent = 'Shohsupani Ko‘rsatish';
+      startCountdown();
+    } else {
+      lobby.style.display = 'none';
+      question.style.display = 'none';
+      podium.style.display = 'flex';
+      btnText.textContent = 'Lobbyga Qaytish';
+      stopCountdown();
+      if (window.eduAudio) window.eduAudio.playVictory();
+    }
+  }
+
+  function startCountdown() {
+    stopCountdown();
+    remainingSec = 30;
+    const secEl = document.getElementById('radialTimerSec');
+    const circle = document.getElementById('radialTimerCircle');
+    const circumference = 2 * Math.PI * 42; // ~264
+
+    timerInterval = setInterval(() => {
+      remainingSec--;
+      if (secEl) secEl.textContent = remainingSec;
+      if (circle) {
+        const offset = circumference - (remainingSec / 30) * circumference;
+        circle.style.strokeDashoffset = offset;
+        if (remainingSec <= 5) {
+          circle.style.stroke = '#EF4444';
+          if (window.eduAudio) window.eduAudio.playTick();
+        } else {
+          circle.style.stroke = '#FF7527';
+        }
+      }
+
+      if (remainingSec <= 0) {
+        stopCountdown();
+        if (window.eduAudio) window.eduAudio.playCoin();
+      }
+    }, 1000);
+  }
+
+  function stopCountdown() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  }
+</script>
+
+</body>
+</html>

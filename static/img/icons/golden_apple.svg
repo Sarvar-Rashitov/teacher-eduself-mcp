@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Apple Body -->
+  <path d="M24 16C21 12 14 12 10 16C5 21 5 31 11 38C15 42 20 42 24 39C28 42 33 42 37 38C43 31 43 21 38 16C34 12 27 12 24 16Z" fill="url(#apple_gold)" />
+  <!-- Apple Stem & Leaf -->
+  <path d="M24 16C24 11 26 7 29 4" stroke="#78350F" stroke-width="2.5" stroke-linecap="round" />
+  <path d="M27 7C32 6 36 8 37 12C32 13 28 11 27 7Z" fill="#84CC16" />
+  <!-- Gloss reflection -->
+  <path d="M12 20C10 24 10 29 13 33" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-opacity="0.6" />
+  <circle cx="33" cy="22" r="1.5" fill="#FFFFFF" fill-opacity="0.8" />
+  <defs>
+    <linearGradient id="apple_gold" x1="10" y1="14" x2="38" y2="40" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF08A" />
+      <stop offset="0.4" stop-color="#FACC15" />
+      <stop offset="1" stop-color="#D97706" />
+    </linearGradient>
+  </defs>
+</svg>

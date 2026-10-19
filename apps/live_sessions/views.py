@@ -128,3 +128,28 @@ class SessionDetailView(views.APIView):
     def get(self, request, room_code):
         session = get_object_or_404(LiveSession, room_code=room_code)
         return Response(LiveSessionSerializer(session).data, status=status.HTTP_200_OK)
+
+
+def host_screen_view(request, room_code):
+    """
+    Renders the classroom projector host screen.
+    """
+    from django.shortcuts import render
+    session = LiveSession.objects.filter(room_code=room_code).first()
+    return render(request, 'live/host_screen.html', {
+        'session': session,
+        'room_code': room_code,
+        'user': request.user,
+    })
+
+
+def student_game_view(request, room_code=None):
+    """
+    Renders the student mobile game interface.
+    """
+    from django.shortcuts import render
+    return render(request, 'player/student_game.html', {
+        'room_code': room_code or '',
+        'user': request.user,
+    })
+

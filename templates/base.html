@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}EduSelf — AI & Gamified Learning Platform{% endblock %}</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- EduPlay 3D Design System Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/eduplay_3d.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- ================= App Navigation Bar ================= -->
+  {% block navbar %}
+  <header class="app-navbar">
+    <a href="/" class="brand-wrapper">
+      <div class="brand-logo-badge">
+        <img src="{% static 'img/icons/sparkles.svg' %}" alt="EduSelf" class="svg-icon" style="filter: brightness(0) invert(1);">
+      </div>
+      <div class="brand-title-wrap">
+        <span class="brand-name">EduSelf</span>
+        <span class="brand-subtitle">AI & Real-Time Classroom</span>
+      </div>
+    </a>
+
+    <div class="nav-actions">
+      <!-- Audio Toggle Button (Web Audio API) -->
+      <button class="audio-toggle-btn" id="soundToggleBtn" type="button" title="Tovushni yoqish / o'chirish">
+        <img src="{% static 'img/icons/speaker_on.svg' %}" alt="Ovoz" class="svg-icon svg-icon-sm">
+        <span class="audio-text">Tovush: Yoqilgan</span>
+      </button>
+
+      {% if user.is_authenticated %}
+        <a href="/profile/" class="audio-toggle-btn" style="text-decoration: none;">
+          <img src="{% static 'img/icons/user.svg' %}" alt="Profil" class="svg-icon svg-icon-sm">
+          <span>{{ user.first_name|default:user.username }}</span>
+        </a>
+      {% else %}
+        <a href="/login/" class="pill-btn btn-primary-orange btn-sm">
+          Kirish
+        </a>
+      {% endif %}
+    </div>
+  </header>
+  {% endblock navbar %}
+
+  <!-- ================= Main Content Block ================= -->
+  <main class="main-content-wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ================= Global Toast Container ================= -->
+  <div id="globalToastContainer"></div>
+
+  <!-- Core Scripts -->
+  <script src="{% static 'js/audio.js' %}"></script>
+  <script src="{% static 'js/components.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

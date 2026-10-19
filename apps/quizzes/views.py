@@ -169,3 +169,54 @@ class QuizStudentPreviewView(APIView):
 
         preview_data = QuizService.get_student_sanitized_quiz(quiz)
         return Response(preview_data)
+
+
+def teacher_dashboard_view(request):
+    """
+    Renders the teacher dashboard with Bento Grid quizzes and quick actions.
+    """
+    from django.shortcuts import render
+    quizzes = []
+    if request.user.is_authenticated:
+        quizzes = Quiz.objects.filter(owner=request.user).prefetch_related('questions').order_by('-created_at')
+    else:
+        # For public demo view, show recent published quizzes or empty
+        quizzes = Quiz.objects.filter(status='published').prefetch_related('questions').order_by('-created_at')[:6]
+
+    return render(request, 'dashboard/teacher_home.html', {
+        'quizzes': quizzes,
+        'quizzes_count': len(quizzes),
+        'user': request.user,
+    })
+
+
+def quiz_editor_view(request, quiz_id=None):
+    """
+    Renders the universal 3-column quiz editor.
+    """
+    from django.shortcuts import render
+    quiz = None
+    if quiz_id:
+        try:
+            if request.user.is_authenticated:
+                quiz = Quiz.objects.filter(pk=quiz_id, owner=request.user).first()
+            if not quiz:
+                quiz = Quiz.objects.filter(pk=quiz_id).first()
+        except Exception:
+            quiz = None
+
+    return render(request, 'editor/quiz_editor.html', {
+        'quiz': quiz,
+        'user': request.user,
+    })
+
+
+def design_system_showcase_view(request):
+    """
+    Renders the interactive EduPlay 3D component and soundboard showcase.
+    """
+    from django.shortcuts import render
+    return render(request, 'showcase/component_library.html', {
+        'user': request.user,
+    })
+

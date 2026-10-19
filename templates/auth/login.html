@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}EduSelf — Tizimga Kirish{% endblock %}
+
+{% block content %}
+<div style="min-height: calc(100vh - 80px); display: flex; align-items: center; justify-content: center; padding: 24px;">
+  <div style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-card); width: 100%; max-width: 440px; padding: 36px 32px; text-align: center;">
+    
+    <!-- Brand Icon -->
+    <div style="width: 64px; height: 64px; background: var(--primary-orange-soft); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px;">
+      <img src="{% static 'img/icons/sparkles.svg' %}" alt="EduSelf" class="svg-icon svg-icon-lg">
+    </div>
+
+    <h1 style="font-size: 26px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">
+      Xush kelibsiz!
+    </h1>
+    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 28px;">
+      EduSelf — AI va Real-Vaqtli Gamifikatsiya Tizimi
+    </p>
+
+    <!-- Social Logins -->
+    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+      <a href="/auth/google/" class="pill-btn" style="background: #FFFFFF; border: 1.5px solid var(--border-subtle); color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+        <img src="{% static 'img/icons/google_logo.svg' %}" alt="Google" class="svg-icon">
+        <span>Google orqali kirish</span>
+      </a>
+
+      <a href="/auth/telegram/" class="pill-btn" style="background: #0088CC; color: #FFFFFF; box-shadow: 0 4px 14px rgba(0, 136, 204, 0.35);">
+        <img src="{% static 'img/icons/telegram_logo.svg' %}" alt="Telegram" class="svg-icon" style="filter: brightness(0) invert(1);">
+        <span>Telegram orqali kirish</span>
+      </a>
+    </div>
+
+    <!-- Divider -->
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+      <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+      <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Yoki Parol Bilan</span>
+      <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+    </div>
+
+    <!-- Standard Login Form -->
+    <form method="post" action="/auth/login/" style="display: flex; flex-direction: column; gap: 16px; text-align: left;">
+      {% csrf_token %}
+      <div>
+        <label for="username" style="display: block; font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+          Login yoki Email
+        </label>
+        <input type="text" id="username" name="username" required placeholder="ustoz@maktab.uz" style="width: 100%; height: 48px; border-radius: var(--radius-md); border: 1.5px solid var(--border-subtle); padding: 0 16px; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'" onblur="this.style.borderColor='var(--border-subtle)'">
+      </div>
+
+      <div>
+        <label for="password" style="display: block; font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
+          Parol
+        </label>
+        <input type="password" id="password" name="password" required placeholder="••••••••" style="width: 100%; height: 48px; border-radius: var(--radius-md); border: 1.5px solid var(--border-subtle); padding: 0 16px; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'" onblur="this.style.borderColor='var(--border-subtle)'">
+      </div>
+
+      <button type="submit" class="pill-btn btn-primary-orange" style="margin-top: 8px;">
+        Kirish →
+      </button>
+    </form>
+
+    <div style="margin-top: 24px; font-size: 13px; color: var(--text-muted);">
+      O‘quvchimisiz? <a href="/play/" style="color: var(--primary-orange); font-weight: 700; text-decoration: none;">O‘yinga PIN orqali qo‘shiling</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

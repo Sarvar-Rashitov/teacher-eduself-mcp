@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <!-- Boy avatar (2nd Rank, with sky blue aura) -->
+  <circle cx="40" cy="40" r="38" fill="#E0F2FE" stroke="#38BDF8" stroke-width="3" />
+  <!-- Hair back -->
+  <circle cx="40" cy="40" r="26" fill="#78350F" />
+  <!-- Face -->
+  <circle cx="40" cy="44" r="20" fill="#FED7AA" />
+  <!-- Cheeks -->
+  <ellipse cx="29" cy="49" rx="3.5" ry="2" fill="#FCA5A5" opacity="0.5" />
+  <ellipse cx="51" cy="49" rx="3.5" ry="2" fill="#FCA5A5" opacity="0.5" />
+  <!-- Eyes -->
+  <circle cx="32" cy="43" r="2.5" fill="#1E293B" />
+  <circle cx="48" cy="43" r="2.5" fill="#1E293B" />
+  <!-- Smile -->
+  <path d="M35 50C37 53 43 53 45 50" stroke="#78350F" stroke-width="2.5" stroke-linecap="round" fill="none" />
+  <!-- Hair front parted -->
+  <path d="M22 34C28 26 42 24 56 32C52 28 42 27 34 29C28 30 24 32 22 34Z" fill="#5A290B" />
+  <!-- Shirt -->
+  <path d="M26 64C28 58 36 56 40 56C44 56 52 58 54 64H26Z" fill="#3B82F6" />
+  <path d="M38 56L40 60L42 56H38Z" fill="#FFFFFF" />
+</svg>

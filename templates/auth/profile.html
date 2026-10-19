@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}EduSelf — O‘qituvchi Profili{% endblock %}
+
+{% block content %}
+<div class="dashboard-container" style="max-width: 900px;">
+  
+  <!-- Profile Top Header Card -->
+  <div class="welcome-banner" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <div style="width: 80px; height: 80px; border-radius: 50%; background: #FFFFFF; border: 4px solid var(--primary-orange); display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 6px 18px rgba(255, 117, 39, 0.3);">
+        <img src="{% static 'img/icons/user.svg' %}" alt="Avatar" class="svg-icon svg-icon-lg" style="color: var(--primary-orange);">
+      </div>
+      <div>
+        <h1 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">
+          {{ user.first_name|default:user.username }} {{ user.last_name }}
+        </h1>
+        <p style="font-size: 13px; color: var(--text-muted); font-weight: 600;">
+          {{ user.email }} • <span class="status-pill status-published" style="display: inline-block;">{{ user.role|upper }}</span>
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <a href="/auth/logout/" class="pill-btn btn-outline-white btn-sm" style="margin-top: 0;">
+        Chiqish
+      </a>
+    </div>
+  </div>
+
+  <!-- Profile Bento Cards Grid -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+    
+    <!-- Card 1: Tashkilot va Obuna -->
+    <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
+      <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; margin-bottom: 12px;">
+        <span style="font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--primary-orange); letter-spacing: 0.5px;">
+          Tashkilot & Obuna
+        </span>
+        <span class="status-pill status-published">Faol</span>
+      </div>
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">
+        {{ user.organization.name|default:'Shaxsiy Ta’lim Hisobi' }}
+      </h3>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+        Obuna darajasi: <strong>{{ user.organization.subscription_plan|default:'EduSelf Pro'|title }}</strong>
+      </p>
+      <div style="width: 100%; background: var(--bg-surface-subtle); border-radius: var(--radius-md); padding: 12px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+          <span>AI Token Oylik Byudjeti</span>
+          <span>{{ user.organization.ai_monthly_token_budget|default:1000000 }} / 1,000,000</span>
+        </div>
+        <div style="width: 100%; height: 8px; background: #E5E7EB; border-radius: 4px; overflow: hidden;">
+          <div style="width: 35%; height: 100%; background: var(--primary-orange); border-radius: 4px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Ixtisoslik va Sinf -->
+    <div class="stat-card" style="flex-direction: column; align-items: flex-start;">
+      <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; margin-bottom: 12px;">
+        <span style="font-size: 13px; font-weight: 800; text-transform: uppercase; color: var(--bento-blue); letter-spacing: 0.5px;">
+          Pedagogik Ma’lumotlar
+        </span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+          <span style="font-size: 13px; color: var(--text-muted);">Asosiy Fan:</span>
+          <span style="font-size: 13px; font-weight: 700;">{{ user.teacher_profile.subject_specialization|default:'Umumiy Fanlar' }}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+          <span style="font-size: 13px; color: var(--text-muted);">Standart Sinf:</span>
+          <span style="font-size: 13px; font-weight: 700;">{{ user.teacher_profile.default_grade|default:'7-sinf' }}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="font-size: 13px; color: var(--text-muted);">Telegram Bog‘lanishi:</span>
+          <span style="font-size: 13px; font-weight: 700; color: #10B981;">
+            {% if user.telegram_id %}Ulangan (ID: {{ user.telegram_id }}){% else %}Ulanmagan{% endif %}
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="display: flex; gap: 12px;">
+    <a href="/dashboard/" class="pill-btn btn-primary-orange" style="max-width: 240px;">
+      ← Dashboardga Qaytish
+    </a>
+  </div>
+
+</div>
+{% endblock %}

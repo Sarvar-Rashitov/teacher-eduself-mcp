@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}EduSelf — Universal Viktorina Muharriri{% endblock %}
+
+{% block content %}
+<!-- Top Action Bar -->
+<div style="background: #FFFFFF; border-bottom: 2px solid var(--border-subtle); padding: 12px 28px; display: flex; justify-content: space-between; align-items: center;">
+  <div style="display: flex; align-items: center; gap: 16px;">
+    <a href="/dashboard/" class="audio-toggle-btn" style="text-decoration: none; padding: 6px 12px;">
+      <img src="{% static 'img/icons/arrow_left.svg' %}" alt="Orqaga" class="svg-icon svg-icon-sm">
+      <span>Dashboard</span>
+    </a>
+    <input type="text" id="quizTitleInput" value="{{ quiz.title|default:'Yangi Viktorina: 7-sinf Fizika Zichlik' }}" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 800; border: 1.5px solid transparent; border-radius: var(--radius-md); padding: 4px 10px; color: var(--text-main); outline: none;" onfocus="this.style.borderColor='var(--primary-orange)'" onblur="this.style.borderColor='transparent'">
+  </div>
+
+  <div style="display: flex; gap: 10px; align-items: center;">
+    <button class="pill-btn btn-outline-white btn-sm" onclick="saveQuiz()" style="margin-top: 0;">
+      <img src="{% static 'img/icons/check.svg' %}" alt="Saqlash" class="svg-icon svg-icon-sm">
+      <span>Saqlash</span>
+    </button>
+    <button class="pill-btn btn-primary-orange btn-sm" onclick="startSessionNow()">
+      <img src="{% static 'img/icons/play.svg' %}" alt="Boshlash" class="svg-icon svg-icon-sm" style="filter: brightness(0) invert(1);">
+      <span>Sinfga Boshlash</span>
+    </button>
+  </div>
+</div>
+
+<!-- 3-Column Layout -->
+<div class="editor-layout">
+  
+  <!-- LEFT COLUMN: Questions List -->
+  <aside class="editor-col" style="overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 style="font-size: 15px; font-weight: 800;">Savollar Ro‘yxati</h3>
+      <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);" id="questionCountBadge">4 ta</span>
+    </div>
+
+    <div id="questionsContainer" style="display: flex; flex-direction: column; gap: 8px;">
+      <div class="question-list-item active" onclick="selectQuestion(1)">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 800; font-size: 13px; color: var(--primary-orange);">1.</span>
+          <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">Zichlik formulasi...</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <img src="{% static 'img/icons/lock.svg' %}" alt="Qulf" class="svg-icon svg-icon-sm" title="Savol qulflangan">
+        </div>
+      </div>
+
+      <div class="question-list-item" onclick="selectQuestion(2)">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 800; font-size: 13px; color: var(--text-muted);">2.</span>
+          <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">Massa birligi...</span>
+        </div>
+        <img src="{% static 'img/icons/unlock.svg' %}" alt="Ochiq" class="svg-icon svg-icon-sm" style="opacity: 0.4;">
+      </div>
+
+      <div class="question-list-item" onclick="selectQuestion(3)">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 800; font-size: 13px; color: var(--text-muted);">3.</span>
+          <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">Hajmni o‘lchash...</span>
+        </div>
+        <img src="{% static 'img/icons/unlock.svg' %}" alt="Ochiq" class="svg-icon svg-icon-sm" style="opacity: 0.4;">
+      </div>
+
+      <div class="question-list-item" onclick="selectQuestion(4)">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 800; font-size: 13px; color: var(--text-muted);">4.</span>
+          <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">Arendometr asbobi...</span>
+        </div>
+        <img src="{% static 'img/icons/unlock.svg' %}" alt="Ochiq" class="svg-icon svg-icon-sm" style="opacity: 0.4;">
+      </div>
+    </div>
+
+    <button class="pill-btn btn-outline-white btn-sm" onclick="addNewQuestion()" style="margin-top: 18px; width: 100%;">
+      <img src="{% static 'img/icons/plus.svg' %}" alt="Qo'shish" class="svg-icon svg-icon-sm">
+      <span>Savol Qo‘shish</span>
+    </button>
+  </aside>
+
+  <!-- CENTER COLUMN: WYSIWYG Question Editor -->
+  <main class="editor-col" style="flex: 1; overflow-y: auto;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="background: var(--primary-orange); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">1</span>
+        <h2 style="font-size: 18px; font-weight: 800;">Savol Matni va Variantlar</h2>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <select style="height: 36px; border-radius: var(--radius-pill); border: 1.5px solid var(--border-subtle); padding: 0 12px; font-size: 13px; font-weight: 700; outline: none;">
+          <option>Single Choice (Bitta to‘g‘ri javob)</option>
+          <option>Multiple Choice</option>
+          <option>True / False</option>
+        </select>
+        <button class="audio-toggle-btn" title="Savolni qulflash" style="padding: 6px 12px;">
+          <img src="{% static 'img/icons/lock.svg' %}" alt="Qulf" class="svg-icon svg-icon-sm">
+          <span>Qulflangan</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Question Textarea -->
+    <div style="margin-bottom: 20px;">
+      <textarea id="questionPrompt" rows="3" placeholder="Savol matnini kiriting..." style="width: 100%; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 16px; font-family: inherit; font-size: 16px; font-weight: 600; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'" onblur="this.style.borderColor='var(--border-subtle)'">Moddaning zichligini hisoblash formulasi qaysi javobda to‘g‘ri keltirilgan?</textarea>
+    </div>
+
+    <!-- 4 Uzbek Mythological Dual-Coded Options Grid -->
+    <div style="margin-bottom: 24px;">
+      <label style="display: block; font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px;">
+        Javob Variantlari (O‘zbek Mifologik Dual-Coding)
+      </label>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        
+        <!-- Red Option: Humo Qanoti -->
+        <div style="display: flex; align-items: center; gap: 12px; background: #FEF2F2; border: 1.5px solid #FECACA; border-radius: var(--radius-md); padding: 8px 14px;">
+          <div style="width: 38px; height: 38px; background: #EF4444; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <img src="{% static 'img/icons/humo_wing.svg' %}" alt="Humo" style="width: 24px; height: 24px;">
+          </div>
+          <span style="font-weight: 800; font-size: 13px; color: #DC2626; width: 90px;">Humo Qanoti</span>
+          <input type="text" value="ρ = m / V" style="flex: 1; height: 40px; border-radius: 8px; border: 1px solid #FECACA; padding: 0 12px; font-size: 15px; font-weight: 700; outline: none;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #10B981; cursor: pointer;">
+            <input type="radio" name="correct_answer" checked style="accent-color: #10B981; width: 18px; height: 18px;">
+            <span>To‘g‘ri</span>
+          </label>
+        </div>
+
+        <!-- Blue Option: Qanotli Tulpor -->
+        <div style="display: flex; align-items: center; gap: 12px; background: #EFF6FF; border: 1.5px solid #BFDBFE; border-radius: var(--radius-md); padding: 8px 14px;">
+          <div style="width: 38px; height: 38px; background: #3B82F6; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <img src="{% static 'img/icons/winged_tulpor.svg' %}" alt="Tulpor" style="width: 24px; height: 24px;">
+          </div>
+          <span style="font-weight: 800; font-size: 13px; color: #2563EB; width: 90px;">Tulpor</span>
+          <input type="text" value="ρ = m · V" style="flex: 1; height: 40px; border-radius: 8px; border: 1px solid #BFDBFE; padding: 0 12px; font-size: 15px; font-weight: 700; outline: none;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer;">
+            <input type="radio" name="correct_answer" style="accent-color: #10B981; width: 18px; height: 18px;">
+            <span>To‘g‘ri</span>
+          </label>
+        </div>
+
+        <!-- Yellow Option: Oltin Olma -->
+        <div style="display: flex; align-items: center; gap: 12px; background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: var(--radius-md); padding: 8px 14px;">
+          <div style="width: 38px; height: 38px; background: #F59E0B; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <img src="{% static 'img/icons/golden_apple.svg' %}" alt="Olma" style="width: 24px; height: 24px;">
+          </div>
+          <span style="font-weight: 800; font-size: 13px; color: #D97706; width: 90px;">Oltin Olma</span>
+          <input type="text" value="ρ = V / m" style="flex: 1; height: 40px; border-radius: 8px; border: 1px solid #FDE68A; padding: 0 12px; font-size: 15px; font-weight: 700; outline: none;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer;">
+            <input type="radio" name="correct_answer" style="accent-color: #10B981; width: 18px; height: 18px;">
+            <span>To‘g‘ri</span>
+          </label>
+        </div>
+
+        <!-- Green Option: Boqiy Chinor -->
+        <div style="display: flex; align-items: center; gap: 12px; background: #ECFDF5; border: 1.5px solid #A7F3D0; border-radius: var(--radius-md); padding: 8px 14px;">
+          <div style="width: 38px; height: 38px; background: #10B981; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <img src="{% static 'img/icons/chinor_leaf.svg' %}" alt="Chinor" style="width: 24px; height: 24px;">
+          </div>
+          <span style="font-weight: 800; font-size: 13px; color: #059669; width: 90px;">Boqiy Chinor</span>
+          <input type="text" value="ρ = m + V" style="flex: 1; height: 40px; border-radius: 8px; border: 1px solid #A7F3D0; padding: 0 12px; font-size: 15px; font-weight: 700; outline: none;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer;">
+            <input type="radio" name="correct_answer" style="accent-color: #10B981; width: 18px; height: 18px;">
+            <span>To‘g‘ri</span>
+          </label>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Parameter Sliders -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div style="background: var(--bg-surface-subtle); padding: 14px 18px; border-radius: var(--radius-md);">
+        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 8px;">
+          <span>Vaqt Limiti:</span>
+          <span id="timerValDisplay" style="color: var(--primary-orange);">30 soniya</span>
+        </div>
+        <input type="range" min="10" max="90" step="5" value="30" style="width: 100%; accent-color: var(--primary-orange);" oninput="document.getElementById('timerValDisplay').textContent = this.value + ' soniya'">
+      </div>
+
+      <div style="background: var(--bg-surface-subtle); padding: 14px 18px; border-radius: var(--radius-md);">
+        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 8px;">
+          <span>Ball / Tangalar:</span>
+          <span id="pointsValDisplay" style="color: var(--primary-orange);">1000 ball</span>
+        </div>
+        <input type="range" min="500" max="3000" step="250" value="1000" style="width: 100%; accent-color: var(--primary-orange);" oninput="document.getElementById('pointsValDisplay').textContent = this.value + ' ball'">
+      </div>
+    </div>
+
+  </main>
+
+  <!-- RIGHT COLUMN: AI Assistant & Suggestions -->
+  <aside class="editor-col" style="overflow-y: auto;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+      <div style="width: 32px; height: 32px; background: var(--primary-orange-soft); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+        <img src="{% static 'img/icons/sparkles.svg' %}" alt="AI" class="svg-icon svg-icon-sm">
+      </div>
+      <h3 style="font-size: 15px; font-weight: 800;">AI Maslahatchi</h3>
+    </div>
+
+    <div style="background: #FDF4E6; border: 1.5px solid #FDE68A; border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px; font-size: 13px; line-height: 1.45;">
+      <strong>Pedagogik taklif:</strong> Ushbu 1-savol formulaga asoslangan. 3-savolga esa hayotiy amaliy misol (masalan: <em>"Nima uchun yog‘och suvda suzadi?"</em>) qo‘shilsa, o‘quvchilar tushunishi 25% ga oshadi.
+    </div>
+
+    <button class="pill-btn btn-primary-orange btn-sm" onclick="applyAiSuggestion()" style="width: 100%; margin-bottom: 20px;">
+      Taklifni Qabul Qilish (Diff)
+    </button>
+
+    <div style="border-top: 1px solid var(--border-subtle); padding-top: 16px;">
+      <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 8px;">
+        Mavzu Bo‘yicha Yangi Savol Generatsiya Qilish:
+      </label>
+      <input type="text" placeholder="Zichlik bo‘yicha hisobiy masala..." style="width: 100%; height: 40px; border-radius: var(--radius-md); border: 1.5px solid var(--border-subtle); padding: 0 12px; font-size: 13px; margin-bottom: 10px; outline: none;">
+      <button class="pill-btn btn-outline-white btn-sm" style="width: 100%;" onclick="window.showToast('Yangi savol generatsiya qilindi! ✨', 'success')">
+        Generatsiya Qilish
+      </button>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+  function selectQuestion(idx) {
+    if (window.eduAudio) window.eduAudio.playTick();
+    document.querySelectorAll('.question-list-item').forEach(el => el.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+  }
+
+  function addNewQuestion() {
+    if (window.eduAudio) window.eduAudio.playCoin();
+    window.showToast('Yangi savol qo‘shildi!', 'success');
+  }
+
+  function saveQuiz() {
+    if (window.eduAudio) window.eduAudio.playCoin();
+    window.showToast('Viktorina muvaffaqiyatli saqlandi! 💾', 'success');
+  }
+
+  function startSessionNow() {
+    if (window.eduAudio) window.eduAudio.playCoin();
+    window.location.href = '/live/489201/';
+  }
+
+  function applyAiSuggestion() {
+    if (window.eduAudio) window.eduAudio.playCorrect();
+    window.showToast('AI taklifi savolga tatbiq etildi! 🚀', 'success');
+  }
+</script>
+{% endblock %}

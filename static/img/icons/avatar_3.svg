@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <!-- Girl avatar (3rd Rank, with yellow/gold aura) -->
+  <circle cx="40" cy="40" r="38" fill="#FEF3C7" stroke="#FBBF24" stroke-width="3" />
+  <!-- Hair blonde/auburn with bob style -->
+  <circle cx="40" cy="42" r="27" fill="#D97706" />
+  <circle cx="22" cy="48" r="8" fill="#D97706" />
+  <circle cx="58" cy="48" r="8" fill="#D97706" />
+  <!-- Face -->
+  <circle cx="40" cy="44" r="20" fill="#FDE0D2" />
+  <!-- Cheeks -->
+  <ellipse cx="30" cy="49" rx="3.5" ry="2" fill="#FCA5A5" opacity="0.6" />
+  <ellipse cx="50" cy="49" rx="3.5" ry="2" fill="#FCA5A5" opacity="0.6" />
+  <!-- Smiling curved eyes -->
+  <path d="M28 43C29 41 33 41 34 43" stroke="#4A2810" stroke-width="2.5" stroke-linecap="round" fill="none" />
+  <path d="M46 43C47 41 51 41 52 43" stroke="#4A2810" stroke-width="2.5" stroke-linecap="round" fill="none" />
+  <!-- Smile -->
+  <path d="M34 50C36 54 44 54 46 50" fill="#E11D48" />
+  <!-- Shirt pink -->
+  <path d="M26 64C28 58 36 56 40 56C44 56 52 58 54 64H26Z" fill="#EC4899" />
+</svg>

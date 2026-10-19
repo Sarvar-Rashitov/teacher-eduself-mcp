@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}EduSelf — O‘quvchi O‘yini{% endblock %}
+
+{% block navbar %}
+<!-- Hide standard navbar on student mobile game screen for full 100dvh focus -->
+{% endblock %}
+
+{% block content %}
+<div class="student-game-container">
+  
+  <!-- ================= SCREEN 0: BENTO WELCOME (student_home.jpg Benchmark) ================= -->
+  <div id="studentWelcomeScreen" style="{% if room_code %}display: none;{% else %}display: flex;{% endif %} flex-direction: column; justify-content: space-between; flex: 1; padding-top: 10px;">
+    
+    <!-- Bento Grid -->
+    <div class="bento-grid">
+      <!-- Sky Blue Card -->
+      <div class="bento-card bento-blue">
+        <div class="bento-title-stacked">
+          <span>PLAY</span>
+          <span>EARN</span>
+          <span>WIN</span>
+        </div>
+        <img src="{% static 'img/characters/student_home.jpg' %}" alt="Student" class="bento-character-img">
+      </div>
+
+      <!-- Purple Card -->
+      <div class="bento-card bento-purple">
+        <h4 style="font-size: 15px; font-weight: 800; line-height: 1.25; color: #FFFFFF;">
+          Challenge Friends in Real Time
+        </h4>
+        <div style="display: flex; align-items: center; gap: 6px; margin-top: auto;">
+          <img src="{% static 'img/icons/avatar_1.svg' %}" alt="User 1" style="width: 26px; height: 26px; border-radius: 50%;">
+          <img src="{% static 'img/icons/avatar_2.svg' %}" alt="User 2" style="width: 26px; height: 26px; border-radius: 50%;">
+          <span style="font-size: 10px; background: rgba(255,255,255,0.25); padding: 2px 6px; border-radius: 8px; color: white; font-weight: 700;">Jonli</span>
+        </div>
+      </div>
+
+      <!-- Cream Trophy Laurel Card -->
+      <div class="bento-card bento-cream">
+        <div style="display: flex; justify-content: center; margin-bottom: 4px;">
+          <img src="{% static 'img/icons/laurel_wreath.svg' %}" alt="Laurel Wreath" style="width: 48px; height: 48px;">
+        </div>
+        <div style="margin-top: auto; text-align: center;">
+          <h4 style="font-size: 13px; font-weight: 800; color: #1E1E24;">Oltin Kubok</h4>
+          <p style="font-size: 11px; color: #78350F; font-weight: 600;">Bilim chempioni</p>
+        </div>
+      </div>
+
+      <!-- Fun games! Black Pill -->
+      <div class="bento-card-fun-pill">
+        <span class="fun-pill-badge">Fun games!</span>
+      </div>
+    </div>
+
+    <!-- Hero Action Text Block -->
+    <div class="hero-text-block">
+      <h2>Play to Gain Knowledge and Skills</h2>
+      <p>Har bir to‘g‘ri javob uchun oltin tangalar to‘plang va shohsupaga ko‘tariling!</p>
+
+      <button class="pill-btn btn-primary-orange" onclick="showJoinScreen()">
+        Get Started →
+      </button>
+
+      <a href="/login/" class="pill-btn btn-outline-white" style="margin-top: 10px;">
+        Create an Account
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ================= SCREEN 1: PIN & JOIN SCREEN ================= -->
+  <div id="studentJoinScreen" style="{% if room_code %}display: flex;{% else %}display: none;{% endif %} flex: 1; flex-direction: column; justify-content: center; text-align: center;">
+    
+    <div style="margin-bottom: 24px;">
+      <div style="width: 72px; height: 72px; background: var(--primary-orange); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 8px 24px rgba(255, 117, 39, 0.35);">
+        <img src="{% static 'img/icons/sparkles.svg' %}" alt="EduSelf" class="svg-icon svg-icon-lg" style="filter: brightness(0) invert(1);">
+      </div>
+      <h1 style="font-size: 28px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">EduSelf</h1>
+      <p style="font-size: 14px; color: var(--text-muted);">Sinf o‘yiniga qo‘shilish</p>
+    </div>
+
+    <!-- Join Card -->
+    <div style="background: #FFFFFF; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 28px 22px; box-shadow: var(--shadow-card); margin-bottom: 20px;">
+      
+      <div style="margin-bottom: 16px; text-align: left;">
+        <label for="roomPinInput" style="display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.5px;">
+          Xona PIN Kodi
+        </label>
+        <input type="text" id="roomPinInput" value="{{ room_code|default:'' }}" placeholder="Masalan: 489201" maxlength="6" style="width: 100%; height: 52px; border-radius: var(--radius-md); border: 2px solid var(--border-subtle); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 22px; font-weight: 800; text-align: center; letter-spacing: 4px; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'" onblur="this.style.borderColor='var(--border-subtle)'">
+      </div>
+
+      <div style="margin-bottom: 22px; text-align: left;">
+        <label for="nicknameInput" style="display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.5px;">
+          Ismingiz (Taxallus)
+        </label>
+        <input type="text" id="nicknameInput" placeholder="Masalan: Sardorbek" maxlength="20" style="width: 100%; height: 50px; border-radius: var(--radius-md); border: 2px solid var(--border-subtle); font-size: 16px; font-weight: 700; padding: 0 16px; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'" onblur="this.style.borderColor='var(--border-subtle)'">
+      </div>
+
+      <button class="pill-btn btn-primary-orange" onclick="joinGameSession()">
+        O‘yinga Qo‘shilish →
+      </button>
+
+      <button class="pill-btn btn-outline-white" style="margin-top: 10px;" onclick="showWelcomeScreen()">
+        ← Orqaga
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- ================= SCREEN 2: ACTIVE QUESTION SCREEN ================= -->
+  <div id="studentPlayScreen" style="flex: 1; display: none; flex-direction: column; justify-content: space-between;">
+    
+    <!-- Top Game Status Header -->
+    <div style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 12px 18px; box-shadow: var(--shadow-card); display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+      
+      <!-- Question index -->
+      <div>
+        <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Savol</span>
+        <div style="font-size: 18px; font-weight: 800; color: var(--text-main);" id="studentQNum">1 / 10</div>
+      </div>
+
+      <!-- Streak Badge -->
+      <div class="bento-dark-badge" style="padding: 6px 12px; font-size: 12px;">
+        <img src="{% static 'img/icons/fire_streak.svg' %}" alt="Streak" class="svg-icon svg-icon-sm">
+        <span>Streak x3</span>
+      </div>
+
+      <!-- Coins Badge -->
+      <div class="coin-reward-pill" style="margin-bottom: 0; padding: 6px 14px; font-size: 15px;">
+        <img src="{% static 'img/icons/gold_coin.svg' %}" alt="Tanga" class="svg-icon svg-icon-sm">
+        <span class="global-coin-count">1,420</span>
+      </div>
+
+    </div>
+
+    <!-- Timer Line Track -->
+    <div style="width: 100%; height: 8px; background: #E5E7EB; border-radius: 4px; overflow: hidden; margin-bottom: 14px;">
+      <div id="studentTimerBar" style="width: 100%; height: 100%; background: var(--primary-orange); transition: width 1s linear, background-color 0.3s;"></div>
+    </div>
+
+    <!-- Question Prompt Container -->
+    <div style="background: #FFFFFF; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 20px; box-shadow: var(--shadow-card); text-align: center; margin-bottom: auto;">
+      <span style="display: inline-block; background: var(--primary-orange-soft); color: var(--primary-orange); font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: 8px;">
+        Fizika • 1000 Ball
+      </span>
+      <h2 style="font-size: 18px; font-weight: 800; line-height: 1.35; color: var(--text-main);" id="studentPromptText">
+        Moddaning zichligini hisoblash formulasi qaysi javobda to‘g‘ri keltirilgan?
+      </h2>
+    </div>
+
+    <!-- NATURAL THUMB-ZONE: 4 Uzbek Mythological Answer Buttons -->
+    <div class="mythic-options-grid" style="margin-top: 14px; gap: 12px;">
+      
+      <!-- Option 1: Humo Qanoti (Red) -->
+      <button class="answer-card answer-btn-humo" onclick="selectAnswerOption(0, true)">
+        <div class="mythic-icon-box">
+          <img src="{% static 'img/icons/humo_wing.svg' %}" alt="Humo" style="width: 28px; height: 28px;">
+        </div>
+        <div class="answer-card-content">
+          <span class="mythic-label">Humo Qanoti</span>
+          <span class="answer-text">ρ = m / V</span>
+        </div>
+      </button>
+
+      <!-- Option 2: Qanotli Tulpor (Blue) -->
+      <button class="answer-card answer-btn-tulpor" onclick="selectAnswerOption(1, false)">
+        <div class="mythic-icon-box">
+          <img src="{% static 'img/icons/winged_tulpor.svg' %}" alt="Tulpor" style="width: 28px; height: 28px;">
+        </div>
+        <div class="answer-card-content">
+          <span class="mythic-label">Qanotli Tulpor</span>
+          <span class="answer-text">ρ = m · V</span>
+        </div>
+      </button>
+
+      <!-- Option 3: Oltin Olma (Yellow) -->
+      <button class="answer-card answer-btn-olma" onclick="selectAnswerOption(2, false)">
+        <div class="mythic-icon-box">
+          <img src="{% static 'img/icons/golden_apple.svg' %}" alt="Olma" style="width: 28px; height: 28px;">
+        </div>
+        <div class="answer-card-content">
+          <span class="mythic-label">Oltin Olma</span>
+          <span class="answer-text">ρ = V / m</span>
+        </div>
+      </button>
+
+      <!-- Option 4: Boqiy Chinor (Green) -->
+      <button class="answer-card answer-btn-chinor" onclick="selectAnswerOption(3, false)">
+        <div class="mythic-icon-box">
+          <img src="{% static 'img/icons/chinor_leaf.svg' %}" alt="Chinor" style="width: 28px; height: 28px;">
+        </div>
+        <div class="answer-card-content">
+          <span class="mythic-label">Boqiy Chinor</span>
+          <span class="answer-text">ρ = m + V</span>
+        </div>
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- ================= FLOATING VICTORY / REWARD MODAL (victory_reward.jpg) ================= -->
+  <div class="modal-backdrop-blur" id="victoryModal">
+    <div class="victory-card">
+      
+      <!-- Top Character Avatar Cutout Portal -->
+      <div class="victory-character-float">
+        <div class="character-glow"></div>
+        <img src="{% static 'img/characters/victory_reward.jpg' %}" alt="Victory Trophy" class="character-trophy-img" style="border-radius: 50%;">
+      </div>
+
+      <h3 class="victory-title">PERFECT SCORER!</h3>
+      <p class="victory-sub">
+        Siz barcha savollarga eng yuqori tezlikda benuqson javob berdingiz va yangi rekord o‘rnatdingiz!
+      </p>
+
+      <div class="coin-reward-pill">
+        <img src="{% static 'img/icons/gold_coin.svg' %}" alt="Tanga" class="svg-icon svg-icon-md">
+        <span id="modalCoinRewardText">+2185</span>
+      </div>
+
+      <button class="pill-btn btn-primary-orange" onclick="window.closeVictoryModal(true)">
+        NEXT LEVEL →
+      </button>
+
+      <button class="pill-btn btn-outline-white" style="margin-top: 10px;" onclick="window.closeVictoryModal(false)">
+        Do‘stlar Bilan Ulashish
+      </button>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'js/audio.js' %}"></script>
+<script src="{% static 'js/components.js' %}"></script>
+<script src="{% static 'js/game_client.js' %}"></script>
+
+<script>
+  let studentTimer = null;
+  let studentSeconds = 30;
+
+  function showJoinScreen() {
+    const welcome = document.getElementById('studentWelcomeScreen');
+    const join = document.getElementById('studentJoinScreen');
+    if (welcome) welcome.style.display = 'none';
+    if (join) join.style.display = 'flex';
+    if (window.eduAudio) window.eduAudio.playTick();
+  }
+
+  function showWelcomeScreen() {
+    const welcome = document.getElementById('studentWelcomeScreen');
+    const join = document.getElementById('studentJoinScreen');
+    if (welcome) welcome.style.display = 'flex';
+    if (join) join.style.display = 'none';
+    if (window.eduAudio) window.eduAudio.playTick();
+  }
+
+  function joinGameSession() {
+    const pin = document.getElementById('roomPinInput').value.trim();
+    const nick = document.getElementById('nicknameInput').value.trim();
+
+    if (!pin) {
+      window.showToast('Iltimos, 6 xonali PIN kodni kiriting!', 'error');
+      return;
+    }
+    if (!nick) {
+      window.showToast('Iltimos, ismingizni kiriting!', 'error');
+      return;
+    }
+
+    if (window.eduAudio) window.eduAudio.playCoin();
+    window.showToast(`Xush kelibsiz, ${nick}! Sessiyaga ulanmoqda...`, 'success');
+
+    document.getElementById('studentJoinScreen').style.display = 'none';
+    document.getElementById('studentPlayScreen').style.display = 'flex';
+
+    startStudentTimer();
+  }
+
+  function startStudentTimer() {
+    studentSeconds = 30;
+    const bar = document.getElementById('studentTimerBar');
+    if (bar) bar.style.width = '100%';
+
+    studentTimer = setInterval(() => {
+      studentSeconds--;
+      if (bar) {
+        const pct = (studentSeconds / 30) * 100;
+        bar.style.width = pct + '%';
+        if (studentSeconds <= 5) {
+          bar.style.backgroundColor = '#EF4444';
+          if (window.eduAudio) window.eduAudio.playTick();
+        } else {
+          bar.style.backgroundColor = '#FF7527';
+        }
+      }
+
+      if (studentSeconds <= 0) {
+        clearInterval(studentTimer);
+      }
+    }, 1000);
+  }
+
+  function selectAnswerOption(index, isCorrect) {
+    if (studentTimer) clearInterval(studentTimer);
+    const clickedBtn = event.currentTarget;
+
+    if (isCorrect) {
+      clickedBtn.classList.add('correct-glow');
+      if (window.eduAudio) {
+        window.eduAudio.playCorrect();
+        setTimeout(() => window.eduAudio.playCoin(), 300);
+      }
+      if (window.triggerHaptic) window.triggerHaptic('success');
+      window.showToast('To‘g‘ri javob! +100 ball', 'success');
+
+      setTimeout(() => {
+        window.openVictoryModal(2185);
+      }, 1000);
+    } else {
+      clickedBtn.classList.add('wrong-shake');
+      if (window.eduAudio) window.eduAudio.playWrong();
+      if (window.triggerHaptic) window.triggerHaptic('error');
+      window.showToast('Afsuski, javob noto‘g‘ri!', 'error');
+      setTimeout(() => clickedBtn.classList.remove('wrong-shake'), 600);
+    }
+  }
+</script>
+{% endblock %}
