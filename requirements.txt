@@ -22,3 +22,6 @@ python-dotenv>=1.0.1
 pytest>=8.3.0
 pytest-django>=4.9.0
 pytest-asyncio>=0.24.0
+
+# Model Context Protocol (MCP)
+mcp>=1.0.0

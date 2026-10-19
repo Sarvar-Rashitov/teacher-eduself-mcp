@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.game_engine',             # Phase 04: Game Modes Catalog & Engine
     'apps.ai_gateway',              # Phase 05: Multi-Provider AI Gateway & BYOK
     'apps.ai_workspace',            # Phase 06: Teacher AI Agent & Quiz Generation
+    'apps.mcp_server',              # Phase 07: Model Context Protocol (MCP) Server
 ]
 
 # Custom User Model (Phase 01)
