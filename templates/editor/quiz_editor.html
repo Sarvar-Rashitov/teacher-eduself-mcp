@@ -1,0 +1,559 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if quiz.title %}{{ quiz.title }} — Muharrir{% else %}Yangi Viktorina — Muharrir{% endif %} — EduSelf Teacher{% endblock %}
+
+{% block extra_head %}
+<style>
+    .editor-layout {
+        display: grid;
+        grid-template-columns: 260px 1fr 380px;
+        gap: 20px;
+        height: calc(100vh - 120px);
+        margin: 20px auto;
+        max-width: 1560px;
+        padding: 0 20px;
+    }
+    @media (max-width: 1200px) {
+        .editor-layout {
+            grid-template-columns: 240px 1fr;
+        }
+        .editor-sidebar-right {
+            display: none;
+        }
+    }
+    @media (max-width: 768px) {
+        .editor-layout {
+            grid-template-columns: 1fr;
+            height: auto;
+        }
+    }
+    .editor-panel {
+        background: #FFFFFF;
+        border: 2px solid var(--border-subtle);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-card);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .editor-panel-header {
+        padding: 16px 20px;
+        border-bottom: 2px solid var(--border-subtle);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #FCFBF9;
+    }
+    .question-nav-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        margin: 6px 12px;
+        border-radius: var(--radius-md);
+        border: 2px solid transparent;
+        background: #F8F6F0;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 14px;
+        transition: all 0.15s ease;
+    }
+    .question-nav-item:hover {
+        background: #F0ECE1;
+    }
+    .question-nav-item.active {
+        background: var(--primary-orange-soft);
+        border-color: var(--primary-orange);
+        color: var(--primary-orange);
+    }
+    .opt-card {
+        border-radius: var(--radius-md);
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: var(--shadow-card);
+        border: 2px solid transparent;
+        transition: transform 0.1s;
+    }
+    .opt-card:focus-within {
+        transform: translateY(-2px);
+    }
+    .opt-card-red {
+        background: #FFEBEB;
+        border-color: #FFA3A3;
+    }
+    .opt-card-blue {
+        background: #EBF5FF;
+        border-color: #93C5FD;
+    }
+    .opt-card-yellow {
+        background: #FEF9C3;
+        border-color: #FCD34D;
+    }
+    .opt-card-green {
+        background: #DCFCE7;
+        border-color: #86EFAC;
+    }
+    .opt-shape-tag {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 800;
+        color: #FFFFFF;
+        flex-shrink: 0;
+    }
+    .tab-pill-btn {
+        background: #F3F0E6;
+        border: none;
+        border-radius: var(--radius-pill);
+        padding: 6px 14px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        color: var(--text-muted);
+        transition: all 0.15s;
+    }
+    .tab-pill-btn.active {
+        background: var(--primary-orange);
+        color: #FFFFFF;
+        box-shadow: 0 4px 12px rgba(255,117,39,0.3);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Top Action Bar -->
+<div style="background:#FFFFFF; border-bottom:2px solid var(--border-subtle); padding:12px 24px;">
+    <div style="max-width:1560px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+        <div style="display:flex; align-items:center; gap:16px;">
+            <a href="/dashboard/" class="nav-circle-btn" style="text-decoration:none;" title="Orqaga">←</a>
+            <div>
+                <input type="text" id="quizTitleInput" value="{{ quiz.title|default:'Yangi Viktorina' }}" 
+                       style="font-family:'Plus Jakarta Sans'; font-size:20px; font-weight:800; border:none; background:transparent; color:var(--text-main); outline:none; padding:4px 8px; border-radius:8px;"
+                       placeholder="Viktorina nomi...">
+                <div style="font-size:12px; color:var(--text-muted); padding-left:8px;" id="saveStatus">
+                    {% if quiz.id %}✅ Saqlangan • Versiya {{ quiz.current_version }}{% else %}⚡ Yangi qoralama{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+            <select id="subjectSelect" style="border:2px solid var(--border-subtle); border-radius:var(--radius-pill); padding:8px 14px; font-size:13px; font-weight:700; background:#FFF; color:var(--text-main);">
+                <option value="math" {% if quiz.subject == 'math' %}selected{% endif %}>📐 Matematika</option>
+                <option value="physics" {% if quiz.subject == 'physics' %}selected{% endif %}>⚡ Fizika</option>
+                <option value="english" {% if quiz.subject == 'english' %}selected{% endif %}>🇬🇧 Ingliz tili</option>
+                <option value="history" {% if quiz.subject == 'history' %}selected{% endif %}>🏛️ Tarix</option>
+                <option value="other" {% if not quiz.subject or quiz.subject == 'other' %}selected{% endif %}>✨ Boshqa</option>
+            </select>
+
+            <select id="gradeSelect" style="border:2px solid var(--border-subtle); border-radius:var(--radius-pill); padding:8px 14px; font-size:13px; font-weight:700; background:#FFF; color:var(--text-main);">
+                <option value="5">5-sinf</option>
+                <option value="6">6-sinf</option>
+                <option value="7">7-sinf</option>
+                <option value="8">8-sinf</option>
+                <option value="9" selected>9-sinf</option>
+                <option value="10">10-sinf</option>
+                <option value="11">11-sinf</option>
+            </select>
+
+            <button id="saveDraftBtn" class="pill-btn btn-outline-white" style="padding:10px 20px; font-size:14px;">
+                💾 Saqlash
+            </button>
+
+            {% if quiz.id %}
+            <a href="/live/launch/{{ quiz.id }}/" class="pill-btn btn-primary-orange" style="padding:10px 24px; font-size:14px; text-decoration:none;">
+                🚀 Jonli O‘yin Boshlash
+            </a>
+            {% else %}
+            <button id="publishBtn" class="pill-btn btn-primary-orange" style="padding:10px 24px; font-size:14px;">
+                🚀 Chop etish
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- 3-Panel Workspace -->
+<div class="editor-layout">
+    
+    <!-- LEFT PANEL: Question Navigator -->
+    <div class="editor-panel">
+        <div class="editor-panel-header">
+            <span style="font-weight:800; font-size:15px; color:var(--text-main);">Savollar (<span id="questionCount">1</span>)</span>
+            <button id="addQuestionBtn" class="tab-pill-btn" style="background:var(--primary-orange-soft); color:var(--primary-orange);">+ Yangi</button>
+        </div>
+        <div style="flex:1; overflow-y:auto; padding:10px 0;" id="questionNavList">
+            <!-- Nav items rendered by JS -->
+            <div class="question-nav-item active" data-index="0">
+                <span class="q-label">1. Savol</span>
+                <span style="font-size:12px; color:var(--text-muted);">30s • 100 ball</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CENTER PANEL: Question Form Editor -->
+    <div class="editor-panel" style="overflow-y:auto; padding:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <div style="display:flex; gap:12px; align-items:center;">
+                <span style="font-size:13px; font-weight:700; color:var(--text-muted);">Vaqt:</span>
+                <select id="timeLimitSelect" style="border:2px solid var(--border-subtle); border-radius:var(--radius-pill); padding:6px 12px; font-weight:700; font-size:13px;">
+                    <option value="10">⏱️ 10 soniya</option>
+                    <option value="20">⏱️ 20 soniya</option>
+                    <option value="30" selected>⏱️ 30 soniya</option>
+                    <option value="60">⏱️ 60 soniya</option>
+                    <option value="90">⏱️ 90 soniya</option>
+                </select>
+
+                <span style="font-size:13px; font-weight:700; color:var(--text-muted); margin-left:8px;">Ball:</span>
+                <select id="pointsSelect" style="border:2px solid var(--border-subtle); border-radius:var(--radius-pill); padding:6px 12px; font-weight:700; font-size:13px;">
+                    <option value="100" selected>🎯 100 ball</option>
+                    <option value="200">🎯 200 ball</option>
+                    <option value="500">🎯 500 ball</option>
+                    <option value="1000">🎯 1,000 ball</option>
+                </select>
+            </div>
+
+            <div style="display:flex; gap:8px;">
+                <button id="deleteQuestionBtn" class="pill-btn btn-outline-white" style="padding:6px 14px; font-size:12px; color:#EF4444;" title="Savolni o'chirish">
+                    🗑️ O‘chirish
+                </button>
+            </div>
+        </div>
+
+        <!-- Question Prompt Area -->
+        <div style="margin-bottom:24px;">
+            <label style="display:block; font-size:13px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px;">
+                Savol matni (yoki LaTeX formula):
+            </label>
+            <textarea id="promptInput" rows="3" 
+                      style="width:100%; border:2px solid var(--border-subtle); border-radius:var(--radius-md); padding:16px; font-family:'Poppins', sans-serif; font-size:16px; font-weight:600; color:var(--text-main); outline:none; resize:vertical; transition:border-color 0.15s;"
+                      placeholder="Savolingizni shu yerga yozing... Masalan: O'zbekiston poytaxti qaysi shahar?"></textarea>
+        </div>
+
+        <!-- 4 Dual-Coded Options Grid -->
+        <div>
+            <label style="display:block; font-size:13px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:12px;">
+                Javob variantlari (To‘g‘ri javobni tanlang):
+            </label>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;" id="optionsContainer">
+                <!-- Option 1 (Red Triangle) -->
+                <div class="opt-card opt-card-red">
+                    <div class="opt-shape-tag" style="background:#EF4444;">▲</div>
+                    <input type="text" class="opt-input" data-idx="0" placeholder="Variant A..." 
+                           style="flex:1; border:none; background:transparent; font-size:15px; font-weight:600; outline:none; color:var(--text-main);">
+                    <input type="radio" name="correctAnswer" value="0" style="width:22px; height:22px; accent-color:var(--primary-orange); cursor:pointer;" title="To'g'ri javob qilib belgilash">
+                </div>
+
+                <!-- Option 2 (Blue Diamond) -->
+                <div class="opt-card opt-card-blue">
+                    <div class="opt-shape-tag" style="background:#3B82F6;">◆</div>
+                    <input type="text" class="opt-input" data-idx="1" placeholder="Variant B..." 
+                           style="flex:1; border:none; background:transparent; font-size:15px; font-weight:600; outline:none; color:var(--text-main);">
+                    <input type="radio" name="correctAnswer" value="1" checked style="width:22px; height:22px; accent-color:var(--primary-orange); cursor:pointer;" title="To'g'ri javob qilib belgilash">
+                </div>
+
+                <!-- Option 3 (Yellow Circle) -->
+                <div class="opt-card opt-card-yellow">
+                    <div class="opt-shape-tag" style="background:#F59E0B;">●</div>
+                    <input type="text" class="opt-input" data-idx="2" placeholder="Variant C..." 
+                           style="flex:1; border:none; background:transparent; font-size:15px; font-weight:600; outline:none; color:var(--text-main);">
+                    <input type="radio" name="correctAnswer" value="2" style="width:22px; height:22px; accent-color:var(--primary-orange); cursor:pointer;" title="To'g'ri javob qilib belgilash">
+                </div>
+
+                <!-- Option 4 (Green Square) -->
+                <div class="opt-card opt-card-green">
+                    <div class="opt-shape-tag" style="background:#10B981;">■</div>
+                    <input type="text" class="opt-input" data-idx="3" placeholder="Variant D..." 
+                           style="flex:1; border:none; background:transparent; font-size:15px; font-weight:600; outline:none; color:var(--text-main);">
+                    <input type="radio" name="correctAnswer" value="3" style="width:22px; height:22px; accent-color:var(--primary-orange); cursor:pointer;" title="To'g'ri javob qilib belgilash">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL: AI Drawer & Mobile WYSIWYG Simulator -->
+    <div class="editor-panel editor-sidebar-right">
+        <div class="editor-panel-header">
+            <div style="display:flex; gap:8px;">
+                <button class="tab-pill-btn active" id="tabBtnSimulator">📱 Ko‘rinish</button>
+                <button class="tab-pill-btn" id="tabBtnAI">🤖 AI Yordamchi</button>
+            </div>
+        </div>
+
+        <!-- Tab 1: Simulator View -->
+        <div id="tabContentSimulator" style="flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; align-items:center; background:#F8F6F0;">
+            <div style="width:100%; max-width:320px; background:#FFFFFF; border-radius:24px; padding:20px; box-shadow:var(--shadow-card); border:2px solid var(--border-subtle);">
+                <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:12px;">
+                    <span id="previewQIndex">Savol 1</span>
+                    <span id="previewTimer" style="color:var(--primary-orange);">30s</span>
+                </div>
+                <div id="previewPrompt" style="font-size:15px; font-weight:700; color:var(--text-main); margin-bottom:16px; min-height:48px;">
+                    Savol matni...
+                </div>
+                <div style="display:flex; flex-direction:column; gap:8px;" id="previewOptionsList">
+                    <div style="background:#FFEBEB; padding:10px 14px; border-radius:12px; font-size:13px; font-weight:700; display:flex; gap:8px;">
+                        <span>▲</span> <span class="prev-opt-text">Variant A</span>
+                    </div>
+                    <div style="background:#EBF5FF; padding:10px 14px; border-radius:12px; font-size:13px; font-weight:700; display:flex; gap:8px;">
+                        <span>◆</span> <span class="prev-opt-text">Variant B</span>
+                    </div>
+                    <div style="background:#FEF9C3; padding:10px 14px; border-radius:12px; font-size:13px; font-weight:700; display:flex; gap:8px;">
+                        <span>●</span> <span class="prev-opt-text">Variant C</span>
+                    </div>
+                    <div style="background:#DCFCE7; padding:10px 14px; border-radius:12px; font-size:13px; font-weight:700; display:flex; gap:8px;">
+                        <span>■</span> <span class="prev-opt-text">Variant D</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: AI Generator Drawer -->
+        <div id="tabContentAI" style="flex:1; overflow-y:auto; padding:20px; display:none;">
+            <div style="background:var(--primary-orange-soft); border-radius:16px; padding:14px; margin-bottom:16px;">
+                <h4 style="font-size:14px; font-weight:800; color:var(--primary-orange); margin-bottom:4px;">✨ Sun'iy Intellekt Yordamchisi</h4>
+                <p style="font-size:12px; color:var(--text-muted);">
+                    Dars mavzusini kiriting, AI pedagogik mezonlarga ko‘ra 4 ta to‘liq variantli savollarni yaratib beradi.
+                </p>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div>
+                    <label style="font-size:12px; font-weight:700; color:var(--text-muted);">Mavzu yoki matn:</label>
+                    <textarea id="aiTopicInput" rows="3" style="width:100%; border:2px solid var(--border-subtle); border-radius:12px; padding:10px; font-size:13px; outline:none;" placeholder="Masalan: Nyuton qonunlari, 8-sinf fizika..."></textarea>
+                </div>
+
+                <div>
+                    <label style="font-size:12px; font-weight:700; color:var(--text-muted);">Savollar soni:</label>
+                    <select id="aiCountSelect" style="width:100%; border:2px solid var(--border-subtle); border-radius:12px; padding:8px 10px; font-size:13px;">
+                        <option value="1">1 ta savol qo'shish</option>
+                        <option value="3" selected>3 ta savol generatsiya qilish</option>
+                        <option value="5">5 ta savol generatsiya qilish</option>
+                    </select>
+                </div>
+
+                <button id="aiGenerateBtn" class="pill-btn btn-primary-orange" style="margin-top:8px;">
+                    ⚡ Savollarni Yaratish
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    // In-memory quiz questions state
+    let questionsData = [
+        {
+            prompt: "O‘zbekiston Respublikasining poytaxti qaysi shahar?",
+            time_limit_seconds: 30,
+            points: 100,
+            options: [
+                { text: "Samarqand", is_correct: false },
+                { text: "Toshkent", is_correct: true },
+                { text: "Buxoro", is_correct: false },
+                { text: "Xiva", is_correct: false }
+            ]
+        }
+    ];
+    let currentIndex = 0;
+
+    const promptInput = document.getElementById('promptInput');
+    const timeLimitSelect = document.getElementById('timeLimitSelect');
+    const pointsSelect = document.getElementById('pointsSelect');
+    const questionNavList = document.getElementById('questionNavList');
+    const questionCount = document.getElementById('questionCount');
+    const previewPrompt = document.getElementById('previewPrompt');
+    const previewQIndex = document.getElementById('previewQIndex');
+    const previewTimer = document.getElementById('previewTimer');
+
+    function syncFormFromState() {
+        const q = questionsData[currentIndex];
+        if (!q) return;
+        promptInput.value = q.prompt || '';
+        timeLimitSelect.value = q.time_limit_seconds || 30;
+        pointsSelect.value = q.points || 100;
+
+        const inputs = document.querySelectorAll('.opt-input');
+        const radios = document.querySelectorAll('input[name="correctAnswer"]');
+        q.options.forEach((opt, idx) => {
+            if (inputs[idx]) inputs[idx].value = opt.text;
+            if (radios[idx]) radios[idx].checked = !!opt.is_correct;
+        });
+
+        updatePreview();
+        renderNav();
+    }
+
+    function syncStateFromForm() {
+        const q = questionsData[currentIndex];
+        if (!q) return;
+        q.prompt = promptInput.value;
+        q.time_limit_seconds = parseInt(timeLimitSelect.value, 10);
+        q.points = parseInt(pointsSelect.value, 10);
+
+        const inputs = document.querySelectorAll('.opt-input');
+        const radios = document.querySelectorAll('input[name="correctAnswer"]');
+        q.options = [];
+        inputs.forEach((inp, idx) => {
+            q.options.push({
+                text: inp.value,
+                is_correct: radios[idx] ? radios[idx].checked : false
+            });
+        });
+
+        updatePreview();
+    }
+
+    function updatePreview() {
+        const q = questionsData[currentIndex];
+        if (!q) return;
+        previewPrompt.textContent = q.prompt || 'Savol matni...';
+        previewQIndex.textContent = `Savol ${currentIndex + 1} / ${questionsData.length}`;
+        previewTimer.textContent = `${q.time_limit_seconds}s`;
+
+        const prevTexts = document.querySelectorAll('.prev-opt-text');
+        q.options.forEach((opt, idx) => {
+            if (prevTexts[idx]) {
+                prevTexts[idx].textContent = opt.text || `Variant ${['A','B','C','D'][idx]}`;
+            }
+        });
+    }
+
+    function renderNav() {
+        questionCount.textContent = questionsData.length;
+        questionNavList.innerHTML = '';
+        questionsData.forEach((q, idx) => {
+            const item = document.createElement('div');
+            item.className = `question-nav-item ${idx === currentIndex ? 'active' : ''}`;
+            item.innerHTML = `
+                <span class="q-label">${idx + 1}. ${q.prompt ? q.prompt.slice(0, 18) + '...' : 'Savol'}</span>
+                <span style="font-size:11px; opacity:0.8;">${q.time_limit_seconds}s</span>
+            `;
+            item.onclick = () => {
+                syncStateFromForm();
+                currentIndex = idx;
+                syncFormFromState();
+            };
+            questionNavList.appendChild(item);
+        });
+    }
+
+    // Input listeners
+    promptInput.addEventListener('input', () => { syncStateFromForm(); });
+    timeLimitSelect.addEventListener('change', () => { syncStateFromForm(); });
+    pointsSelect.addEventListener('change', () => { syncStateFromForm(); });
+    document.querySelectorAll('.opt-input').forEach(inp => {
+        inp.addEventListener('input', () => { syncStateFromForm(); });
+    });
+    document.querySelectorAll('input[name="correctAnswer"]').forEach(rad => {
+        rad.addEventListener('change', () => { 
+            syncStateFromForm(); 
+            if (window.eduAudio) window.eduAudio.playTick();
+        });
+    });
+
+    // Add Question
+    document.getElementById('addQuestionBtn').onclick = () => {
+        syncStateFromForm();
+        questionsData.push({
+            prompt: "",
+            time_limit_seconds: 30,
+            points: 100,
+            options: [
+                { text: "", is_correct: true },
+                { text: "", is_correct: false },
+                { text: "", is_correct: false },
+                { text: "", is_correct: false }
+            ]
+        });
+        currentIndex = questionsData.length - 1;
+        syncFormFromState();
+        if (window.eduAudio) window.eduAudio.playCoin();
+    };
+
+    // Delete Question
+    document.getElementById('deleteQuestionBtn').onclick = () => {
+        if (questionsData.length <= 1) {
+            alert("Kamida 1 ta savol bo'lishi kerak!");
+            return;
+        }
+        questionsData.splice(currentIndex, 1);
+        if (currentIndex >= questionsData.length) currentIndex = questionsData.length - 1;
+        syncFormFromState();
+    };
+
+    // Tabs toggle
+    const tabBtnSim = document.getElementById('tabBtnSimulator');
+    const tabBtnAI = document.getElementById('tabBtnAI');
+    const contentSim = document.getElementById('tabContentSimulator');
+    const contentAI = document.getElementById('tabContentAI');
+
+    tabBtnSim.onclick = () => {
+        tabBtnSim.classList.add('active');
+        tabBtnAI.classList.remove('active');
+        contentSim.style.display = 'flex';
+        contentAI.style.display = 'none';
+    };
+    tabBtnAI.onclick = () => {
+        tabBtnAI.classList.add('active');
+        tabBtnSim.classList.remove('active');
+        contentSim.style.display = 'none';
+        contentAI.style.display = 'block';
+    };
+
+    // AI Generate mock/trigger
+    document.getElementById('aiGenerateBtn').onclick = () => {
+        const topic = document.getElementById('aiTopicInput').value.trim();
+        if (!topic) {
+            alert("Iltimos, avval mavzuni kiriting!");
+            return;
+        }
+        if (window.eduAudio) window.eduAudio.playStreak();
+        const btn = document.getElementById('aiGenerateBtn');
+        btn.textContent = 'Generatsiya qilinmoqda... ⏳';
+        btn.disabled = true;
+
+        setTimeout(() => {
+            btn.textContent = '⚡ Savollarni Yaratish';
+            btn.disabled = false;
+            questionsData.push({
+                prompt: `${topic} bo'yicha asosiy tushuncha qaysi javobda to'g'ri ko'rsatilgan?`,
+                time_limit_seconds: 30,
+                points: 100,
+                options: [
+                    { text: "Barcha qonuniyatlarga mos keluvchi asosiy nazariya", is_correct: true },
+                    { text: "Noto'g'ri noto'g'ri tasavvur", is_correct: false },
+                    { text: "Eskirgan gipoteza", is_correct: false },
+                    { text: "Tajribasiz xulosa", is_correct: false }
+                ]
+            });
+            currentIndex = questionsData.length - 1;
+            syncFormFromState();
+            tabBtnSim.click();
+            if (window.eduAudio) window.eduAudio.playCorrect();
+        }, 800);
+    };
+
+    // Save & Publish
+    document.getElementById('saveDraftBtn').onclick = () => {
+        syncStateFromForm();
+        if (window.eduAudio) window.eduAudio.playCoin();
+        const st = document.getElementById('saveStatus');
+        st.textContent = '✅ Saqlandi!';
+        setTimeout(() => {
+            st.textContent = '✅ Saqlangan • Hozirgina';
+        }, 1500);
+    };
+
+    // Initial render
+    syncFormFromState();
+</script>
+{% endblock %}

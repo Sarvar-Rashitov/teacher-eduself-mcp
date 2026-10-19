@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}EduSelf — EduPlay 3D Gamified Platform{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- EduPlay 3D Stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/eduplay_3d.css' %}">
+
+    <style>
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+        .navbar-brand .logo-box {
+            width: 42px;
+            height: 42px;
+            background: var(--primary-orange);
+            color: #fff;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 800;
+            box-shadow: var(--primary-shadow);
+        }
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 15px;
+            transition: color 0.15s;
+        }
+        .nav-link:hover {
+            color: var(--primary-orange);
+        }
+        .pill-mute-btn {
+            background: #FFFFFF;
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-pill);
+            padding: 8px 16px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.1s;
+        }
+        .pill-mute-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="showcase-header">
+        <a href="/" class="navbar-brand">
+            <div class="logo-box">⚡</div>
+            <div>
+                <div style="font-family:'Plus Jakarta Sans'; font-weight:800; font-size:18px; line-height:1.2;">EduSelf</div>
+                <div style="font-size:11px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Teacher Platform</div>
+            </div>
+        </a>
+
+        <div style="display:flex; align-items:center; gap:16px;">
+            {% if user.is_authenticated %}
+                <a href="/dashboard/" class="nav-link">Darslarim</a>
+                <a href="/profile/" class="nav-link" style="display:flex; align-items:center; gap:8px;">
+                    <span style="width:32px; height:32px; border-radius:50%; background:var(--primary-orange-soft); color:var(--primary-orange); display:flex; align-items:center; justify-content:center; font-weight:700;">
+                        {{ user.username|slice:":1"|upper }}
+                    </span>
+                    <span>{{ user.username }}</span>
+                </a>
+            {% else %}
+                <a href="/login/" class="nav-link" style="color:var(--primary-orange); font-weight:700;">Kirish</a>
+            {% endif %}
+
+            <!-- Sound Mute Toggle -->
+            <button id="muteToggleBtn" class="pill-mute-btn" title="Tovushlarni yoqish/o'chirish">
+                <span>🔊</span> Ovoz
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Block -->
+    <main class="main-content-wrapper">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Audio Synthesizer & Components Scripts -->
+    <script src="{% static 'js/audio.js' %}"></script>
+    <script src="{% static 'js/components.js' %}"></script>
+    <script>
+        // Init Audio on first click
+        document.addEventListener('click', () => {
+            if (window.eduAudio) window.eduAudio.init();
+        }, { once: true });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}O‘yinchi Maydoni — EduSelf Play{% endblock %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: #F7F5EE;
+    }
+    .student-app-frame {
+        max-width: 480px;
+        margin: 16px auto;
+        padding: 16px;
+        min-height: calc(100vh - 100px);
+        display: flex;
+        flex-direction: column;
+    }
+    .dual-coded-play-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        flex: 1;
+        margin-top: 20px;
+    }
+    .student-touch-btn {
+        border: none;
+        border-radius: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        color: #FFFFFF;
+        cursor: pointer;
+        user-select: none;
+        box-shadow: 0 8px 0 rgba(0,0,0,0.2), 0 14px 20px rgba(0,0,0,0.15);
+        transition: transform 0.08s ease, box-shadow 0.08s ease;
+        padding: 24px 16px;
+        min-height: 140px;
+    }
+    .student-touch-btn:active {
+        transform: translateY(6px);
+        box-shadow: 0 2px 0 rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .student-touch-btn.opt-red {
+        background: linear-gradient(135deg, #FF5C5C 0%, #E63946 100%);
+    }
+    .student-touch-btn.opt-blue {
+        background: linear-gradient(135deg, #4EA8DE 0%, #0077B6 100%);
+    }
+    .student-touch-btn.opt-yellow {
+        background: linear-gradient(135deg, #FFD166 0%, #F4A261 100%);
+    }
+    .student-touch-btn.opt-green {
+        background: linear-gradient(135deg, #06D6A0 0%, #059669 100%);
+    }
+    .touch-btn-symbol {
+        font-size: 44px;
+        line-height: 1;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+    }
+    .touch-btn-label {
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+    }
+    .avatar-picker-chip {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        background: #FFFFFF;
+        border: 2px solid var(--border-subtle);
+        cursor: pointer;
+        transition: transform 0.1s, border-color 0.1s;
+    }
+    .avatar-picker-chip.active {
+        border-color: var(--primary-orange);
+        background: var(--primary-orange-soft);
+        transform: scale(1.1);
+    }
+    .streak-pill-counter {
+        background: #111827;
+        color: #FBBF24;
+        border-radius: var(--radius-pill);
+        padding: 6px 14px;
+        font-size: 13px;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="student-app-frame">
+
+    <!-- Top Status Bar for Player -->
+    <div style="background:#FFFFFF; border:2px solid var(--border-subtle); border-radius:var(--radius-pill); padding:8px 16px; display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow-card); margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span id="playerAvatarDisplay" style="font-size:22px;">🦊</span>
+            <span id="playerNameDisplay" style="font-weight:800; font-size:14px; color:var(--text-main);">O‘quvchi</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span class="streak-pill-counter">
+                🔥 <span id="playerStreak">0</span>
+            </span>
+            <div class="coin-reward-pill" style="margin:0; padding:4px 12px; font-size:13px;">
+                🪙 <span id="playerCoins">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= STAGE 1: PIN & JOIN FORM ================= -->
+    <div id="playerJoinStage" class="bento-card" style="background:#FFFFFF; border:2px solid var(--border-subtle); padding:28px; text-align:center;">
+        <div style="font-size:42px; margin-bottom:8px;">🎮</div>
+        <h2 style="font-size:24px; font-weight:800; color:var(--text-main); margin-bottom:6px;">
+            O‘yinga Qo‘shilish
+        </h2>
+        <p style="font-size:14px; color:var(--text-muted); margin-bottom:24px;">
+            Doskadagi 6 xonali o‘yin kodini kiriting:
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:16px; text-align:left;">
+            <div>
+                <label style="font-size:12px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Xona PIN kodi:</label>
+                <input type="text" id="joinPinInput" value="{{ room_code|default:'' }}" placeholder="Masalan: 824190" maxlength="6"
+                       style="width:100%; border:2px solid var(--border-subtle); border-radius:var(--radius-md); padding:14px; font-size:24px; font-weight:800; text-align:center; letter-spacing:4px; color:var(--primary-orange); outline:none;">
+            </div>
+
+            <div>
+                <label style="font-size:12px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Ismingiz yoki taxallusingiz:</label>
+                <input type="text" id="joinNameInput" placeholder="Ismingizni yozing..." maxlength="20"
+                       style="width:100%; border:2px solid var(--border-subtle); border-radius:var(--radius-md); padding:14px; font-size:16px; font-weight:700; color:var(--text-main); outline:none;">
+            </div>
+
+            <div>
+                <label style="font-size:12px; font-weight:800; color:var(--text-muted); text-transform:uppercase; margin-bottom:8px; display:block;">Qahramoningizni tanlang:</label>
+                <div style="display:flex; justify-content:space-between;" id="avatarGrid">
+                    <div class="avatar-picker-chip active" data-avatar="🦊">🦊</div>
+                    <div class="avatar-picker-chip" data-avatar="🦁">🦁</div>
+                    <div class="avatar-picker-chip" data-avatar="🐼">🐼</div>
+                    <div class="avatar-picker-chip" data-avatar="🐨">🐨</div>
+                    <div class="avatar-picker-chip" data-avatar="🚀">🚀</div>
+                </div>
+            </div>
+
+            <button id="joinGameBtn" class="pill-btn btn-primary-orange" style="margin-top:12px; padding:16px; font-size:16px;">
+                🚀 Boshlash (Qo‘shilish)
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= STAGE 2: LOBBY WAITING ================= -->
+    <div id="playerLobbyStage" class="bento-card" style="background:#FFFFFF; border:2px solid var(--border-subtle); padding:36px; text-align:center; display:none;">
+        <div style="font-size:54px; margin-bottom:12px; animation:bounce 2s infinite;" id="waitingAvatarAnim">🦊</div>
+        <h2 style="font-size:22px; font-weight:800; color:var(--text-main); margin-bottom:8px;">
+            Siz o‘yindasiz!
+        </h2>
+        <p style="font-size:14px; color:var(--text-muted); margin-bottom:24px;">
+            O‘qituvchi o‘yinni boshlashini kuting. Katta ekranga qarab turing!
+        </p>
+
+        <div style="background:#F8F6F0; border-radius:var(--radius-md); padding:16px;">
+            <div style="font-size:13px; font-weight:700; color:var(--text-muted);">Xona kodi:</div>
+            <div style="font-size:24px; font-weight:800; color:var(--primary-orange); letter-spacing:2px;" id="confirmedPinDisplay">824 190</div>
+        </div>
+
+        <button id="devStartGameBtn" class="pill-btn btn-outline-white" style="margin-top:28px; font-size:13px; border-style:dashed;">
+            ⚡ O‘yin savoliga o‘tish (Test)
+        </button>
+    </div>
+
+    <!-- ================= STAGE 3: LIVE ACTIVE QUESTION ================= -->
+    <div id="playerQuestionStage" style="display:none; flex:1; flex-direction:column;">
+        <!-- Header Info -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <span class="quiz-badge">Savol 1 / 5</span>
+            <span style="font-size:13px; font-weight:700; color:var(--text-muted);">Katta ekranga qarang!</span>
+        </div>
+
+        <!-- 4 Dual-Coded Giant Buttons -->
+        <div class="dual-coded-play-grid">
+            <!-- Red Triangle Button -->
+            <button class="student-touch-btn opt-red" data-index="0">
+                <span class="touch-btn-symbol">▲</span>
+                <span class="touch-btn-label">A</span>
+            </button>
+
+            <!-- Blue Diamond Button -->
+            <button class="student-touch-btn opt-blue" data-index="1">
+                <span class="touch-btn-symbol">◆</span>
+                <span class="touch-btn-label">B</span>
+            </button>
+
+            <!-- Yellow Circle Button -->
+            <button class="student-touch-btn opt-yellow" data-index="2">
+                <span class="touch-btn-symbol">●</span>
+                <span class="touch-btn-label">C</span>
+            </button>
+
+            <!-- Green Square Button -->
+            <button class="student-touch-btn opt-green" data-index="3">
+                <span class="touch-btn-symbol">■</span>
+                <span class="touch-btn-label">D</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= STAGE 4: RESULT / VICTORY OVERLAY ================= -->
+    <div id="playerResultStage" class="bento-card" style="background:#FFFFFF; border:2px solid var(--border-subtle); padding:32px; text-align:center; display:none;">
+        <div style="font-size:60px; margin-bottom:12px;" id="resultEmoji">✨</div>
+        <h2 style="font-size:24px; font-weight:800; color:var(--text-main); margin-bottom:6px;" id="resultTitle">
+            To‘g‘ri Javob!
+        </h2>
+        <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;" id="resultSub">
+            Juda tez va aniq javob berdingiz!
+        </p>
+
+        <div class="coin-reward-pill" style="display:inline-flex; margin-bottom:24px;">
+            <span>🪙</span>
+            <span id="earnedCoinsText">+100 Tangalar</span>
+        </div>
+
+        <button id="nextOrFinishBtn" class="pill-btn btn-primary-orange">
+            Davom etish →
+        </button>
+    </div>
+
+</div>
+
+<!-- Player Controller Script -->
+<script>
+    let selectedAvatar = "🦊";
+    let score = 0;
+    let coins = 0;
+    let streak = 0;
+
+    const joinStage = document.getElementById('playerJoinStage');
+    const lobbyStage = document.getElementById('playerLobbyStage');
+    const questionStage = document.getElementById('playerQuestionStage');
+    const resultStage = document.getElementById('playerResultStage');
+
+    // Avatar Selection
+    document.querySelectorAll('.avatar-picker-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.avatar-picker-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            selectedAvatar = chip.dataset.avatar;
+            document.getElementById('playerAvatarDisplay').textContent = selectedAvatar;
+            document.getElementById('waitingAvatarAnim').textContent = selectedAvatar;
+            if (window.eduAudio) window.eduAudio.playTick();
+        });
+    });
+
+    // Join button click
+    document.getElementById('joinGameBtn').addEventListener('click', () => {
+        const pin = document.getElementById('joinPinInput').value.trim();
+        const name = document.getElementById('joinNameInput').value.trim() || 'O‘quvchi';
+
+        if (!pin) {
+            alert("Iltimos, PIN kodni kiriting!");
+            return;
+        }
+
+        document.getElementById('playerNameDisplay').textContent = name;
+        document.getElementById('confirmedPinDisplay').textContent = pin;
+
+        if (window.eduAudio) window.eduAudio.playCoin();
+
+        joinStage.style.display = 'none';
+        lobbyStage.style.display = 'block';
+    });
+
+    // Test transition into question
+    document.getElementById('devStartGameBtn').addEventListener('click', () => {
+        lobbyStage.style.display = 'none';
+        questionStage.style.display = 'flex';
+        if (window.eduAudio) window.eduAudio.playTick();
+    });
+
+    // Touch Buttons Click
+    document.querySelectorAll('.student-touch-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Haptic vibration feedback if supported
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
+
+            const idx = parseInt(btn.dataset.index, 10);
+            const isCorrect = (idx === 1); // Mock test: B is correct
+
+            questionStage.style.display = 'none';
+            resultStage.style.display = 'block';
+
+            if (isCorrect) {
+                streak++;
+                coins += 100;
+                score += 100;
+                if (window.eduAudio) window.eduAudio.playCorrect();
+                document.getElementById('resultEmoji').textContent = '🎉';
+                document.getElementById('resultTitle').textContent = 'To‘g‘ri Javob!';
+                document.getElementById('resultSub').textContent = 'Barakalla! Tangalar balansingizga qo‘shildi.';
+                document.getElementById('earnedCoinsText').textContent = '+100 Tangalar';
+            } else {
+                streak = 0;
+                if (window.eduAudio) window.eduAudio.playWrong();
+                document.getElementById('resultEmoji').textContent = '😅';
+                document.getElementById('resultTitle').textContent = 'Afsus, noto‘g‘ri';
+                document.getElementById('resultSub').textContent = 'Keyingi savolda omadingizni sinab ko‘ring!';
+                document.getElementById('earnedCoinsText').textContent = '+0 Tanga';
+            }
+
+            document.getElementById('playerCoins').textContent = coins;
+            document.getElementById('playerStreak').textContent = streak;
+        });
+    });
+
+    // Finish / Next Button
+    document.getElementById('nextOrFinishBtn').addEventListener('click', () => {
+        if (window.eduAudio) window.eduAudio.playVictory();
+        alert(`O‘yin yakunlandi! Siz to‘plagan umumiy ball: ${score}, Tangalar: ${coins}`);
+        window.location.reload();
+    });
+</script>
+{% endblock %}

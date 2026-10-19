@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Kirish — EduSelf Teacher{% endblock %}
+
+{% block content %}
+<div style="min-height: calc(100vh - 80px); display: flex; align-items: center; justify-content: center; padding: 24px;">
+    <div class="bento-card" style="background:#FFFFFF; max-width: 440px; width: 100%; padding: 40px 32px; border: 2px solid var(--border-subtle); box-shadow: var(--shadow-modal);">
+        <div style="text-align: center; margin-bottom: 28px;">
+            <div style="width: 64px; height: 64px; background: var(--primary-orange-soft); color: var(--primary-orange); border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 12px; box-shadow: var(--shadow-card);">
+                🎓
+            </div>
+            <h1 style="font-size: 24px; color: var(--text-main); margin-bottom: 6px;">O‘qituvchi Tizimiga Kirish</h1>
+            <p style="font-size: 14px; color: var(--text-muted);">Darslarni boshqarish va jonli o‘yinlarni ishga tushiring</p>
+        </div>
+
+        {% if error %}
+        <div style="background: #FEE2E2; color: #DC2626; padding: 12px 16px; border-radius: var(--radius-sm); font-size: 14px; margin-bottom: 20px; font-weight: 500;">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="post" action="/login/" style="display: flex; flex-direction: column; gap: 16px;">
+            {% csrf_token %}
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Foydalanuvchi nomi yoki Email</label>
+                <input type="text" name="username" required placeholder="malika_ustoz"
+                       style="width: 100%; height: 50px; padding: 0 16px; border: 2px solid var(--border-subtle); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; outline: none; transition: border-color 0.2s;">
+            </div>
+
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Maxfiy Parol</label>
+                <input type="password" name="password" required placeholder="••••••••"
+                       style="width: 100%; height: 50px; padding: 0 16px; border: 2px solid var(--border-subtle); border-radius: var(--radius-md); font-family: inherit; font-size: 15px; outline: none; transition: border-color 0.2s;">
+            </div>
+
+            <button type="submit" class="pill-button-primary" style="margin-top: 8px;">
+                Tizimga Kirish 🚀
+            </button>
+        </form>
+
+        <div style="display: flex; align-items: center; margin: 24px 0; gap: 12px;">
+            <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+            <span style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Yoki tezkor kirish</span>
+            <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Telegram Login -->
+            <a href="/api/auth/telegram/" class="pill-mute-btn" style="width: 100%; justify-content: center; height: 48px; text-decoration: none; color: #0284C7; border-color: #BAE6FD; background: #F0F9FF;">
+                <span style="font-size: 18px;">✈️</span> Telegram orqali Kirish
+            </a>
+
+            <!-- Google Login -->
+            <a href="/api/auth/google/" class="pill-mute-btn" style="width: 100%; justify-content: center; height: 48px; text-decoration: none; color: #374151; border-color: #E5E7EB;">
+                <span style="font-size: 18px;">🌐</span> Google orqali Kirish
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

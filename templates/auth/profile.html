@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profil — {{ user.username }}{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 40px auto; padding: 0 24px;">
+    <!-- Profile Header Card -->
+    <div class="bento-card" style="background:#FFFFFF; border:2px solid var(--border-subtle); padding:32px; margin-bottom:24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px;">
+        <div style="display:flex; align-items:center; gap:20px;">
+            <div style="width:72px; height:72px; border-radius:50%; background:var(--primary-orange); color:#FFFFFF; font-size:32px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:var(--primary-shadow);">
+                {{ user.username|slice:":1"|upper }}
+            </div>
+            <div>
+                <h1 style="font-size:24px; color:var(--text-main); margin-bottom:4px;">{{ user.get_full_name|default:user.username }}</h1>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="background:var(--primary-orange-soft); color:var(--primary-orange); padding:4px 12px; border-radius:var(--radius-pill); font-size:12px; font-weight:700; text-transform:uppercase;">
+                        {{ user.get_role_display }}
+                    </span>
+                    <span style="font-size:13px; color:var(--text-muted);">{{ user.email|default:"Email ko'rsatilmagan" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <a href="/logout/" class="pill-mute-btn" style="color:#DC2626; border-color:#FECACA; text-decoration:none;">
+                Chiqish (Logout)
+            </a>
+        </div>
+    </div>
+
+    <!-- Details Grid -->
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:24px;">
+        <!-- Organization & Subscription -->
+        <div class="bento-card bento-card-purple" style="min-height: 200px;">
+            <div>
+                <span class="badge" style="background:rgba(255,255,255,0.25); color:#fff; border-radius:9999px; padding:4px 10px; font-size:12px; font-weight:700;">Tashkilot & Obuna</span>
+                <h3 style="font-size:20px; margin-top:12px; font-weight:700;">{{ user.organization.name|default:"Shaxsiy O'qituvchi Hisobi" }}</h3>
+                <p style="font-size:14px; opacity:0.9; margin-top:4px;">Reja: {{ user.organization.get_subscription_plan_display|default:"Free Bepul" }}</p>
+            </div>
+            <div style="margin-top:20px; font-size:13px; background:rgba(0,0,0,0.15); padding:10px 14px; border-radius:var(--radius-md);">
+                🤖 AI Oylik Limiti: <strong>{{ user.organization.ai_monthly_token_budget|default:1000000|floatformat:0 }} token</strong>
+            </div>
+        </div>
+
+        <!-- MCP AI Kalitlari -->
+        <div class="bento-card bento-card-blue" style="min-height: 200px;">
+            <div>
+                <span class="badge" style="background:rgba(255,255,255,0.25); color:#fff; border-radius:9999px; padding:4px 10px; font-size:12px; font-weight:700;">Model Context Protocol</span>
+                <h3 style="font-size:20px; margin-top:12px; font-weight:700;">Claude Desktop & CLI</h3>
+                <p style="font-size:14px; opacity:0.9; margin-top:4px;">Hisobingiz tashqi sun'iy intellekt agentlariga ulangan</p>
+            </div>
+            <div style="margin-top:20px;">
+                <code style="background:rgba(0,0,0,0.25); color:#fff; padding:6px 10px; border-radius:8px; font-size:12px; display:inline-block;">
+                    eduself login
+                </code>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

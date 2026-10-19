@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Jonli O‘yin (PIN: {{ room_code|default:'824 190' }}) — EduSelf Teacher{% endblock %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: #F7F5EE;
+    }
+    .host-container {
+        max-width: 1360px;
+        margin: 24px auto;
+        padding: 0 24px;
+        min-height: calc(100vh - 120px);
+        display: flex;
+        flex-direction: column;
+    }
+    .giant-pin-display {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 72px;
+        font-weight: 800;
+        letter-spacing: 8px;
+        color: var(--primary-orange);
+        text-shadow: 0 4px 18px rgba(255,117,39,0.25);
+        line-height: 1.1;
+    }
+    @media (max-width: 768px) {
+        .giant-pin-display {
+            font-size: 42px;
+            letter-spacing: 4px;
+        }
+    }
+    .player-bubble {
+        background: #FFFFFF;
+        border: 2px solid var(--border-subtle);
+        border-radius: var(--radius-pill);
+        padding: 8px 18px;
+        font-weight: 700;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: var(--shadow-card);
+        animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes popIn {
+        from { transform: scale(0.5); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    .radial-timer-box {
+        position: relative;
+        width: 100px;
+        height: 100px;
+    }
+    .radial-timer-svg {
+        transform: rotate(-90deg);
+        width: 100px;
+        height: 100px;
+    }
+    .radial-timer-circle-bg {
+        fill: none;
+        stroke: #F0ECE1;
+        stroke-width: 8;
+    }
+    .radial-timer-circle-val {
+        fill: none;
+        stroke: var(--primary-orange);
+        stroke-width: 8;
+        stroke-linecap: round;
+        stroke-dasharray: 283;
+        stroke-dashoffset: 0;
+        transition: stroke-dashoffset 1s linear, stroke 0.3s;
+    }
+    .radial-timer-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Plus Jakarta Sans';
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--text-main);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="host-container">
+    
+    <!-- Top Host Status Bar -->
+    <div style="background:#FFFFFF; border:2px solid var(--border-subtle); border-radius:var(--radius-pill); padding:10px 24px; display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; box-shadow:var(--shadow-card);">
+        <div style="display:flex; align-items:center; gap:16px;">
+            <span style="background:var(--primary-orange-soft); color:var(--primary-orange); padding:4px 14px; border-radius:9999px; font-weight:800; font-size:13px;">
+                ● JONLI EFIR
+            </span>
+            <span style="font-size:15px; font-weight:700; color:var(--text-main);">
+                Xona PIN: <strong style="color:var(--primary-orange); font-size:17px;">{{ room_code|default:'824190' }}</strong>
+            </span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:16px;">
+            <div style="font-size:14px; font-weight:700; color:var(--text-muted);" id="hostPlayerCountBadge">
+                👥 <span id="connectedCount">4</span> o‘quvchi ulangan
+            </div>
+            <button id="endSessionBtn" class="pill-btn btn-outline-white" style="padding:6px 14px; font-size:13px;">
+                Sessiyani yakunlash
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= VIEW 1: LOBBY STAGE ================= -->
+    <div id="hostLobbyStage" style="display:block; flex:1;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:32px; align-items:center; margin-top:20px;">
+            
+            <!-- Left: Giant PIN & Joining QR Instructions -->
+            <div class="bento-card" style="background:#FFFFFF; border:2px solid var(--border-subtle); padding:40px; text-align:center;">
+                <p style="font-size:16px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">
+                    Smartfondan qo‘shilish uchun:
+                </p>
+                <div style="font-size:24px; font-weight:800; color:var(--text-main); margin-bottom:20px;">
+                    👉 <span style="color:var(--bento-blue); text-decoration:underline;">eduself.uz/play</span>
+                </div>
+
+                <div class="giant-pin-display" id="lobbyPinDisplay">
+                    {{ room_code|default:'824 190' }}
+                </div>
+
+                <p style="font-size:14px; color:var(--text-muted); margin-top:16px;">
+                    O‘yin kodini kiriting va taxallusingizni yozing!
+                </p>
+
+                <div style="margin-top:32px;">
+                    <button id="startCountdownBtn" class="pill-btn btn-primary-orange" style="font-size:18px; padding:16px 48px; width:auto; display:inline-block;">
+                        🚀 O‘yinni Boshlash (Start Game)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: Connected Players Wall -->
+            <div class="bento-card" style="background:#FFFFFF; border:2px solid var(--border-subtle); padding:32px; min-height:420px; display:flex; flex-direction:column;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h3 style="font-size:18px; font-weight:800; color:var(--text-main);">Kutish zali (Lobby)</h3>
+                    <span class="bento-dark-badge" style="background:var(--bento-blue);">Tayyor</span>
+                </div>
+
+                <div id="playersGrid" style="display:flex; flex-wrap:wrap; gap:12px; align-content:flex-start; flex:1;">
+                    <div class="player-bubble">🦁 Sardorbek</div>
+                    <div class="player-bubble">🦊 Madina K.</div>
+                    <div class="player-bubble">🐼 Temur A.</div>
+                    <div class="player-bubble">🐨 Rayhona O.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= VIEW 2: QUESTION LIVE DISPLAY ================= -->
+    <div id="hostQuestionStage" style="display:none; flex:1;">
+        <!-- Question Header Card -->
+        <div class="bento-card" style="background:#FFFFFF; border:2px solid var(--border-subtle); padding:32px; margin-bottom:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <span class="quiz-badge" id="hostQIndexBadge">Savol 1 / 5</span>
+                
+                <!-- 30s Radial Timer -->
+                <div class="radial-timer-box">
+                    <svg class="radial-timer-svg" viewBox="0 0 100 100">
+                        <circle class="radial-timer-circle-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="radial-timer-circle-val" id="radialCircle" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="radial-timer-text" id="radialText">30</div>
+                </div>
+
+                <div style="text-align:right;">
+                    <div style="font-size:12px; color:var(--text-muted); font-weight:700;">Javob berganlar:</div>
+                    <div style="font-size:22px; font-weight:800; color:var(--primary-orange);" id="answersCounter">0 / 4</div>
+                </div>
+            </div>
+
+            <!-- Big Question Prompt -->
+            <h2 id="hostPromptText" style="font-size:32px; font-weight:800; color:var(--text-main); text-align:center; line-height:1.3; min-height:80px; display:flex; align-items:center; justify-content:center;">
+                O‘zbekiston Respublikasining poytaxti qaysi shahar?
+            </h2>
+        </div>
+
+        <!-- 4 Dual-Coded Giant Options -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;" id="hostOptionsGrid">
+            <div class="quiz-option-btn opt-red" style="padding:24px 28px; font-size:22px; cursor:default;">
+                <span class="opt-shape" style="font-size:28px;">▲</span>
+                <span id="hostOpt0">Samarqand</span>
+            </div>
+            <div class="quiz-option-btn opt-blue" style="padding:24px 28px; font-size:22px; cursor:default;">
+                <span class="opt-shape" style="font-size:28px;">◆</span>
+                <span id="hostOpt1">Toshkent</span>
+            </div>
+            <div class="quiz-option-btn opt-yellow" style="padding:24px 28px; font-size:22px; cursor:default;">
+                <span class="opt-shape" style="font-size:28px;">●</span>
+                <span id="hostOpt2">Buxoro</span>
+            </div>
+            <div class="quiz-option-btn opt-green" style="padding:24px 28px; font-size:22px; cursor:default;">
+                <span class="opt-shape" style="font-size:28px;">■</span>
+                <span id="hostOpt3">Xiva</span>
+            </div>
+        </div>
+
+        <!-- Next / Reveal Controller -->
+        <div style="display:flex; justify-content:flex-end; margin-top:24px; gap:16px;">
+            <button id="revealAnswerBtn" class="pill-btn btn-outline-white" style="width:auto; padding:12px 28px;">
+                👁️ Javobni Ko‘rsatish
+            </button>
+            <button id="nextQuestionBtn" class="pill-btn btn-primary-orange" style="width:auto; padding:12px 32px;">
+                Keyingi Savol →
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= VIEW 3: 3D PODIUM & CELEBRATION ================= -->
+    <div id="hostPodiumStage" style="display:none; flex:1; text-align:center; padding:20px 0;">
+        <h1 style="font-size:36px; font-weight:800; color:var(--text-main); margin-bottom:8px;">
+            🎉 Viktorina G‘oliblari!
+        </h1>
+        <p style="font-size:16px; color:var(--text-muted); margin-bottom:40px;">
+            Barcha ishtirokchilar ajoyib natija ko‘rsatishdi!
+        </p>
+
+        <!-- 3D Podium Stands (Claymorphic) -->
+        <div class="podium-section" style="max-width:700px; margin:0 auto 40px auto; min-height:300px;">
+            <!-- 2nd Rank (Blue) -->
+            <div class="podium-column">
+                <div class="avatar-wrapper">
+                    <div class="avatar-circle" style="font-size:32px;">🦊</div>
+                </div>
+                <div class="podium-user-name" style="font-size:16px; font-weight:700;">Madina K.</div>
+                <div class="podium-block podium-blue" style="height:140px;">
+                    <span class="podium-rank-num" style="font-size:38px;">2</span>
+                    <span class="podium-coins" style="font-size:14px;">1,200 ball</span>
+                </div>
+            </div>
+
+            <!-- 1st Rank (Orange Tallest) -->
+            <div class="podium-column">
+                <div class="avatar-wrapper">
+                    <span class="crown-badge" style="font-size:24px;">👑</span>
+                    <div class="avatar-circle rank1-avatar" style="font-size:36px;">🦁</div>
+                </div>
+                <div class="podium-user-name" style="font-size:18px; font-weight:800; color:#E65D0F;">Sardorbek</div>
+                <div class="podium-block podium-orange" style="height:200px;">
+                    <span class="podium-rank-num" style="font-size:46px;">1</span>
+                    <span class="podium-coins" style="font-size:15px;">1,500 ball</span>
+                </div>
+            </div>
+
+            <!-- 3rd Rank (Yellow) -->
+            <div class="podium-column">
+                <div class="avatar-wrapper">
+                    <div class="avatar-circle" style="font-size:32px;">🐼</div>
+                </div>
+                <div class="podium-user-name" style="font-size:16px; font-weight:700;">Temur A.</div>
+                <div class="podium-block podium-yellow" style="height:100px;">
+                    <span class="podium-rank-num" style="font-size:34px;">3</span>
+                    <span class="podium-coins" style="font-size:14px;">980 ball</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <a href="/dashboard/" class="pill-btn btn-primary-orange" style="display:inline-block; width:auto; padding:14px 36px; text-decoration:none;">
+                🏁 Boshqaruv Paneliga Qaytish
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<!-- Host Screen State Controller Script -->
+<script>
+    const hostLobbyStage = document.getElementById('hostLobbyStage');
+    const hostQuestionStage = document.getElementById('hostQuestionStage');
+    const hostPodiumStage = document.getElementById('hostPodiumStage');
+
+    let timerInterval = null;
+    let secondsLeft = 30;
+    const totalSeconds = 30;
+    const radialCircle = document.getElementById('radialCircle');
+    const radialText = document.getElementById('radialText');
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        secondsLeft = totalSeconds;
+        radialText.textContent = secondsLeft;
+        radialCircle.style.strokeDashoffset = 0;
+
+        timerInterval = setInterval(() => {
+            secondsLeft--;
+            radialText.textContent = secondsLeft;
+            const fraction = (totalSeconds - secondsLeft) / totalSeconds;
+            radialCircle.style.strokeDashoffset = 283 * fraction;
+
+            if (secondsLeft <= 5 && secondsLeft > 0) {
+                if (window.eduAudio) window.eduAudio.playTick();
+            }
+
+            if (secondsLeft <= 0) {
+                clearInterval(timerInterval);
+                revealAnswer();
+            }
+        }, 1000);
+    }
+
+    function revealAnswer() {
+        clearInterval(timerInterval);
+        if (window.eduAudio) window.eduAudio.playCorrect();
+        const opt1 = document.getElementById('hostOpt1').parentElement;
+        opt1.style.outline = "6px solid #10B981";
+        opt1.style.transform = "scale(1.02)";
+    }
+
+    document.getElementById('startCountdownBtn').onclick = () => {
+        if (window.eduAudio) window.eduAudio.playCoin();
+        hostLobbyStage.style.display = 'none';
+        hostQuestionStage.style.display = 'block';
+        startTimer();
+    };
+
+    document.getElementById('revealAnswerBtn').onclick = () => {
+        revealAnswer();
+    };
+
+    document.getElementById('nextQuestionBtn').onclick = () => {
+        clearInterval(timerInterval);
+        if (window.eduAudio) window.eduAudio.playVictory();
+        hostQuestionStage.style.display = 'none';
+        hostPodiumStage.style.display = 'block';
+    };
+
+    document.getElementById('endSessionBtn').onclick = () => {
+        if (confirm("Sessiyani yakunlamoqchimisiz?")) {
+            window.location.href = '/dashboard/';
+        }
+    };
+</script>
+{% endblock %}
