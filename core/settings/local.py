@@ -47,3 +47,7 @@ if os.getenv('USE_SQLITE', 'False').lower() == 'true':
         }
     }
 
+# Celery local development & testing defaults
+CELERY_TASK_ALWAYS_EAGER = os.getenv('CELERY_TASK_ALWAYS_EAGER', 'True').lower() in ('true', '1', 't')
+CELERY_TASK_EAGER_PROPAGATES = True
+

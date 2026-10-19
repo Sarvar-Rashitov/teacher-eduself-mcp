@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'apps.ai_gateway',              # Phase 05: Multi-Provider AI Gateway & BYOK
     'apps.ai_workspace',            # Phase 06: Teacher AI Agent & Quiz Generation
     'apps.mcp_server',              # Phase 07: Model Context Protocol (MCP) Server
+    'apps.sheets_sync',             # Phase 09: Google Sheets Sync & Celery Tasks
 ]
 
 # Custom User Model (Phase 01)
@@ -177,3 +178,17 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY', '')
 GROQ_API_KEY = os.getenv('GROQ_API_KEY', '')
 DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY', '')
+
+# Google Sheets Synchronization (Phase 09)
+GOOGLE_SHEETS_SERVICE_ACCOUNT_JSON = os.getenv('GOOGLE_SHEETS_SERVICE_ACCOUNT_JSON', '')
+GOOGLE_SHEETS_SERVICE_ACCOUNT_FILE = os.getenv('GOOGLE_SHEETS_SERVICE_ACCOUNT_FILE', '')
+
+# Celery Task Queue Settings
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'))
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'))
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_ALWAYS_EAGER = os.getenv('CELERY_TASK_ALWAYS_EAGER', 'False').lower() in ('true', '1', 't')
+

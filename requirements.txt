@@ -25,3 +25,8 @@ pytest-asyncio>=0.24.0
 
 # Model Context Protocol (MCP)
 mcp>=1.0.0
+
+# Google Sheets Synchronization (Phase 09)
+gspread>=6.0.0
+google-auth>=2.28.0
+
