@@ -1,0 +1,192 @@
+version: '3.9'
+
+networks:
+  eduself-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:
+  media_volume:
+  backups_volume:
+  certbot_etc:
+
+services:
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: eduself-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - certbot_etc:/etc/letsencrypt:ro
+      - static_volume:/var/www/static:ro
+      - media_volume:/var/www/media:ro
+    depends_on:
+      - web
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.backend
+    container_name: eduself-web
+    restart: always
+    command: daphne -b 0.0.0.0 -p 8000 core.asgi:application
+    environment:
+      - ENVIRONMENT=production
+      - DJANGO_SETTINGS_MODULE=core.settings.production
+      - SECRET_KEY=${SECRET_KEY}
+      - POSTGRES_DB=${POSTGRES_DB:-eduself}
+      - POSTGRES_USER=${POSTGRES_USER:-eduself}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/live/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4096M
+
+  celery-worker:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.backend
+    container_name: eduself-celery-worker
+    restart: always
+    command: celery -A core worker -Q default,high_priority,sync_sheets,ai_tasks -l info -c 4
+    environment:
+      - ENVIRONMENT=production
+      - DJANGO_SETTINGS_MODULE=core.settings.production
+      - SECRET_KEY=${SECRET_KEY}
+      - POSTGRES_DB=${POSTGRES_DB:-eduself}
+      - POSTGRES_USER=${POSTGRES_USER:-eduself}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 3072M
+
+  celery-beat:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.backend
+    container_name: eduself-celery-beat
+    restart: always
+    command: celery -A core beat -l info
+    environment:
+      - ENVIRONMENT=production
+      - DJANGO_SETTINGS_MODULE=core.settings.production
+      - SECRET_KEY=${SECRET_KEY}
+      - POSTGRES_DB=${POSTGRES_DB:-eduself}
+      - POSTGRES_USER=${POSTGRES_USER:-eduself}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: eduself-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-eduself}
+      POSTGRES_USER: ${POSTGRES_USER:-eduself}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: >
+      postgres -c shared_buffers=2GB
+               -c effective_cache_size=6GB
+               -c maintenance_work_mem=512MB
+               -c checkpoint_completion_target=0.9
+               -c wal_buffers=16MB
+               -c max_connections=200
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - backups_volume:/data/backups
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-eduself} -d $${POSTGRES_DB:-eduself}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4096M
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: eduself-redis
+    restart: always
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "3gb", "--maxmemory-policy", "volatile-lru"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 3500M

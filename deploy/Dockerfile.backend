@@ -1,0 +1,62 @@
+# ============================================================
+# EduSelf Teacher — Multi-Stage Production Dockerfile
+# DEPLOYMENT_ARCHITECTURE.md §4 va SECURITY.md §9 asosida.
+# ============================================================
+
+# ------------------------------------------------------------
+# 1-Bosqich: Builder (Kutubxonalarni yig'ish)
+# ------------------------------------------------------------
+FROM python:3.12-slim AS builder
+
+WORKDIR /build
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    gcc \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# ------------------------------------------------------------
+# 2-Bosqich: Runner (Xavfsiz Minimal Runtime)
+# ------------------------------------------------------------
+FROM python:3.12-slim AS runner
+
+# Xavfsizlik: Non-root foydalanuvchi yaratish (OWASP & NIST tavsiyasi)
+RUN groupadd -g 10001 appgroup && \
+    useradd -u 10001 -g appgroup -s /bin/bash -m appuser
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    curl \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Builder bosqichidagi tayyor Python paketlarini ko'chirish
+COPY --from=builder /install /usr/local
+
+# Loyiha kodini to'liq ko'chirish va appuser huquqlarini o'rnatish
+COPY --chown=appuser:appgroup . /app
+
+RUN chmod +x /app/deploy/scripts/*.sh && \
+    mkdir -p /app/staticfiles /app/media && \
+    chown -R appuser:appgroup /app/staticfiles /app/media
+
+USER appuser
+
+EXPOSE 8000
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DJANGO_SETTINGS_MODULE=core.settings.production
+
+ENTRYPOINT ["/app/deploy/scripts/entrypoint.sh"]
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "core.asgi:application"]

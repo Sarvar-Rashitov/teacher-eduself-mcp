@@ -26,4 +26,5 @@ urlpatterns = [
     path('api/sheets/', include('apps.sheets_sync.urls')),
     path('mcp/', include('apps.mcp_server.urls')),
     path('oauth/', include('apps.mcp_server.oauth_urls')),
+    path('health/', include('deploy.health.urls')),
 ]
