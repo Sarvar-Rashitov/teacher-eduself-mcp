@@ -58,10 +58,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # Xavfsizlik middleware'lari (Phase 10 da qo'shiladi)
-    # 'core.middleware.security_headers.SecurityHeadersMiddleware',
-    # 'core.middleware.rate_limit.RateLimitMiddleware',
-    # 'core.middleware.audit_log.AuditLogMiddleware',
+    # Xavfsizlik middleware'lari (Phase 10)
+    'core.middleware.security_headers.SecurityHeadersMiddleware',
+    'core.middleware.rate_limit.SlidingWindowRateLimitMiddleware',
+    'core.middleware.audit_log.SecurityAuditLogMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'

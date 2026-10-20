@@ -22,21 +22,42 @@ def index_view(request):
     return redirect('/login/')
 
 
+from apps.authentication.security import BruteForceProtector
+
+
 def login_view(request):
-    """O'qituvchi kirish sahifasi."""
+    """O'qituvchi kirish sahifasi (Brute-force himoyasi bilan)."""
     if request.user.is_authenticated:
         return redirect('/dashboard/')
+
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    client_ip = x_forwarded_for.split(',')[0].strip() if x_forwarded_for else request.META.get('REMOTE_ADDR', '127.0.0.1')
+
+    is_locked, remaining_seconds = BruteForceProtector.is_locked(client_ip)
+    if is_locked:
+        return render(request, 'auth/login.html', {
+            'error': f"Ko'p xato urinishlar tufayli hisobingiz vaqtincha bloklandi. Iltimos, {remaining_seconds} soniyadan so'ng qayta urinib ko'ring."
+        }, status=429)
 
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '').strip()
         user = authenticate(request, username=username, password=password)
         if user is not None:
+            BruteForceProtector.reset_attempts(client_ip)
             login(request, user)
             next_url = request.GET.get('next') or '/dashboard/'
             return redirect(next_url)
+
+        attempts, is_now_locked = BruteForceProtector.record_failed_attempt(client_ip)
+        if is_now_locked:
+            return render(request, 'auth/login.html', {
+                'error': "5 marta xato parol kiritildi. Hisobingiz 15 daqiqaga bloklandi."
+            }, status=429)
+
+        remaining_attempts = max(0, BruteForceProtector.MAX_ATTEMPTS - attempts)
         return render(request, 'auth/login.html', {
-            'error': "Foydalanuvchi nomi yoki maxfiy parol noto'g'ri."
+            'error': f"Foydalanuvchi nomi yoki maxfiy parol noto'g'ri. (Qolgan urinishlar: {remaining_attempts})"
         })
 
     return render(request, 'auth/login.html')

@@ -44,6 +44,7 @@ Pillow>=10.4.0
 # Xavfsizlik va Utillar
 python-dotenv>=1.0.0
 django-cors-headers>=4.3.0
+bleach>=6.0.0
 
 # Testlar
 pytest-django>=4.8.0
