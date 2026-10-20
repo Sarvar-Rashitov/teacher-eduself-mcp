@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .services import check_telegram_hash, authenticate_telegram_user, authenticate_google_user
 from .permissions import login_required_json
+from .models import User
 
 
 @csrf_exempt
@@ -129,6 +130,14 @@ def login_view(request: HttpRequest) -> HttpResponse:
         return response
 
     user = authenticate(request, username=username, password=password)
+    if user is None and '@' in username:
+        try:
+            matched_user = User.objects.filter(email__iexact=username).first()
+            if matched_user:
+                user = authenticate(request, username=matched_user.username, password=password)
+        except Exception:
+            pass
+
     if user is None:
         record_login_failure(client_ip, username)
         return JsonResponse({'error': 'Login yoki parol noto‘g‘ri'}, status=401)
