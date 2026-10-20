@@ -13,7 +13,7 @@
     { label: "Play Arena", icon: "/static/img/icons/play.svg", href: "/play/" },
     { label: "Yangi Viktorina", icon: "/static/img/icons/plus.svg", href: "/editor/new/" },
     { label: "AI Yordamchi", icon: "/static/img/icons/sparkles.svg", href: "javascript:window.toggleAiDrawer();" },
-    { label: "3D Vitrina", icon: "/static/img/icons/trophy.svg", href: "/design-system/" },
+    { label: "Peshqadamlar", icon: "/static/img/icons/trophy.svg", href: "/leaderboard/" },
     { label: "Profilim", icon: "/static/img/icons/user.svg", href: "/profile/" },
   ];
 
@@ -45,14 +45,14 @@
       triggerBtn.title = 'Tezkor Radial Menyu';
       triggerBtn.innerHTML = `
         <span class="circle-menu-icon-open">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </span>
         <span class="circle-menu-icon-close">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
@@ -83,7 +83,7 @@
         a.style.setProperty('--stagger-index', index);
 
         a.innerHTML = `
-          <img src="${item.icon}" alt="${item.label}" class="svg-icon svg-icon-sm">
+          <img src="${item.icon}" alt="${item.label}" class="circle-menu-icon">
           <span class="circle-menu-label">${item.label}</span>
         `;
 

@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="{% static 'css/eduplay_3d.css' %}">
   {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
 
   <!-- ================= Dual Floating Islands Navigation Bar ================= -->
   {% block navbar %}
@@ -42,11 +42,13 @@
       <!-- Radial CircleMenu Navigation Trigger -->
       <div data-circle-menu id="headerCircleMenu"></div>
 
-      <!-- Audio Toggle Button (Web Audio API) -->
+      <!-- Audio Toggle Button (Web Audio API - for authenticated users only) -->
+      {% if user.is_authenticated %}
       <button class="audio-toggle-btn" id="soundToggleBtn" type="button" title="Tovushni yoqish / o'chirish">
         <img src="{% static 'img/icons/speaker_on.svg' %}" alt="Ovoz" class="svg-icon svg-icon-sm">
         <span class="audio-text">Tovush: Yoqilgan</span>
       </button>
+      {% endif %}
 
       {% if user.is_authenticated %}
         <a href="/profile/" class="audio-toggle-btn" style="text-decoration: none; border-color: var(--primary-orange);">

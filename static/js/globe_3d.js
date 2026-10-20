@@ -22,8 +22,8 @@
     { lat: 1.3521, lon: 103.8198, label: "Singapore", primary: false, size: 3 },
   ];
 
-  // Pre-generate continent points grid (Fibonacci Sphere / landmass representation)
-  function generateGlobePoints(count = 900) {
+  // Pre-generate continent points grid (Fibonacci Sphere / landmass representation with high density)
+  function generateGlobePoints(count = 3200) {
     const points = [];
     const phi = (1 + Math.sqrt(5)) / 2; // Golden ratio
     for (let i = 0; i < count; i++) {
@@ -37,20 +37,31 @@
       const lat = Math.asin(y) * (180 / Math.PI);
       const lon = Math.atan2(z, x) * (180 / Math.PI);
 
-      // Rough landmass filter (continents distribution approximation)
-      const isLand = (
+      // Enhanced Central Asia / Uzbekistan coordinate boundaries
+      const isUzbekistan = (lat >= 36.5 && lat <= 45.8 && lon >= 56.0 && lon <= 73.5);
+
+      // Continents distribution filter
+      const isLand = isUzbekistan || (
         (lat > -35 && lat < 37 && lon > -18 && lon < 52) || // Africa
         (lat > 35 && lat < 72 && lon > -10 && lon < 45) ||  // Europe
-        (lat > 5 && lat < 75 && lon > 45 && lon < 145) ||   // Asia & Central Asia (Uzbekistan!)
+        (lat > 5 && lat < 75 && lon > 45 && lon < 145) ||   // Asia & Central Asia
         (lat > 15 && lat < 72 && lon > -165 && lon < -55) || // North America
         (lat > -55 && lat < 12 && lon > -82 && lon < -34) || // South America
         (lat > -40 && lat < -10 && lon > 112 && lon < 155)   // Australia
       );
 
-      if (isLand || Math.random() < 0.12) {
-        points.push({ lat, lon, isLand });
+      if (isLand || Math.random() < 0.07) {
+        points.push({ lat, lon, isLand, isUzbekistan });
       }
     }
+
+    // Add extra dense points specifically over Uzbekistan & Silk Road heartland
+    for (let j = 0; j < 140; j++) {
+      const uLat = 37.2 + Math.random() * 8.2;
+      const uLon = 56.8 + Math.random() * 16.2;
+      points.push({ lat: uLat, lon: uLon, isLand: true, isUzbekistan: true });
+    }
+
     return points;
   }
 
@@ -63,7 +74,7 @@
         theta: 0.32, // tilt angle (radians)
         baseRadius: 180,
         primaryColor: '#FF7527',
-        landColor: '#94A3B8',
+        landColor: '#64748B',
         oceanGlow: 'rgba(255, 117, 39, 0.08)'
       }, options);
 
@@ -72,7 +83,7 @@
       this.velocity = 0;
       this.isDragging = false;
       this.lastMouseX = 0;
-      this.points = generateGlobePoints(850);
+      this.points = generateGlobePoints(3200);
       this.animId = null;
 
       this.init();
@@ -86,8 +97,8 @@
     }
 
     handleResize() {
-      const rect = this.canvas.parentElement ? this.canvas.parentElement.getBoundingClientRect() : { width: 600, height: 600 };
-      const size = Math.min(rect.width || 600, rect.height || 600, 820);
+      const rect = this.canvas.parentElement ? this.canvas.parentElement.getBoundingClientRect() : { width: 850, height: 850 };
+      const size = Math.min(rect.width || 850, rect.height || 850, 960);
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
       this.canvas.width = size * dpr;
@@ -97,7 +108,7 @@
 
       this.ctx.scale(dpr, dpr);
       this.size = size;
-      this.radius = (size / 2) * 0.82;
+      this.radius = (size / 2) * 0.84;
       this.cx = size / 2;
       this.cy = size / 2;
     }
@@ -199,11 +210,15 @@
 
         // Depth scale and alpha based on z
         const depthRatio = Math.max(0.2, proj.z / r);
-        const pointSize = pt.isLand ? (1.8 * depthRatio) : (1.1 * depthRatio);
+        const pointSize = pt.isUzbekistan ? (2.4 * depthRatio) : (pt.isLand ? (1.7 * depthRatio) : (1.0 * depthRatio));
 
-        ctx.fillStyle = pt.isLand
-          ? `rgba(100, 116, 139, ${0.35 + depthRatio * 0.45})`
-          : `rgba(203, 213, 225, ${0.2 + depthRatio * 0.2})`;
+        if (pt.isUzbekistan) {
+          ctx.fillStyle = `rgba(255, 117, 39, ${0.75 + depthRatio * 0.25})`;
+        } else if (pt.isLand) {
+          ctx.fillStyle = `rgba(80, 95, 115, ${0.4 + depthRatio * 0.55})`;
+        } else {
+          ctx.fillStyle = `rgba(203, 213, 225, ${0.12 + depthRatio * 0.18})`;
+        }
 
         ctx.beginPath();
         ctx.arc(proj.x, proj.y, pointSize, 0, Math.PI * 2);

@@ -1499,10 +1499,10 @@ h1, h2, h3, h4, .font-heading {
 
 .circle-menu-item {
   position: absolute;
-  top: -22px;
-  left: -22px;
-  width: 44px;
-  height: 44px;
+  top: -24px;
+  left: -24px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: #FFFFFF;
   border: 1.5px solid var(--border-subtle);
@@ -1516,6 +1516,13 @@ h1, h2, h3, h4, .font-heading {
   transform: translate(0, 0) scale(0.3);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
   pointer-events: none;
+}
+
+.circle-menu-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
 }
 
 .circle-menu-item:hover {
@@ -1557,31 +1564,70 @@ h1, h2, h3, h4, .font-heading {
 }
 
 /* ==========================================================================
-   3D Interactive Globe Hero Styles
+   100vh Viewport-Locked No-Scroll Landing Page Layout
+   ========================================================================== */
+
+body.guest-landing-body {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+}
+
+body.guest-landing-body .main-content-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+body.guest-landing-body .dashboard-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  padding: 0;
+}
+
+/* ==========================================================================
+   3D Interactive Globe Hero Styles (Sunken 72% Horizon with 960px Diameter)
    ========================================================================== */
 
 .globe-hero-section {
   position: relative;
-  min-height: 680px;
-  background: radial-gradient(circle at 50% 45%, #FFF6F0 0%, #FAF8F5 65%, #F4F1EB 100%);
-  border-radius: 40px;
+  min-height: 600px;
+  background: radial-gradient(circle at 50% 30%, #FFF7F2 0%, #FAF8F5 60%, #F3EFEB 100%);
+  border-radius: 36px;
   overflow: hidden;
-  margin: 12px 24px 36px;
+  margin: 8px 24px 20px;
   border: 2px solid rgba(255, 117, 39, 0.15);
   box-shadow: 0 24px 64px rgba(30, 30, 36, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
   display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
-  padding: 48px 24px;
+  padding: 36px 24px 24px;
+}
+
+body.guest-landing-body .globe-hero-section {
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+  max-height: calc(100vh - 84px);
+  margin: 4px 24px 12px;
+  padding: 24px 20px;
 }
 
 .globe-canvas-wrap {
   position: absolute;
-  top: 52%;
+  top: 72%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
-  max-width: 800px;
+  max-width: 960px;
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
@@ -1595,7 +1641,7 @@ h1, h2, h3, h4, .font-heading {
   user-select: none;
   touch-action: none;
   cursor: grab;
-  filter: drop-shadow(0 24px 60px rgba(255, 117, 39, 0.16));
+  filter: drop-shadow(0 24px 60px rgba(255, 117, 39, 0.18));
 }
 
 .globe-canvas-wrap canvas:active {
@@ -1605,7 +1651,7 @@ h1, h2, h3, h4, .font-heading {
 .globe-backdrop-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, rgba(251, 249, 245, 0.72) 80%);
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.04) 0%, rgba(251, 249, 245, 0.70) 80%);
   pointer-events: none;
   z-index: 2;
 }
@@ -1675,6 +1721,31 @@ h1, h2, h3, h4, .font-heading {
   margin-top: 36px;
   position: relative;
   z-index: 15;
+}
+
+body.guest-landing-body .dual-portal-header {
+  margin-bottom: 14px;
+}
+
+body.guest-landing-body .dual-portal-badge {
+  margin-bottom: 8px;
+  padding: 5px 16px;
+  font-size: 12px;
+}
+
+body.guest-landing-body .dual-portal-title {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+body.guest-landing-body .dual-portal-subtitle {
+  font-size: 14.5px;
+  max-width: 580px;
+}
+
+body.guest-landing-body .hero-actions-group {
+  margin-top: 18px;
+  gap: 16px;
 }
 
 /* 1. Teacher Portal Hero Button */

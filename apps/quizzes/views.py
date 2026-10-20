@@ -193,13 +193,16 @@ def teacher_dashboard_view(request):
 def quiz_editor_view(request, quiz_id=None):
     """
     Renders the universal 3-column quiz editor.
+    Requires authentication: unauthenticated users are redirected to login.
     """
-    from django.shortcuts import render
+    from django.shortcuts import render, redirect
+    if not request.user.is_authenticated:
+        return redirect(f"/login/?next={request.path}")
+
     quiz = None
     if quiz_id:
         try:
-            if request.user.is_authenticated:
-                quiz = Quiz.objects.filter(pk=quiz_id, owner=request.user).first()
+            quiz = Quiz.objects.filter(pk=quiz_id, owner=request.user).first()
             if not quiz:
                 quiz = Quiz.objects.filter(pk=quiz_id).first()
         except Exception:
@@ -219,4 +222,29 @@ def design_system_showcase_view(request):
     return render(request, 'showcase/component_library.html', {
         'user': request.user,
     })
+
+
+def leaderboard_page_view(request):
+    """
+    Renders the public & national 3D Leaderboard Podium and Rankings page.
+    """
+    from django.shortcuts import render
+    top_3 = [
+        {"rank": 1, "nickname": "Aziza Karimova", "school": "7-Maktab (Toshkent)", "score": 3450, "streak": 8, "accolade": "Humo Qanoti"},
+        {"rank": 2, "nickname": "Jasur Aliyev", "school": "14-Prezident Maktabi (Samarqand)", "score": 3120, "streak": 6, "accolade": "Qanotli Tulpor"},
+        {"rank": 3, "nickname": "Madina Shokirova", "school": "1-IDUM (Farg'ona)", "score": 2890, "streak": 5, "accolade": "Uchqur Lochin"},
+    ]
+    rankings = [
+        {"rank": 4, "nickname": "Otabek Rustamov", "school": "21-Maktab (Buxoro)", "score": 2650, "accuracy": "94%"},
+        {"rank": 5, "nickname": "Zilola Yusupova", "school": "5-Gimnaziya (Andijon)", "score": 2420, "accuracy": "91%"},
+        {"rank": 6, "nickname": "Bobur Mirzayev", "school": "32-Maktab (Namangan)", "score": 2280, "accuracy": "89%"},
+        {"rank": 7, "nickname": "Dilnoza Saidova", "school": "8-Maktab (Xorazm)", "score": 2150, "accuracy": "88%"},
+        {"rank": 8, "nickname": "Sardor Ahmedov", "school": "19-Maktab (Qashqadaryo)", "score": 2040, "accuracy": "85%"},
+    ]
+    return render(request, 'leaderboard/leaderboard_page.html', {
+        'user': request.user,
+        'top_3': top_3,
+        'rankings': rankings,
+    })
+
 

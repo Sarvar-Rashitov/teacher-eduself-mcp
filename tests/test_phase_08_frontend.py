@@ -177,3 +177,27 @@ class TestPhase08Frontend:
             assert resp.status_code == 200
             content = resp.content.decode('utf-8')
             assert ".svg" in content or "<svg" in content
+
+    def test_quiz_editor_redirects_unauthenticated_to_login(self):
+        client = Client()
+        response = client.get('/editor/new/')
+        assert response.status_code == 302
+        assert '/login/?next=/editor/new/' in response.headers['Location']
+
+    def test_sound_toggle_hidden_for_guests_and_100vh_active(self):
+        client = Client()
+        response = client.get('/')
+        assert response.status_code == 200
+        content = response.content.decode('utf-8')
+        assert 'soundToggleBtn' not in content
+        assert 'guest-landing-body' in content
+
+    def test_leaderboard_page_renders_ok(self):
+        client = Client()
+        response = client.get('/leaderboard/')
+        assert response.status_code == 200
+        content = response.content.decode('utf-8')
+        assert "Peshqadamlar Shohsupasi" in content
+        assert "Humo Qanoti" in content
+        assert "Aziza Karimova" in content
+
