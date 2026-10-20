@@ -175,6 +175,22 @@ h1, h2, h3, h4, .font-heading {
   filter: drop-shadow(0 2px 8px rgba(255, 117, 39, 0.2));
 }
 
+.brand-logo-default {
+  display: block;
+}
+
+.brand-logo-white {
+  display: none !important;
+}
+
+.login-neural-page .brand-logo-default {
+  display: none !important;
+}
+
+.login-neural-page .brand-logo-white {
+  display: block !important;
+}
+
 .brand-logo-badge {
   width: 44px;
   height: 44px;
