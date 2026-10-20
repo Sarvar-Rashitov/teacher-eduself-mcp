@@ -18,20 +18,30 @@
 </head>
 <body>
 
-  <!-- ================= App Navigation Bar ================= -->
+  <!-- ================= Dual Floating Islands Navigation Bar ================= -->
   {% block navbar %}
-  <header class="app-navbar">
-    <a href="/" class="brand-wrapper">
-      <div class="brand-logo-badge">
-        <img src="{% static 'img/icons/sparkles.svg' %}" alt="EduSelf" class="svg-icon" style="filter: brightness(0) invert(1);">
-      </div>
-      <div class="brand-title-wrap">
-        <span class="brand-name">EduSelf</span>
-        <span class="brand-subtitle">AI & Real-Time Classroom</span>
-      </div>
-    </a>
+  <header class="app-navbar app-navbar-container">
+    <!-- Left Floating Island: EduSelf Teacher Brand Capsule -->
+    <div class="navbar-island navbar-island-brand">
+      <a href="/" class="brand-wrapper" title="EduSelf Bosh Sahifasi">
+        <img src="{% static 'img/eduself_teacher_logo.svg' %}" alt="EduSelf Teacher" class="brand-logo-img">
+      </a>
+    </div>
 
-    <div class="nav-actions">
+    <!-- Center Open Space (Allows background and 3D Globe to shine through) -->
+
+    <!-- Right Floating Island: Navigation & Quick Actions Capsule -->
+    <div class="navbar-island navbar-island-actions">
+      <!-- Quick Play Arena Link with Pulsing Beacon -->
+      <a href="/play/" class="nav-play-pill" title="O'quvchi sifatida jonli o'yinga ulanish">
+        <span class="nav-play-pulse"></span>
+        <img src="{% static 'img/icons/play.svg' %}" alt="Play" class="svg-icon svg-icon-sm" style="filter: brightness(0) invert(1);">
+        <span>Play Arena</span>
+      </a>
+
+      <!-- Radial CircleMenu Navigation Trigger -->
+      <div data-circle-menu id="headerCircleMenu"></div>
+
       <!-- Audio Toggle Button (Web Audio API) -->
       <button class="audio-toggle-btn" id="soundToggleBtn" type="button" title="Tovushni yoqish / o'chirish">
         <img src="{% static 'img/icons/speaker_on.svg' %}" alt="Ovoz" class="svg-icon svg-icon-sm">
@@ -39,12 +49,12 @@
       </button>
 
       {% if user.is_authenticated %}
-        <a href="/profile/" class="audio-toggle-btn" style="text-decoration: none;">
-          <img src="{% static 'img/icons/user.svg' %}" alt="Profil" class="svg-icon svg-icon-sm">
+        <a href="/profile/" class="audio-toggle-btn" style="text-decoration: none; border-color: var(--primary-orange);">
+          <img src="{% static 'img/icons/user.svg' %}" alt="Profil" class="svg-icon svg-icon-sm" style="color: var(--primary-orange);">
           <span>{{ user.first_name|default:user.username }}</span>
         </a>
       {% else %}
-        <a href="/login/" class="pill-btn btn-primary-orange btn-sm">
+        <a href="/login/" class="pill-btn btn-primary-orange btn-sm" style="height: 38px; padding: 0 20px; font-size: 13.5px; width: auto; text-decoration: none;">
           Kirish
         </a>
       {% endif %}
@@ -63,6 +73,8 @@
   <!-- Core Scripts -->
   <script src="{% static 'js/audio.js' %}"></script>
   <script src="{% static 'js/components.js' %}"></script>
+  <script src="{% static 'js/circle_menu.js' %}"></script>
+  <script src="{% static 'js/globe_3d.js' %}"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

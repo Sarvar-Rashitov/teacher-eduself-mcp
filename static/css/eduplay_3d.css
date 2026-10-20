@@ -107,17 +107,52 @@ h1, h2, h3, h4, .font-heading {
    Header & Navigation
    ========================================================================== */
 
+.app-navbar-container,
 .app-navbar {
-  background: #FFFFFF;
-  border-bottom: 2px solid var(--border-subtle);
-  padding: 14px 28px;
+  position: sticky;
+  top: 14px;
+  z-index: 100;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 60;
-  box-shadow: 0 4px 16px rgba(30, 30, 36, 0.03);
+  pointer-events: none;
+  background: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: all 0.25s ease;
+}
+
+.navbar-island {
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 32px rgba(30, 30, 36, 0.08), 0 2px 6px rgba(30, 30, 36, 0.03);
+  display: flex;
+  align-items: center;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.navbar-island:hover {
+  box-shadow: 0 14px 40px rgba(30, 30, 36, 0.12);
+  transform: translateY(-1px);
+}
+
+.navbar-island-brand {
+  padding: 6px 20px;
+}
+
+.navbar-island-actions {
+  padding: 6px 14px;
+  gap: 10px;
 }
 
 .brand-wrapper {
@@ -126,6 +161,18 @@ h1, h2, h3, h4, .font-heading {
   gap: 12px;
   text-decoration: none;
   color: inherit;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brand-wrapper:hover {
+  transform: translateY(-1px);
+}
+
+.brand-logo-img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(255, 117, 39, 0.2));
 }
 
 .brand-logo-badge {
@@ -163,6 +210,55 @@ h1, h2, h3, h4, .font-heading {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+/* Glowing Play Arena Button in Header */
+.nav-play-pill {
+  background: linear-gradient(135deg, #FF7527 0%, #FF4500 100%);
+  color: #FFFFFF !important;
+  text-decoration: none;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 13.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(255, 117, 39, 0.4);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-play-pill:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(255, 117, 39, 0.55);
+}
+
+.nav-play-pulse {
+  width: 8px;
+  height: 8px;
+  background: #34D399;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+  animation: pulseBeacon 1.8s infinite;
+}
+
+@keyframes pulseBeacon {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(52, 211, 153, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+  }
 }
 
 .audio-toggle-btn {
@@ -1328,6 +1424,448 @@ h1, h2, h3, h4, .font-heading {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   Radial CircleMenu Component Styles (Trigonometric pointOnCircle)
+   ========================================================================== */
+
+.circle-menu-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+}
+
+.circle-menu-trigger {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--text-main);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(30, 30, 36, 0.25);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 85;
+}
+
+.circle-menu-trigger:hover {
+  transform: scale(1.08);
+  background: var(--primary-orange);
+  box-shadow: 0 6px 16px rgba(255, 117, 39, 0.4);
+}
+
+.circle-menu-wrapper.is-open .circle-menu-trigger {
+  background: var(--primary-orange);
+  transform: rotate(90deg);
+}
+
+.circle-menu-icon-open,
+.circle-menu-icon-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.circle-menu-icon-close {
+  display: none;
+}
+
+.circle-menu-wrapper.is-open .circle-menu-icon-open {
+  display: none;
+}
+
+.circle-menu-wrapper.is-open .circle-menu-icon-close {
+  display: flex;
+}
+
+.circle-menu-items {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 80;
+}
+
+.circle-menu-item {
+  position: absolute;
+  top: -22px;
+  left: -22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-subtle);
+  color: var(--text-main);
+  box-shadow: 0 6px 18px rgba(30, 30, 36, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  opacity: 0;
+  transform: translate(0, 0) scale(0.3);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.circle-menu-item:hover {
+  background: var(--primary-orange-soft);
+  border-color: var(--primary-orange);
+  transform: translate(var(--target-x), var(--target-y)) scale(1.15) !important;
+  box-shadow: 0 8px 24px rgba(255, 117, 39, 0.35);
+}
+
+.circle-menu-wrapper.is-open .circle-menu-item {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(var(--target-x), var(--target-y)) scale(1);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--stagger-index) * 0.03s), opacity 0.2s ease calc(var(--stagger-index) * 0.02s);
+}
+
+.circle-menu-label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(30, 30, 36, 0.92);
+  color: #FFFFFF;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.circle-menu-item:hover .circle-menu-label {
+  opacity: 1;
+  transform: translateX(-50%) translateY(6px);
+}
+
+/* ==========================================================================
+   3D Interactive Globe Hero Styles
+   ========================================================================== */
+
+.globe-hero-section {
+  position: relative;
+  min-height: 680px;
+  background: radial-gradient(circle at 50% 45%, #FFF6F0 0%, #FAF8F5 65%, #F4F1EB 100%);
+  border-radius: 40px;
+  overflow: hidden;
+  margin: 12px 24px 36px;
+  border: 2px solid rgba(255, 117, 39, 0.15);
+  box-shadow: 0 24px 64px rgba(30, 30, 36, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+.globe-canvas-wrap {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.globe-canvas-wrap canvas {
+  display: block;
+  user-select: none;
+  touch-action: none;
+  cursor: grab;
+  filter: drop-shadow(0 24px 60px rgba(255, 117, 39, 0.16));
+}
+
+.globe-canvas-wrap canvas:active {
+  cursor: grabbing;
+}
+
+.globe-backdrop-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, rgba(251, 249, 245, 0.72) 80%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   Streamlined Hero Action Overlay (Guest Landing: Expansive Globe + Action Pills)
+   ========================================================================== */
+
+.dual-portal-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.dual-portal-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.dual-portal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255, 117, 39, 0.3);
+  padding: 6px 18px;
+  border-radius: var(--radius-pill);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 12.5px;
+  color: var(--primary-orange);
+  box-shadow: 0 4px 16px rgba(255, 117, 39, 0.15);
+  margin-bottom: 14px;
+}
+
+.dual-portal-title {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.6px;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 12px rgba(255, 255, 255, 0.8);
+}
+
+.dual-portal-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.55;
+  text-shadow: 0 1px 8px rgba(255, 255, 255, 0.9);
+}
+
+/* Modern Streamlined Hero Actions Group */
+.hero-actions-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 36px;
+  position: relative;
+  z-index: 15;
+}
+
+/* 1. Teacher Portal Hero Button */
+.hero-btn-teacher {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 117, 39, 0.35);
+  border-radius: var(--radius-pill);
+  padding: 10px 24px 10px 12px;
+  text-decoration: none;
+  box-shadow: 0 12px 32px rgba(255, 117, 39, 0.18), 0 4px 12px rgba(30, 30, 36, 0.04);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hero-btn-teacher:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: var(--primary-orange);
+  box-shadow: 0 16px 40px rgba(255, 117, 39, 0.32);
+}
+
+.hero-btn-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hero-btn-icon-teacher {
+  background: linear-gradient(135deg, #FF7527 0%, #FF9040 100%);
+  color: white;
+  box-shadow: 0 4px 14px rgba(255, 117, 39, 0.35);
+}
+
+.hero-btn-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.hero-btn-subtitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--primary-orange);
+}
+
+.hero-btn-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+/* 2. Student Arena PIN Pill Form */
+.hero-pin-capsule {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(0, 163, 255, 0.35);
+  border-radius: var(--radius-pill);
+  padding: 8px 10px 8px 12px;
+  box-shadow: 0 12px 32px rgba(0, 163, 255, 0.16), 0 4px 12px rgba(30, 30, 36, 0.04);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hero-pin-capsule:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: var(--bento-blue);
+  box-shadow: 0 16px 40px rgba(0, 163, 255, 0.28);
+}
+
+.hero-btn-icon-student {
+  background: linear-gradient(135deg, #00A3FF 0%, #0080FF 100%);
+  color: white;
+  box-shadow: 0 4px 14px rgba(0, 163, 255, 0.35);
+}
+
+.hero-pin-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-pin-input-wrap {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.hero-pin-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--bento-blue);
+}
+
+.hero-pin-input {
+  height: 36px;
+  width: 140px;
+  background: #F1F5F9;
+  border: 1.5px solid #CBD5E1;
+  border-radius: var(--radius-pill);
+  padding: 0 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-align: center;
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.hero-pin-input:focus {
+  background: #FFFFFF;
+  border-color: var(--bento-blue);
+  box-shadow: 0 0 0 3px rgba(0, 163, 255, 0.2);
+}
+
+.hero-pin-submit-btn {
+  height: 42px;
+  padding: 0 20px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #00A3FF 0%, #0077E6 100%);
+  color: white;
+  border: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 163, 255, 0.4);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hero-pin-submit-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 18px rgba(0, 163, 255, 0.55);
+}
+
+@media (max-width: 768px) {
+  .app-navbar-container,
+  .app-navbar {
+    padding: 0 12px;
+    top: 8px;
+  }
+  .navbar-island-brand {
+    padding: 6px 14px;
+  }
+  .navbar-island-actions {
+    padding: 6px 10px;
+    gap: 6px;
+  }
+  .brand-logo-img {
+    height: 36px;
+  }
+  .globe-hero-section {
+    min-height: 520px;
+    margin: 8px 12px 24px;
+    padding: 32px 14px;
+    border-radius: 28px;
+  }
+  .dual-portal-title {
+    font-size: 28px;
+  }
+  .hero-actions-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+  .hero-btn-teacher,
+  .hero-pin-capsule {
+    width: 100%;
+    justify-content: center;
   }
 }
 
