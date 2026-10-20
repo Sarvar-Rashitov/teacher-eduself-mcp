@@ -114,13 +114,29 @@ def login_view(request: HttpRequest) -> HttpResponse:
     if not username or not password:
         return JsonResponse({'error': 'Login va parol kiritilishi shart'}, status=400)
 
+    from core.middleware.rate_limit import get_client_ip
+    from .security import is_account_locked, record_login_failure, reset_login_failures
+
+    client_ip = get_client_ip(request)
+    is_locked, remaining = is_account_locked(client_ip, username)
+    if is_locked:
+        response = JsonResponse({
+            'error': 'Too Many Requests',
+            'message': f'Ketma-ket xato urinishlar sababli hisob vaqtincha bloklandi. Qolgan vaqt: {remaining} soniya.',
+            'retry_after': remaining
+        }, status=429)
+        response['Retry-After'] = str(remaining)
+        return response
+
     user = authenticate(request, username=username, password=password)
     if user is None:
+        record_login_failure(client_ip, username)
         return JsonResponse({'error': 'Login yoki parol noto‘g‘ri'}, status=401)
 
     if not user.is_active:
         return JsonResponse({'error': 'Foydalanuvchi hisobi faol emas'}, status=403)
 
+    reset_login_failures(client_ip, username)
     login(request, user)
     return JsonResponse({
         'status': 'ok',

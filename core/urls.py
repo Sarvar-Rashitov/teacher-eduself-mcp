@@ -29,6 +29,7 @@ urlpatterns = [
 
     # Backend APIs
     path('auth/', include('apps.authentication.urls')),
+    path('api/v1/auth/', include('apps.authentication.urls')),
     path('api/v1/quizzes/', include('apps.quizzes.urls')),
     path('api/v1/sessions/', include('apps.live_sessions.urls')),
     path('api/v1/ai-workspace/', include('apps.ai_workspace.urls')),
