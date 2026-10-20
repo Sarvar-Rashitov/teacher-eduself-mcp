@@ -1740,28 +1740,32 @@ body.guest-landing-body .globe-hero-section {
 }
 
 body.guest-landing-body .dual-portal-header {
-  margin-bottom: 18px;
+  margin-bottom: 36px;
 }
 
 body.guest-landing-body .dual-portal-badge {
   margin-bottom: 14px;
-  padding: 6px 18px;
-  font-size: 12.5px;
+  padding: 7px 22px;
+  font-size: 13.5px;
 }
 
 body.guest-landing-body .dual-portal-title {
-  font-size: 38px;
-  margin-bottom: 10px;
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  line-height: 1.15;
+  margin-bottom: 12px;
 }
 
 body.guest-landing-body .dual-portal-subtitle {
-  font-size: 15px;
-  max-width: 600px;
+  font-size: 17.5px;
+  max-width: 680px;
+  line-height: 1.55;
 }
 
 body.guest-landing-body .hero-actions-group {
-  margin-top: 24px;
-  gap: 18px;
+  margin-top: 36px;
+  gap: 20px;
 }
 
 /* 1. Teacher Portal Hero Button */
