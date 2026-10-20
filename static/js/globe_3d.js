@@ -97,8 +97,8 @@
     }
 
     handleResize() {
-      const rect = this.canvas.parentElement ? this.canvas.parentElement.getBoundingClientRect() : { width: 850, height: 850 };
-      const size = Math.min(rect.width || 850, rect.height || 850, 960);
+      const rect = this.canvas.parentElement ? this.canvas.parentElement.getBoundingClientRect() : { width: 1000, height: 1000 };
+      const size = Math.min(rect.width || 1000, rect.height || 1000, 1100);
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
       this.canvas.width = size * dpr;
