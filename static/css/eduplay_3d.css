@@ -1740,7 +1740,8 @@ body.guest-landing-body .globe-hero-section {
 }
 
 body.guest-landing-body .dual-portal-header {
-  margin-bottom: 36px;
+  transform: translateY(-30px);
+  margin-bottom: 20px;
 }
 
 body.guest-landing-body .dual-portal-badge {
