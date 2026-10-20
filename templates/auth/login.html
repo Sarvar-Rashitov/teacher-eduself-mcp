@@ -1,70 +1,711 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}EduSelf — Tizimga Kirish{% endblock %}
+{% block title %}EduSelf — Neural Access | Ustoz Portali{% endblock %}
+
+{% block body_class %}login-neural-page{% endblock %}
 
 {% block content %}
-<div style="min-height: calc(100vh - 80px); display: flex; align-items: center; justify-content: center; padding: 24px;">
-  <div style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-card); width: 100%; max-width: 440px; padding: 36px 32px; text-align: center;">
-    
-    <!-- Brand Icon -->
-    <div style="width: 64px; height: 64px; background: var(--primary-orange-soft); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px;">
-      <img src="{% static 'img/icons/sparkles.svg' %}" alt="EduSelf" class="svg-icon svg-icon-lg">
-    </div>
+<div class="mercury-wrapper">
+  <!-- Hidden SVG Filter for Liquid Gooey Physics -->
+  <svg class="svg-filter-hidden" aria-hidden="true">
+    <defs>
+      <filter id="gooey">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
+        <feColorMatrix 
+          in="blur" 
+          mode="matrix" 
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" 
+          result="goo" 
+        />
+        <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+      </filter>
+    </defs>
+  </svg>
 
-    <h1 style="font-size: 26px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">
-      Xush kelibsiz!
-    </h1>
-    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 28px;">
-      EduSelf — AI va Real-Vaqtli Gamifikatsiya Tizimi
-    </p>
+  <!-- Background Liquid Physics Simulation Stage -->
+  <div class="stage" id="neuralMercuryStage">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+    <div class="blob blob-5"></div>
+    <div class="blob blob-6"></div>
+  </div>
 
-    <!-- Social Logins -->
-    <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
-      <a href="/auth/google/" class="pill-btn" style="background: #FFFFFF; border: 1.5px solid var(--border-subtle); color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+  <!-- Neural Access Interface Container -->
+  <main class="auth-container">
+    <header class="header">
+      <div class="brand-badge-row">
+        <span class="brand-id">SYSTEM NODE: EDUSELF // NODE-0X7A</span>
+        <span class="status-pulse-badge"><span class="pulse-dot"></span> LIVE</span>
+      </div>
+      <h1 class="neural-title">NEURAL<br/><span class="accent-text">ACCESS</span></h1>
+      <p class="neural-subtitle">EduSelf — AI va Real-Vaqtli Gamifikatsiya Tizimi</p>
+    </header>
+
+    <!-- Social Authentication Grid -->
+    <div class="neural-social-grid">
+      <a href="/auth/google/" class="neural-social-card" title="Google orqali kiring">
         <img src="{% static 'img/icons/google_logo.svg' %}" alt="Google" class="svg-icon">
         <span>Google orqali kirish</span>
       </a>
-
-      <a href="/auth/telegram/" class="pill-btn" style="background: #0088CC; color: #FFFFFF; box-shadow: 0 4px 14px rgba(0, 136, 204, 0.35);">
-        <img src="{% static 'img/icons/telegram_logo.svg' %}" alt="Telegram" class="svg-icon" style="filter: brightness(0) invert(1);">
+      <a href="/auth/telegram/" class="neural-social-card telegram" title="Telegram orqali kiring">
+        <img src="{% static 'img/icons/telegram_logo.svg' %}" alt="Telegram" class="svg-icon">
         <span>Telegram orqali kirish</span>
       </a>
     </div>
 
-    <!-- Divider -->
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-      <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
-      <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Yoki Parol Bilan</span>
-      <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+    <!-- Telemetry Divider -->
+    <div class="neural-divider">
+      <span class="divider-line"></span>
+      <span class="divider-text">YOKI PAROL BILAN</span>
+      <span class="divider-line"></span>
     </div>
 
-    <!-- Standard Login Form -->
-    <form method="post" action="/auth/login/" style="display: flex; flex-direction: column; gap: 16px; text-align: left;">
+    <!-- Neural Stream Authentication Form -->
+    <form id="neuralLoginForm" method="post" action="/auth/login/" autocomplete="off">
       {% csrf_token %}
-      <div>
-        <label for="username" style="display: block; font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
-          Login yoki Email
-        </label>
-        <input type="text" id="username" name="username" required placeholder="ustoz@maktab.uz" style="width: 100%; height: 48px; border-radius: var(--radius-md); border: 1.5px solid var(--border-subtle); padding: 0 16px; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'" onblur="this.style.borderColor='var(--border-subtle)'">
+
+      <div class="form-group">
+        <label for="username">User Identity // Login yoki Email</label>
+        <input type="text" id="username" name="username" placeholder="ustoz@maktab.uz" required autocomplete="username">
+        <div class="input-glow"></div>
       </div>
 
-      <div>
-        <label for="password" style="display: block; font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">
-          Parol
-        </label>
-        <input type="password" id="password" name="password" required placeholder="••••••••" style="width: 100%; height: 48px; border-radius: var(--radius-md); border: 1.5px solid var(--border-subtle); padding: 0 16px; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'" onblur="this.style.borderColor='var(--border-subtle)'">
+      <div class="form-group">
+        <label for="password">Sequence Key // Maxfiy Parol</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+        <div class="input-glow"></div>
       </div>
 
-      <button type="submit" class="pill-btn btn-primary-orange" style="margin-top: 8px;">
-        Kirish →
-      </button>
+      <!-- Feedback notice element -->
+      <div id="loginFeedback" class="neural-feedback" style="display: none;"></div>
+
+      <!-- The Mercury Button -->
+      <div class="submit-wrap">
+        <div class="mercury-drop"></div>
+        <button type="submit" id="submitBtn" class="btn-base">
+          <span class="btn-text">INITIALIZE STREAM →</span>
+        </button>
+      </div>
     </form>
 
-    <div style="margin-top: 24px; font-size: 13px; color: var(--text-muted);">
-      O‘quvchimisiz? <a href="/play/" style="color: var(--primary-orange); font-weight: 700; text-decoration: none;">O‘yinga PIN orqali qo‘shiling</a>
-    </div>
-
-  </div>
+    <!-- Telemetry Navigation Footer -->
+    <footer class="footer-nav">
+      <a href="#encrypted" id="encryptedRecoveryLink">ENCRYPTED RECOVERY</a>
+      <a href="/play/" class="student-arena-link">O‘QUVCHI ARENASI (PIN) →</a>
+    </footer>
+  </main>
 </div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+  :root {
+    --bg-neural: #050508;
+    --mercury-silver: #E0E0E0;
+    --mercury-dark: #666666;
+    --primary-orange: #FF7527;
+    --primary-orange-glow: rgba(255, 117, 39, 0.45);
+    --accent: #FFFFFF;
+    --text-dim: rgba(255, 255, 255, 0.55);
+    --filter-goo: url('#gooey');
+  }
+
+  .login-neural-page {
+    background-color: var(--bg-neural) !important;
+    color: var(--accent);
+    min-height: 100vh;
+  }
+
+  /* Dual island navbar dark-theme adaptation on login page */
+  .login-neural-page .navbar-island {
+    background: rgba(14, 16, 24, 0.75) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55) !important;
+  }
+  .login-neural-page .navbar-island:hover {
+    border-color: rgba(255, 117, 39, 0.45) !important;
+    box-shadow: 0 14px 40px rgba(255, 117, 39, 0.2) !important;
+  }
+
+  .mercury-wrapper {
+    background-color: var(--bg-neural);
+    color: var(--accent);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: calc(100vh - 84px);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 16px 60px;
+    box-sizing: border-box;
+  }
+
+  .mercury-wrapper * {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Background Liquid Physics Simulation Stage */
+  .stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    filter: var(--filter-goo);
+    opacity: 0.65;
+    pointer-events: none;
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(22px);
+    animation: float 22s infinite alternate ease-in-out;
+    box-shadow: inset -12px -12px 24px rgba(0,0,0,0.6), 
+                10px 10px 30px rgba(255,117,39,0.35);
+    transition: margin 0.12s ease-out;
+  }
+
+  @keyframes float {
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    33% { transform: translate(8vw, 15vh) scale(1.15) rotate(90deg); }
+    66% { transform: translate(-6vw, 10vh) scale(0.85) rotate(180deg); }
+    100% { transform: translate(5vw, -8vh) scale(1.08) rotate(270deg); }
+  }
+
+  .blob-1 {
+    width: 290px;
+    height: 290px;
+    left: 14%;
+    top: 18%;
+    background: radial-gradient(circle at 35% 35%, #FFA239, #FF7527 65%, #9E3800 100%);
+    animation-duration: 24s;
+    animation-delay: -2s;
+  }
+
+  .blob-2 {
+    width: 240px;
+    height: 240px;
+    left: 68%;
+    top: 22%;
+    background: radial-gradient(circle at 40% 40%, #FFFFFF, #E0E0E0 50%, #666666 100%);
+    animation-duration: 20s;
+    animation-delay: -5s;
+  }
+
+  .blob-3 {
+    width: 320px;
+    height: 320px;
+    left: 45%;
+    top: 52%;
+    background: radial-gradient(circle at 35% 35%, #FF8533, #FF7527 50%, #4D1A00 100%);
+    animation-duration: 28s;
+    animation-delay: -10s;
+  }
+
+  .blob-4 {
+    width: 210px;
+    height: 210px;
+    left: 18%;
+    top: 68%;
+    background: radial-gradient(circle at 35% 35%, #E0E0E0, #888888 70%, #222222 100%);
+    animation-duration: 18s;
+    animation-delay: -7s;
+  }
+
+  .blob-5 {
+    width: 270px;
+    height: 270px;
+    left: 78%;
+    top: 62%;
+    background: radial-gradient(circle at 30% 30%, #FFA834, #FF7527 60%, #B84300 100%);
+    animation-duration: 22s;
+    animation-delay: -14s;
+  }
+
+  .blob-6 {
+    width: 190px;
+    height: 190px;
+    left: 38%;
+    top: 10%;
+    background: radial-gradient(circle at 40% 40%, #FFFFFF, #E0E0E0 60%, #777777 100%);
+    animation-duration: 16s;
+    animation-delay: -3s;
+  }
+
+  /* Interface Container */
+  .auth-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 460px;
+    padding: 40px 36px;
+    background: rgba(11, 13, 20, 0.74);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 28px;
+    box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.75), 
+                0 0 40px rgba(255, 117, 39, 0.12);
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .auth-container:hover {
+    border-color: rgba(255, 117, 39, 0.35);
+    box-shadow: 0 35px 80px -15px rgba(0, 0, 0, 0.8), 
+                0 0 50px rgba(255, 117, 39, 0.22);
+  }
+
+  .header {
+    margin-bottom: 28px;
+    text-align: left;
+  }
+
+  .brand-badge-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .brand-id {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--primary-orange);
+    display: inline-block;
+    font-weight: 700;
+  }
+
+  .status-pulse-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10B981;
+    box-shadow: 0 0 8px #10B981;
+    animation: pulseDot 2s infinite;
+  }
+
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  .neural-title {
+    font-weight: 800;
+    font-size: 2.75rem;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    margin: 0 0 8px -2px;
+    color: #FFFFFF;
+    text-shadow: 0 2px 20px rgba(255, 255, 255, 0.2);
+  }
+
+  .neural-title .accent-text {
+    color: var(--primary-orange);
+    text-shadow: 0 0 25px rgba(255, 117, 39, 0.5);
+  }
+
+  .neural-subtitle {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* Social Logins Grid */
+  .neural-social-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .neural-social-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.25s cubic-bezier(0.2, 1, 0.3, 1);
+  }
+
+  .neural-social-card:hover {
+    background: rgba(255, 255, 255, 0.09);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  .neural-social-card.telegram {
+    background: rgba(0, 136, 204, 0.12);
+    border-color: rgba(0, 136, 204, 0.3);
+  }
+
+  .neural-social-card.telegram:hover {
+    background: rgba(0, 136, 204, 0.22);
+    border-color: rgba(0, 136, 204, 0.55);
+    box-shadow: 0 8px 22px rgba(0, 136, 204, 0.3);
+  }
+
+  .neural-social-card .svg-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+  }
+
+  /* Telemetry Divider */
+  .neural-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 18px 0 24px;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  }
+
+  .divider-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  /* Form Elements */
+  .form-group {
+    position: relative;
+    margin-bottom: 24px;
+    transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+  }
+
+  .form-group:focus-within {
+    transform: translateX(8px);
+  }
+
+  .form-group label {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+  }
+
+  .form-group:focus-within label {
+    color: var(--primary-orange);
+  }
+
+  .form-group input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--accent);
+    padding: 10px 0 12px;
+    font-size: 15.5px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.4s ease;
+  }
+
+  .form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 14px;
+  }
+
+  .input-glow {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-orange), #FFA239);
+    transition: width 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+    box-shadow: 0 0 16px var(--primary-orange);
+  }
+
+  .form-group input:focus + .input-glow {
+    width: 100%;
+  }
+
+  /* Feedback Notice */
+  .neural-feedback {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 18px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .neural-feedback.error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #FCA5A5;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+  }
+
+  .neural-feedback.success {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #6EE7B7;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* The Mercury Button */
+  .submit-wrap {
+    margin-top: 32px;
+    position: relative;
+    filter: var(--filter-goo);
+  }
+
+  .btn-base {
+    background: linear-gradient(135deg, #FF7527 0%, #FF8F4D 100%);
+    color: #050508;
+    border: none;
+    padding: 18px 36px;
+    font-size: 13.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: 'Space Mono', monospace;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 12px;
+    position: relative;
+    z-index: 2;
+    transition: letter-spacing 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px rgba(255, 117, 39, 0.4);
+  }
+
+  .btn-base:hover {
+    letter-spacing: 3.5px;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 40px rgba(255, 117, 39, 0.6);
+  }
+
+  .btn-base:active {
+    transform: translateY(1px);
+  }
+
+  .mercury-drop {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #FF7527, #FFA834, #E0E0E0);
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    border-radius: 50px;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .submit-wrap:hover .mercury-drop {
+    transform: translate(-50%, -50%) scale(1.05, 1.2);
+    filter: brightness(1.2);
+  }
+
+  /* Footer Navigation */
+  .footer-nav {
+    margin-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .footer-nav a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .footer-nav a:hover {
+    color: var(--primary-orange);
+    text-shadow: 0 0 10px rgba(255, 117, 39, 0.5);
+  }
+
+  .footer-nav a.student-arena-link {
+    color: #38BDF8;
+  }
+
+  .footer-nav a.student-arena-link:hover {
+    color: #7DD3FC;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+  }
+
+  .svg-filter-hidden {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  @media (max-width: 540px) {
+    .auth-container {
+      padding: 30px 20px;
+    }
+    .neural-title {
+      font-size: 2.2rem;
+    }
+    .neural-social-grid {
+      grid-template-columns: 1fr;
+    }
+    .footer-nav {
+      flex-direction: column;
+      gap: 10px;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Stage Blobs Mouse Parallax
+    const stage = document.getElementById('neuralMercuryStage');
+    if (stage) {
+      const blobs = stage.querySelectorAll('.blob');
+      window.addEventListener('mousemove', function (e) {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+
+        blobs.forEach(function (blob, index) {
+          const speed = (index + 1) * 14;
+          blob.style.marginLeft = (x * speed) + 'px';
+          blob.style.marginTop = (y * speed) + 'px';
+        });
+      });
+    }
+
+    // Ajax Form Submission with Interactive Feedback
+    const form = document.getElementById('neuralLoginForm');
+    const feedback = document.getElementById('loginFeedback');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = submitBtn ? submitBtn.querySelector('.btn-text') : null;
+
+    if (form) {
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const username = usernameInput ? usernameInput.value.trim() : '';
+        const password = passwordInput ? passwordInput.value : '';
+
+        if (!username || !password) {
+          showFeedback('Login va parol kiritilishi shart', 'error');
+          return;
+        }
+
+        const csrfTokenEl = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        const csrfToken = csrfTokenEl ? csrfTokenEl.value : '';
+
+        if (btnText) btnText.textContent = 'CONNECTING STREAM...';
+        if (submitBtn) submitBtn.disabled = true;
+        hideFeedback();
+
+        try {
+          const response = await fetch('/auth/login/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({ username: username, password: password })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.status === 'ok') {
+            showFeedback('STREAM FAOL! Yo‘naltirilmoqda...', 'success');
+            if (btnText) btnText.textContent = 'STREAM CONNECTED ✓';
+            
+            // Check next parameter in URL query
+            const urlParams = new URLSearchParams(window.location.search);
+            const nextUrl = urlParams.get('next') || data.redirect_url || '/dashboard/';
+            setTimeout(function () {
+              window.location.href = nextUrl;
+            }, 500);
+          } else {
+            const errorMsg = data.error || data.message || 'Login yoki parol noto‘g‘ri';
+            showFeedback(errorMsg, 'error');
+            if (btnText) btnText.textContent = 'INITIALIZE STREAM →';
+            if (submitBtn) submitBtn.disabled = false;
+          }
+        } catch (err) {
+          // Fallback to standard form post
+          form.submit();
+        }
+      });
+    }
+
+    function showFeedback(msg, type) {
+      if (!feedback) return;
+      feedback.textContent = msg;
+      feedback.className = 'neural-feedback ' + type;
+      feedback.style.display = 'block';
+    }
+
+    function hideFeedback() {
+      if (!feedback) return;
+      feedback.style.display = 'none';
+    }
+
+    // Encrypted recovery notice
+    const recoveryLink = document.getElementById('encryptedRecoveryLink');
+    if (recoveryLink) {
+      recoveryLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        showFeedback('Kreditentiallarni tiklash uchun maktab administratsiyasiga murojaat qiling.', 'error');
+      });
+    }
+  });
+</script>
 {% endblock %}
