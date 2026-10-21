@@ -201,3 +201,44 @@ class TestPhase08Frontend:
         assert "Humo Qanoti" in content
         assert "Aziza Karimova" in content
 
+    def test_header_search_island_and_floating_ai_widget_rendered(self):
+        client = Client()
+        response = client.get('/')
+        assert response.status_code == 200
+        content = response.content.decode('utf-8')
+        # Center Search Capsule
+        assert 'id="navbarSearchIsland"' in content
+        assert 'id="globalSearchInput"' in content
+        assert 'id="searchResultsDropdown"' in content
+        assert 'search.svg' in content
+        # Floating Bottom-Right AI Assistant Widget
+        assert 'id="floatingAiWidget"' in content
+        assert 'id="floatingAiTrigger"' in content
+        assert 'id="aiCommandModal"' in content
+        assert 'id="aiChatBody"' in content
+        assert 'id="aiModalInput"' in content
+        assert 'data-ai-action="new-quiz"' in content
+        assert 'data-ai-action="live-game"' in content
+        assert 'data-ai-action="sound-toggle"' in content
+        # Scripts loaded
+        assert 'static/js/search.js' in content
+        assert 'static/js/ai_assistant.js' in content
+
+    def test_circle_menu_downward_geometry_and_sound_toggle(self):
+        from pathlib import Path
+        menu_js_path = Path("static/js/circle_menu.js")
+        assert menu_js_path.exists()
+        menu_js_code = menu_js_path.read_text(encoding="utf-8")
+        assert "pointOnCircleDownward" in menu_js_code
+        assert "toggleSound" in menu_js_code
+        assert "speaker_on.svg" in menu_js_code
+        assert "speaker_off.svg" in menu_js_code
+
+    def test_new_feature_static_assets_exist(self):
+        from pathlib import Path
+        assert Path("static/img/icons/search.svg").exists()
+        assert Path("static/js/search.js").exists()
+        assert Path("static/js/ai_assistant.js").exists()
+        assert Path("ui_components/icons/search.svg").exists()
+
+
