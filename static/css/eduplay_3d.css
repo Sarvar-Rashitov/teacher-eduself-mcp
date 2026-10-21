@@ -1117,6 +1117,9 @@ h1, h2, h3, h4, .font-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow-card);
+}
 /* ==========================================================================
    Teacher Dashboard — Floating Island Aesthetic & Claymorphism
    ========================================================================== */
