@@ -1117,70 +1117,376 @@ h1, h2, h3, h4, .font-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
-  box-shadow: var(--shadow-card);
+/* ==========================================================================
+   Teacher Dashboard — Floating Island Aesthetic & Claymorphism
+   ========================================================================== */
+
+.dashboard-header-island {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.welcome-text h1 {
-  font-size: 28px;
-  color: var(--text-main);
-  margin-bottom: 6px;
+.dashboard-island-brand {
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 32px rgba(30, 30, 36, 0.08), 0 2px 6px rgba(30, 30, 36, 0.03);
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.welcome-text p {
+.dashboard-island-brand:hover {
+  box-shadow: 0 14px 40px rgba(30, 30, 36, 0.12);
+  transform: translateY(-1px);
+}
+
+.dashboard-badge-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF7527 0%, #FF9052 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255, 117, 39, 0.35);
+  flex-shrink: 0;
+}
+
+.dashboard-badge-icon .svg-icon {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) invert(1);
+}
+
+.dashboard-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboard-section-label {
+  font-size: 11px;
+  font-weight: 800;
   color: var(--text-muted);
-  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
+.dashboard-teacher-greeting {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.live-beacon-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00E599;
+  box-shadow: 0 0 8px rgba(0, 229, 153, 0.8);
+  display: inline-block;
+}
+
+.dashboard-island-actions {
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 32px rgba(30, 30, 36, 0.08), 0 2px 6px rgba(30, 30, 36, 0.03);
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.island-action-pill {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.island-action-pill:hover {
+  transform: translateY(-2px);
+}
+
+.island-action-pill.pill-play {
+  background: linear-gradient(135deg, #FF7527 0%, #FF9052 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(255, 117, 39, 0.35);
+}
+
+.island-action-pill.pill-play .svg-icon {
+  filter: brightness(0) invert(1);
+}
+
+.island-action-pill.pill-ai {
+  background: #FFFFFF;
+  border: 1.5px solid rgba(255, 117, 39, 0.3);
+  color: var(--primary-orange);
+  box-shadow: 0 2px 8px rgba(30, 30, 36, 0.04);
+}
+
+.island-action-pill.pill-ai:hover {
+  background: var(--primary-orange-soft);
+  border-color: var(--primary-orange);
+}
+
+.island-action-pill.pill-new-quiz {
+  background: var(--text-main);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(30, 30, 36, 0.2);
+}
+
+.island-action-pill.pill-new-quiz:hover {
+  background: #000000;
+  box-shadow: 0 6px 18px rgba(30, 30, 36, 0.3);
+}
+
+/* Stats Grid — Frosted Glass Island Cards */
 .dashboard-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 20px;
   margin-bottom: 32px;
 }
 
 .stat-card {
-  background: #FFFFFF;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+  padding: 22px 24px;
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 32px rgba(30, 30, 36, 0.06), 0 2px 6px rgba(30, 30, 36, 0.02);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-island-orange:hover {
+  border-color: rgba(255, 117, 39, 0.45);
+  box-shadow: 0 16px 40px rgba(255, 117, 39, 0.18), 0 0 24px rgba(255, 117, 39, 0.12);
+}
+
+.stat-island-blue:hover {
+  border-color: rgba(0, 163, 255, 0.45);
+  box-shadow: 0 16px 40px rgba(0, 163, 255, 0.18), 0 0 24px rgba(0, 163, 255, 0.12);
+}
+
+.stat-island-purple:hover {
+  border-color: rgba(139, 92, 246, 0.45);
+  box-shadow: 0 16px 40px rgba(139, 92, 246, 0.18), 0 0 24px rgba(139, 92, 246, 0.12);
+}
+
+.stat-island-green:hover {
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 16px 40px rgba(16, 185, 129, 0.18), 0 0 24px rgba(16, 185, 129, 0.12);
 }
 
 .stat-icon-wrap {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-md);
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon-wrap .svg-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.stat-icon-orange {
+  background: rgba(255, 117, 39, 0.12);
+  color: var(--primary-orange);
+}
+
+.stat-icon-blue {
+  background: rgba(0, 163, 255, 0.12);
+  color: #00A3FF;
+}
+
+.stat-icon-purple {
+  background: rgba(139, 92, 246, 0.12);
+  color: #8B5CF6;
+}
+
+.stat-icon-green {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10B981;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .stat-val {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 800;
   color: var(--text-main);
   line-height: 1.1;
 }
 
 .stat-lbl {
-  font-size: 12px;
+  font-size: 12.5px;
   color: var(--text-muted);
   font-weight: 600;
 }
 
-/* Quiz Bento Grid */
+.stat-sparkle-pill {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(30, 30, 36, 0.05);
+  color: var(--text-muted);
+}
+
+.stat-island-orange .stat-sparkle-pill {
+  background: rgba(255, 117, 39, 0.1);
+  color: var(--primary-orange);
+}
+
+.stat-island-green .stat-sparkle-pill {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+}
+
+/* Quizzes Section Floating Toolbar */
 .quizzes-section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
+.quizzes-header-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quizzes-header-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: rgba(255, 117, 39, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.quizzes-header-badge .svg-icon {
+  color: var(--primary-orange);
+}
+
+.quizzes-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.quizzes-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.quizzes-filter-toolbar {
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 6px 20px rgba(30, 30, 36, 0.06);
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.quiz-filter-pill {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: transparent;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quiz-filter-pill:hover:not(.is-active) {
+  color: var(--text-main);
+  background: rgba(30, 30, 36, 0.05);
+}
+
+.quiz-filter-pill.is-active {
+  background: var(--primary-orange);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(255, 117, 39, 0.35);
+}
+
+.quiz-filter-pill.pill-design-system {
+  background: rgba(30, 30, 36, 0.04);
+  color: var(--text-main);
+}
+
+.quiz-filter-pill.pill-design-system:hover {
+  background: rgba(30, 30, 36, 0.08);
+}
+
+/* Quizzes Bento Grid — Frosted Glass Cards */
 .quizzes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -1188,26 +1494,29 @@ h1, h2, h3, h4, .font-heading {
 }
 
 .quiz-bento-card {
-  background: #FFFFFF;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1.5px solid rgba(255, 255, 255, 0.88);
+  border-radius: 22px;
   padding: 24px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 10px 32px rgba(30, 30, 36, 0.06), 0 2px 6px rgba(30, 30, 36, 0.02);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s ease;
 }
 
 .quiz-bento-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-bento);
+  transform: translateY(-5px);
+  box-shadow: 0 18px 48px rgba(30, 30, 36, 0.12), 0 0 24px rgba(255, 117, 39, 0.15);
+  border-color: rgba(255, 117, 39, 0.35);
 }
 
 .quiz-card-top {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 14px;
 }
 
@@ -1216,29 +1525,117 @@ h1, h2, h3, h4, .font-heading {
   font-weight: 700;
   padding: 4px 10px;
   border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.status-published { background: #ECFDF5; color: #10B981; }
-.status-draft { background: #FFFBEB; color: #F59E0B; }
+.status-published {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10B981;
+}
+
+.status-draft {
+  background: rgba(245, 158, 11, 0.12);
+  color: #D97706;
+}
+
+.status-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.grade-capsule-badge {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: rgba(30, 30, 36, 0.05);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
 
 .quiz-card-title {
   font-size: 18px;
   font-weight: 800;
+  color: var(--text-main);
   margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.quiz-card-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.45;
 }
 
 .quiz-card-meta {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 8px;
   font-size: 12px;
   color: var(--text-muted);
   font-weight: 600;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+}
+
+.meta-tag {
+  color: var(--primary-orange);
+  font-weight: 700;
 }
 
 .quiz-card-actions {
   display: flex;
   gap: 10px;
+}
+
+.quiz-action-btn {
+  height: 40px;
+  border-radius: var(--radius-pill);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.quiz-action-btn.btn-edit {
+  flex: 1;
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-subtle);
+  color: var(--text-main);
+  box-shadow: 0 2px 6px rgba(30, 30, 36, 0.04);
+}
+
+.quiz-action-btn.btn-edit:hover {
+  border-color: var(--primary-orange);
+  color: var(--primary-orange);
+  transform: translateY(-1px);
+}
+
+.quiz-action-btn.btn-live {
+  flex: 1.3;
+  background: linear-gradient(135deg, #FF7527 0%, #FF9052 100%);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 4px 14px rgba(255, 117, 39, 0.35);
+}
+
+.quiz-action-btn.btn-live:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(255, 117, 39, 0.5);
+}
+
+.quiz-action-btn.btn-live .svg-icon {
+  filter: brightness(0) invert(1);
 }
 
 /* ==========================================================================
