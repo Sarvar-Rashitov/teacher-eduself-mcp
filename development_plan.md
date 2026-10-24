@@ -478,8 +478,8 @@ pytest apps/ai_gateway/tests/
 *Kutilayotgan natija:* Kalitlarni shifrlash/ochish testlari va adapterlarning yagona format qaytarishi tasdiqlanishi.
 
 ### 6. Self-Audit Checklist
-- [ ] API kalitlari bazada ochiq matn (plain text) holatida saqlanmayaptimi?
-- [ ] Asosiy model (masalan, Claude) 500 xato berganda zaxira model (masalan, Gemini) chaqiriladimi?
+- [x] API kalitlari bazada ochiq matn (plain text) holatida saqlanmayaptimi?
+- [x] Asosiy model (masalan, Claude) 500 xato berganda zaxira model (masalan, Gemini) chaqiriladimi?
 
 ---
 

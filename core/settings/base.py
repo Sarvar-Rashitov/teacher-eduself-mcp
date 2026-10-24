@@ -37,10 +37,19 @@ INSTALLED_APPS = [
 
     # Local apps (Phase 01+)
     'authentication',
+    'questions_registry',
+    'quizzes',
+    'live_sessions',
+    'game_engine',
+    'ai_gateway',
+    'ai_workspace',
 ]
 
 # Custom User Model
 AUTH_USER_MODEL = 'authentication.User'
+
+# BYOK Encryption Key (32 bytes for AES-256-GCM)
+BYOK_MASTER_KEY = os.getenv('BYOK_MASTER_KEY', 'eduself-teacher-byok-aes256gcm!').encode('utf-8')[:32].ljust(32, b'0')
 
 # Authentication & Social Credentials
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')

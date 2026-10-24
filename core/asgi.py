@@ -9,11 +9,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings.local')
 # is populated before importing code that may import ORM models.
 django_asgi_app = get_asgi_application()
 
+from core.routing import websocket_urlpatterns  # noqa: E402
+
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
     "websocket": AuthMiddlewareStack(
-        URLRouter([
-            # Real-time WebSocket routing will be wired up in Phase 03
-        ])
+        URLRouter(websocket_urlpatterns)
     ),
 })

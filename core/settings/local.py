@@ -29,8 +29,9 @@ else:
         }
     }
 
-# In local/testing mode, fallback to InMemoryChannelLayer if Redis is not running
-if os.getenv('USE_IN_MEMORY_CHANNEL_LAYER', 'False').lower() in ('true', '1'):
+# In local/testing mode, fallback to InMemoryChannelLayer if Redis is not running or in testing
+is_testing = 'test' in sys.argv or any('pytest' in arg for arg in sys.argv)
+if is_testing or os.getenv('USE_IN_MEMORY_CHANNEL_LAYER', 'False').lower() in ('true', '1'):
     CHANNEL_LAYERS = {
         'default': {
             'BACKEND': 'channels.layers.InMemoryChannelLayer',
