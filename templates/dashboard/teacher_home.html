@@ -65,115 +65,107 @@
   {% endif %}
 
   {% if user.is_authenticated %}
-  <!-- ================= SUBHEADER FLOATING ISLAND TOOLBAR ================= -->
-  <div class="dashboard-header-island">
-    <!-- Left Capsule: Breadcrumb & Teacher Greeting -->
-    <div class="dashboard-island-brand">
-      <div class="dashboard-badge-icon">
-        <img src="{% static 'img/icons/sparkles.svg' %}" alt="EduSelf" class="svg-icon svg-icon-sm">
+  <!-- ================= 1. YUQORI QISM: STATISTIKA VA UNING UMUMIY RAMKASI ================= -->
+  <section class="dashboard-panel-frame stats-panel-frame">
+    <div class="panel-frame-header">
+      <div class="panel-title-group">
+        <div class="panel-icon-badge">
+          <img src="{% static 'img/icons/sparkles.svg' %}" alt="Statistika" class="svg-icon">
+        </div>
+        <div>
+          <h2 class="panel-title">Umumiy Ko‘rsatkichlar va Faollik</h2>
+          <p class="panel-subtitle">O‘quvchilar faolligi, viktorinalar va sinf natijalari</p>
+        </div>
       </div>
-      <div class="dashboard-title-group">
-        <div class="dashboard-section-label">O‘qituvchi Boshqaruv Markazi</div>
-        <div class="dashboard-teacher-greeting">
-          Ustoz: <strong>{{ user.first_name|default:user.username|default:'Ustoz' }}</strong>
-          <span class="live-beacon-dot" title="Tizim faol"></span>
+      <div class="panel-status-pill">
+        <span class="live-beacon-dot" title="Tizim faol"></span>
+        <span>Ustoz: <strong>{{ user.first_name|default:user.username|default:'Ustoz' }}</strong></span>
+      </div>
+    </div>
+
+    <!-- 4 Frosted Glass Stat Cards with Design-Colored Borders -->
+    <div class="dashboard-stats-grid">
+      <div class="stat-card stat-island-orange">
+        <div class="stat-icon-wrap stat-icon-orange">
+          <img src="{% static 'img/icons/sparkles.svg' %}" alt="Viktorinalar" class="svg-icon">
+        </div>
+        <div class="stat-content">
+          <div class="stat-val">{{ quizzes_count }}</div>
+          <div class="stat-lbl">Faol Viktorinalar</div>
+        </div>
+        <div class="stat-sparkle-pill">{% if quizzes_count > 0 %}Faol{% else %}Yangi{% endif %}</div>
+      </div>
+
+      <div class="stat-card stat-island-blue">
+        <div class="stat-icon-wrap stat-icon-blue">
+          <img src="{% static 'img/icons/user.svg' %}" alt="O'quvchilar" class="svg-icon">
+        </div>
+        <div class="stat-content">
+          <div class="stat-val">{{ active_students_count }}</div>
+          <div class="stat-lbl">Jami O‘quvchilar</div>
+        </div>
+        <div class="stat-sparkle-pill">{% if active_students_count > 0 %}+{{ active_students_count }} o‘quvchi{% else %}0 ta{% endif %}</div>
+      </div>
+
+      <div class="stat-card stat-island-purple">
+        <div class="stat-icon-wrap stat-icon-purple">
+          <img src="{% static 'img/icons/fire_streak.svg' %}" alt="Sessiyalar" class="svg-icon">
+        </div>
+        <div class="stat-content">
+          <div class="stat-val">{{ completed_sessions_count }}</div>
+          <div class="stat-lbl">O‘tkazilgan O‘yinlar</div>
+        </div>
+        <div class="stat-sparkle-pill">{% if completed_sessions_count > 0 %}🔥 {{ completed_sessions_count }} ta{% else %}Boshlanmagan{% endif %}</div>
+      </div>
+
+      <div class="stat-card stat-island-green">
+        <div class="stat-icon-wrap stat-icon-green">
+          <img src="{% static 'img/icons/trophy.svg' %}" alt="Aniqlik" class="svg-icon">
+        </div>
+        <div class="stat-content">
+          <div class="stat-val">{{ average_accuracy }}%</div>
+          <div class="stat-lbl">O‘rtacha Aniqlik</div>
+        </div>
+        <div class="stat-sparkle-pill">{% if average_accuracy >= 80 %}A’lo daraja{% elif average_accuracy >= 50 %}O‘rta daraja{% else %}Boshlang‘ich{% endif %}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2. PASTKI QISM: VIKTORINALAR KUTUBXONASI RAMKASI ================= -->
+  <section class="dashboard-panel-frame quizzes-panel-frame">
+    <!-- Quizzes Section Header Inside Frame -->
+    <div class="quizzes-section-header">
+      <div class="quizzes-header-title-wrap">
+        <div class="quizzes-header-badge">
+          <img src="{% static 'img/icons/sparkles.svg' %}" alt="Viktorinalar" class="svg-icon svg-icon-sm">
+        </div>
+        <div>
+          <h2 class="quizzes-title">Viktorinalar Kutubxonasi</h2>
+          <p class="quizzes-subtitle">Siz yaratgan interaktiv testlar va faol sinf o‘yinlari</p>
+        </div>
+      </div>
+
+      <!-- Actions & Filters Toolbar -->
+      <div class="quizzes-toolbar-group">
+        <!-- Filter Pills -->
+        <div class="quizzes-filter-toolbar">
+          <button type="button" class="quiz-filter-pill is-active" data-filter="all" onclick="filterQuizzes('all', this)">Barchasi</button>
+          <button type="button" class="quiz-filter-pill" data-filter="published" onclick="filterQuizzes('published', this)">Chop etilgan</button>
+          <button type="button" class="quiz-filter-pill" data-filter="draft" onclick="filterQuizzes('draft', this)">Qoralama</button>
+        </div>
+
+        <!-- Action Buttons inside frame toolbar -->
+        <div class="quizzes-actions-toolbar">
+
+          <!-- New Quiz Primary Action -->
+          <a href="/editor/new/" class="island-action-pill pill-new-quiz-primary" title="Yangi Viktorina Yaratish">
+            <img src="{% static 'img/icons/plus.svg' %}" alt="Yangi" class="svg-icon svg-icon-sm">
+            <span>Yangi Viktorina</span>
+          </a>
+
         </div>
       </div>
     </div>
-
-    <!-- Right Capsule: Floating Island Quick Actions -->
-    <div class="dashboard-island-actions">
-      <!-- Direct Play Button -->
-      <a href="/play/" class="island-action-pill pill-play" title="O‘quvchi arenasi">
-        <span class="nav-play-pulse"></span>
-        <img src="{% static 'img/icons/play.svg' %}" alt="Play" class="svg-icon svg-icon-sm">
-        <span>Play Arena</span>
-      </a>
-
-      <!-- Quick AI Assistant Trigger -->
-      <button type="button" class="island-action-pill pill-ai" onclick="if(window.toggleAiModal){window.toggleAiModal();}else if(window.toggleAiDrawer){window.toggleAiDrawer();}" title="EduAI Yordamchisi">
-        <img src="{% static 'img/icons/sparkles.svg' %}" alt="AI" class="svg-icon svg-icon-sm">
-        <span>EduAI Yordamchisi</span>
-      </button>
-
-      <!-- New Quiz -->
-      <a href="/editor/new/" class="island-action-pill pill-new-quiz" title="Yangi Viktorina Yaratish">
-        <img src="{% static 'img/icons/plus.svg' %}" alt="Yangi" class="svg-icon svg-icon-sm">
-        <span>Yangi Viktorina</span>
-      </a>
-    </div>
-  </div>
-
-  <!-- ================= 4 FLOATING FROSTED GLASS STATS ISLANDS ================= -->
-  <div class="dashboard-stats-grid">
-    <div class="stat-card stat-island-orange">
-      <div class="stat-icon-wrap stat-icon-orange">
-        <img src="{% static 'img/icons/sparkles.svg' %}" alt="Viktorinalar" class="svg-icon">
-      </div>
-      <div class="stat-content">
-        <div class="stat-val">{{ quizzes_count|default:quizzes|length|default:12 }}</div>
-        <div class="stat-lbl">Faol Viktorinalar</div>
-      </div>
-      <div class="stat-sparkle-pill">Jonli</div>
-    </div>
-
-    <div class="stat-card stat-island-blue">
-      <div class="stat-icon-wrap stat-icon-blue">
-        <img src="{% static 'img/icons/user.svg' %}" alt="O'quvchilar" class="svg-icon">
-      </div>
-      <div class="stat-content">
-        <div class="stat-val">{{ active_students_count|default:156 }}</div>
-        <div class="stat-lbl">Jami O‘quvchilar</div>
-      </div>
-      <div class="stat-sparkle-pill">+18 yangi</div>
-    </div>
-
-    <div class="stat-card stat-island-purple">
-      <div class="stat-icon-wrap stat-icon-purple">
-        <img src="{% static 'img/icons/fire_streak.svg' %}" alt="Sessiyalar" class="svg-icon">
-      </div>
-      <div class="stat-content">
-        <div class="stat-val">{{ completed_sessions_count|default:28 }}</div>
-        <div class="stat-lbl">O‘tkazilgan O‘yinlar</div>
-      </div>
-      <div class="stat-sparkle-pill">🔥 Faol</div>
-    </div>
-
-    <div class="stat-card stat-island-green">
-      <div class="stat-icon-wrap stat-icon-green">
-        <img src="{% static 'img/icons/trophy.svg' %}" alt="Aniqlik" class="svg-icon">
-      </div>
-      <div class="stat-content">
-        <div class="stat-val">82%</div>
-        <div class="stat-lbl">O‘rtacha Aniqlik</div>
-      </div>
-      <div class="stat-sparkle-pill">A’lo daraja</div>
-    </div>
-  </div>
-
-  <!-- ================= QUIZZES SECTION FLOATING TOOLBAR ================= -->
-  <div class="quizzes-section-header">
-    <div class="quizzes-header-title-wrap">
-      <div class="quizzes-header-badge">
-        <img src="{% static 'img/icons/sparkles.svg' %}" alt="Viktorinalar" class="svg-icon svg-icon-sm">
-      </div>
-      <div>
-        <h2 class="quizzes-title">Viktorinalar Kutubxonasi</h2>
-        <p class="quizzes-subtitle">Siz yaratgan interaktiv testlar va faol sinf o‘yinlari</p>
-      </div>
-    </div>
-
-    <!-- Filter Pills & Showcase Link -->
-    <div class="quizzes-filter-toolbar">
-      <button type="button" class="quiz-filter-pill is-active" data-filter="all" onclick="filterQuizzes('all', this)">Barchasi</button>
-      <button type="button" class="quiz-filter-pill" data-filter="published" onclick="filterQuizzes('published', this)">Chop etilgan</button>
-      <button type="button" class="quiz-filter-pill" data-filter="draft" onclick="filterQuizzes('draft', this)">Qoralama</button>
-      <a href="/design-system/" class="quiz-filter-pill pill-design-system" title="3D Vitrina">
-        <img src="{% static 'img/icons/settings.svg' %}" alt="Vitrina" class="svg-icon svg-icon-sm">
-        <span>EduPlay 3D Vitrinasi</span>
-      </a>
-    </div>
-  </div>
 
   <!-- ================= QUIZZES BENTO GRID ================= -->
   <div class="quizzes-grid" id="quizzesGrid">
@@ -213,74 +205,22 @@
       </div>
     </div>
     {% empty %}
-    <!-- Demo / Default Cards if DB is empty -->
-    <div class="quiz-bento-card" data-status="published">
-      <div class="quiz-card-content">
-        <div class="quiz-card-top">
-          <span class="status-pill status-published">
-            <span class="status-pulse-dot"></span>
-            Chop etilgan
-          </span>
-          <span class="grade-capsule-badge">7-sinf</span>
-        </div>
-        <h3 class="quiz-card-title">Fizika: Zichlik va Massa</h3>
-        <p class="quiz-card-desc">
-          Massa va hajm munosabatlari, zichlik formulasi bo‘yicha interaktiv savollar to‘plami.
-        </p>
+    <div class="quiz-empty-state-card" style="grid-column: 1 / -1; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border: 2px dashed rgba(255, 117, 39, 0.35); border-radius: 24px; padding: 48px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; box-shadow: 0 10px 32px rgba(30, 30, 36, 0.04);">
+      <div style="width: 64px; height: 64px; border-radius: 20px; background: rgba(255, 117, 39, 0.12); display: flex; align-items: center; justify-content: center;">
+        <img src="{% static 'img/icons/sparkles.svg' %}" alt="Yangi Viktorina" style="width: 32px; height: 32px;">
       </div>
-      <div class="quiz-card-footer">
-        <div class="quiz-card-meta">
-          <span class="meta-tag">Fizika</span>
-          <span class="meta-dot">•</span>
-          <span class="meta-questions">10 ta savol</span>
-        </div>
-        <div class="quiz-card-actions">
-          <a href="/editor/new/" class="quiz-action-btn btn-edit">
-            <img src="{% static 'img/icons/edit.svg' %}" alt="Tahrir" class="svg-icon svg-icon-sm">
-            <span>Tahrir</span>
-          </a>
-          <a href="/live/489201/" class="quiz-action-btn btn-live">
-            <img src="{% static 'img/icons/play.svg' %}" alt="O'yin" class="svg-icon svg-icon-sm">
-            <span>Jonli O‘yin</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="quiz-bento-card" data-status="draft">
-      <div class="quiz-card-content">
-        <div class="quiz-card-top">
-          <span class="status-pill status-draft">
-            <span class="status-pulse-dot"></span>
-            Qoralama
-          </span>
-          <span class="grade-capsule-badge">6-sinf</span>
-        </div>
-        <h3 class="quiz-card-title">Matematika: Oddiy Kasrlar</h3>
-        <p class="quiz-card-desc">
-          Kasrlarni qo‘shish, ayirish va taqqoslash bo‘yicha gamifikatsiyalashgan topshiriqlar.
-        </p>
-      </div>
-      <div class="quiz-card-footer">
-        <div class="quiz-card-meta">
-          <span class="meta-tag">Matematika</span>
-          <span class="meta-dot">•</span>
-          <span class="meta-questions">8 ta savol</span>
-        </div>
-        <div class="quiz-card-actions">
-          <a href="/editor/new/" class="quiz-action-btn btn-edit">
-            <img src="{% static 'img/icons/edit.svg' %}" alt="Tahrir" class="svg-icon svg-icon-sm">
-            <span>Tahrir</span>
-          </a>
-          <a href="/live/712394/" class="quiz-action-btn btn-live">
-            <img src="{% static 'img/icons/play.svg' %}" alt="O'yin" class="svg-icon svg-icon-sm">
-            <span>Jonli O‘yin</span>
-          </a>
-        </div>
-      </div>
+      <h3 style="font-size: 19px; font-weight: 800; color: var(--text-main); margin: 0;">Hozircha viktorinalar mavjud emas</h3>
+      <p style="font-size: 14px; color: var(--text-muted); max-width: 480px; margin: 0; line-height: 1.5;">
+        O‘quvchilaringiz bilan qiziqarli dars o‘tish uchun birinchi interaktiv viktorinangizni yarating!
+      </p>
+      <a href="/editor/new/" class="island-action-pill pill-new-quiz-primary" style="margin-top: 8px; text-decoration: none;">
+        <img src="{% static 'img/icons/plus.svg' %}" alt="Yangi" class="svg-icon svg-icon-sm">
+        <span>+ Yangi Viktorina Yaratish</span>
+      </a>
     </div>
     {% endfor %}
   </div>
+  </section>
   {% endif %}
 
 </div>
@@ -296,20 +236,37 @@
     }
   }
 
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
   function startLiveQuiz(quizId) {
     if (window.eduAudio) window.eduAudio.playCoin();
+    const csrfToken = getCookie('csrftoken') || (document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').content : '');
     fetch('/api/v1/sessions/create/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').content : ''
+        'X-CSRFToken': csrfToken
       },
       body: JSON.stringify({ quiz_id: quizId, game_mode: 'classic' })
     })
     .then(r => r.json())
     .then(data => {
-      if (data.room_code) {
-        window.location.href = `/live/${data.room_code}/`;
+      const roomCode = (data.session && data.session.room_code) ? data.session.room_code : data.room_code;
+      if (roomCode) {
+        window.location.href = `/live/${roomCode}/`;
       } else {
         window.location.href = `/live/489201/`;
       }

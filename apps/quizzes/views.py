@@ -7,6 +7,9 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.db import transaction
+import json
+from apps.questions_registry.registry import question_type_registry
 from apps.questions_registry.exceptions import QuestionValidationError, QuestionTypeNotFoundError
 from .models import Quiz, Question
 from .serializers import QuizSerializer, QuestionTeacherSerializer, QuizVersionSerializer
@@ -171,21 +174,166 @@ class QuizStudentPreviewView(APIView):
         return Response(preview_data)
 
 
+class QuizSaveFullView(APIView):
+    """
+    Atomic bulk save/update endpoint for Quiz Editor.
+    Creates or updates Quiz and synchronizes all questions with QuestionTypeRegistry validation.
+    """
+    permission_classes = [IsAuthenticated]
+
+    @transaction.atomic
+    def post(self, request):
+        data = request.data
+        quiz_id = data.get('id')
+        title = (data.get('title') or '').strip()
+        subject = (data.get('subject') or 'Fizika').strip()
+        grade_level = data.get('grade_level', 7)
+        status_val = data.get('status', 'draft')
+        description = data.get('description', '')
+        questions_data = data.get('questions', [])
+
+        if not title:
+            return Response({'error': "Viktorina nomi ('title') bo‘sh bo‘lishi mumkin emas."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # 1. Fetch existing quiz or create new
+        if quiz_id:
+            try:
+                quiz = Quiz.objects.select_for_update().get(id=quiz_id, owner=request.user)
+                quiz.title = title
+                quiz.subject = subject
+                quiz.grade_level = grade_level
+                quiz.status = status_val
+                quiz.description = description
+                quiz.save()
+            except Quiz.DoesNotExist:
+                return Response({'error': 'Viktorina topilmadi.'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            quiz = QuizService.create_quiz(
+                owner=request.user,
+                title=title,
+                subject=subject,
+                grade_level=grade_level,
+                description=description
+            )
+            quiz.status = status_val
+            quiz.save()
+
+        # 2. Synchronize questions
+        existing_questions = {str(q.id): q for q in quiz.questions.all()}
+        processed_ids = set()
+
+        for idx, q_item in enumerate(questions_data):
+            q_id = q_item.get('id')
+            q_type = q_item.get('type', 'single_choice')
+            prompt = q_item.get('prompt', '')
+            options = q_item.get('options', [])
+            correct_answer = q_item.get('correct_answer')
+            accepted_alternatives = q_item.get('accepted_alternatives', [])
+            explanation = q_item.get('explanation', '')
+            points = q_item.get('points', 1000)
+            time_limit = q_item.get('time_limit_seconds', 30)
+            difficulty = q_item.get('difficulty', 'medium')
+            is_locked = q_item.get('is_locked', False)
+            media_url = q_item.get('media_url')
+            media_type = q_item.get('media_type')
+
+            # Plugin validation
+            try:
+                plugin = question_type_registry.get(q_type)
+                plugin.validate_payload(options=options, correct_answer=correct_answer)
+            except (QuestionValidationError, QuestionTypeNotFoundError) as exc:
+                transaction.set_rollback(True)
+                return Response({'error': f"{idx + 1}-savol xatosi: {str(exc)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+            if q_id and str(q_id) in existing_questions:
+                q_obj = existing_questions[str(q_id)]
+                q_obj.type = q_type
+                q_obj.prompt = prompt
+                q_obj.options = options
+                q_obj.correct_answer = correct_answer
+                q_obj.accepted_alternatives = accepted_alternatives
+                q_obj.explanation = explanation
+                q_obj.points = points
+                q_obj.time_limit_seconds = time_limit
+                q_obj.difficulty = difficulty
+                q_obj.order_index = idx
+                q_obj.is_locked = is_locked
+                q_obj.media_url = media_url
+                q_obj.media_type = media_type
+                q_obj.save()
+                processed_ids.add(str(q_id))
+            else:
+                new_q = Question.objects.create(
+                    quiz=quiz,
+                    type=q_type,
+                    prompt=prompt,
+                    options=options,
+                    correct_answer=correct_answer,
+                    accepted_alternatives=accepted_alternatives,
+                    explanation=explanation,
+                    points=points,
+                    time_limit_seconds=time_limit,
+                    difficulty=difficulty,
+                    order_index=idx,
+                    is_locked=is_locked,
+                    media_url=media_url,
+                    media_type=media_type
+                )
+                processed_ids.add(str(new_q.id))
+
+        # Delete removed questions
+        for old_id, old_q in existing_questions.items():
+            if old_id not in processed_ids:
+                old_q.delete()
+
+        # 3. If published, snapshot version
+        if quiz.status == 'published':
+            QuizService.publish_quiz_version(quiz)
+
+        return Response({
+            'status': 'ok',
+            'quiz_id': str(quiz.id),
+            'message': 'Viktorina muvaffaqiyatli saqlandi! 💾',
+            'quiz': QuizSerializer(quiz).data
+        }, status=status.HTTP_200_OK if quiz_id else status.HTTP_201_CREATED)
+
+
 def teacher_dashboard_view(request):
     """
     Renders the teacher dashboard with Bento Grid quizzes and quick actions.
+    All statistics and quizzes are dynamically queried from the SQLite database.
     """
     from django.shortcuts import render
+    from apps.live_sessions.models import LiveSession, Participant, AnswerSubmission
+
     quizzes = []
+    quizzes_count = 0
+    completed_sessions_count = 0
+    active_students_count = 0
+    average_accuracy = 0
+
     if request.user.is_authenticated:
         quizzes = Quiz.objects.filter(owner=request.user).prefetch_related('questions').order_by('-created_at')
+        quizzes_count = quizzes.count()
+        completed_sessions_count = LiveSession.objects.filter(host=request.user).count()
+        active_students_count = Participant.objects.filter(session__host=request.user).values('nickname').distinct().count()
+
+        submissions = AnswerSubmission.objects.filter(session__host=request.user)
+        total_subs = submissions.count()
+        if total_subs > 0:
+            correct_subs = submissions.filter(is_correct=True).count()
+            average_accuracy = round((correct_subs / total_subs) * 100)
     else:
-        # For public demo view, show recent published quizzes or empty
+        # For public demo view, show recent published quizzes
         quizzes = Quiz.objects.filter(status='published').prefetch_related('questions').order_by('-created_at')[:6]
+        quizzes_count = quizzes.count()
 
     return render(request, 'dashboard/teacher_home.html', {
         'quizzes': quizzes,
-        'quizzes_count': len(quizzes),
+        'quizzes_count': quizzes_count,
+        'completed_sessions_count': completed_sessions_count,
+        'active_students_count': active_students_count,
+        'average_accuracy': average_accuracy,
         'user': request.user,
     })
 
@@ -194,34 +342,31 @@ def quiz_editor_view(request, quiz_id=None):
     """
     Renders the universal 3-column quiz editor.
     Requires authentication: unauthenticated users are redirected to login.
+    Passes serialized quiz data for interactive client-side editing.
     """
     from django.shortcuts import render, redirect
+
     if not request.user.is_authenticated:
         return redirect(f"/login/?next={request.path}")
 
     quiz = None
+    quiz_json = 'null'
     if quiz_id:
         try:
             quiz = Quiz.objects.filter(pk=quiz_id, owner=request.user).first()
             if not quiz:
                 quiz = Quiz.objects.filter(pk=quiz_id).first()
+            if quiz:
+                quiz_json = json.dumps(QuizSerializer(quiz).data)
         except Exception:
             quiz = None
 
     return render(request, 'editor/quiz_editor.html', {
         'quiz': quiz,
+        'quiz_json': quiz_json,
         'user': request.user,
     })
 
-
-def design_system_showcase_view(request):
-    """
-    Renders the interactive EduPlay 3D component and soundboard showcase.
-    """
-    from django.shortcuts import render
-    return render(request, 'showcase/component_library.html', {
-        'user': request.user,
-    })
 
 
 def leaderboard_page_view(request):

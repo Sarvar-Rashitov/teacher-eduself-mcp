@@ -7,7 +7,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from apps.quizzes.views import teacher_dashboard_view, quiz_editor_view, design_system_showcase_view, leaderboard_page_view
+from apps.quizzes.views import teacher_dashboard_view, quiz_editor_view, leaderboard_page_view
 from apps.live_sessions.views import host_screen_view, student_game_view
 from apps.authentication.views import login_page_view, profile_page_view
 
@@ -26,7 +26,6 @@ urlpatterns = [
     path('play/', student_game_view, name='student-play-join'),
     path('play/<str:room_code>/', student_game_view, name='student-play-room'),
     path('leaderboard/', leaderboard_page_view, name='leaderboard'),
-    path('design-system/', design_system_showcase_view, name='design-system'),
 
     # Backend APIs
     path('auth/', include('apps.authentication.urls')),

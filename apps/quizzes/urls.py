@@ -9,6 +9,7 @@ app_name = 'quizzes'
 
 urlpatterns = [
     path('', views.QuizListCreateView.as_view(), name='quiz_list_create'),
+    path('save-full/', views.QuizSaveFullView.as_view(), name='quiz_save_full'),
     path('<uuid:pk>/', views.QuizDetailView.as_view(), name='quiz_detail'),
     path('<uuid:quiz_id>/questions/', views.QuestionCreateView.as_view(), name='question_create'),
     path('<uuid:quiz_id>/questions/<uuid:pk>/', views.QuestionDetailView.as_view(), name='question_detail'),

@@ -118,6 +118,8 @@
               window.toggleAiModal();
             } else if (window.toggleAiDrawer) {
               window.toggleAiDrawer();
+            } else {
+              window.location.href = '/login/?next=/dashboard/';
             }
             return;
           }

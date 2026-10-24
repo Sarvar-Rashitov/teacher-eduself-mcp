@@ -86,7 +86,16 @@ class TestPhase08Frontend:
             assert "EduSelf" in content
             assert "Dilshod" in content
             assert "7-sinf Fizika Zichlik" in content
-            assert "EduAI Yordamchisi" in content
+            assert "Yangi Viktorina" in content
+            assert "EduAI Yordamchisi" not in content
+            # Assert header island is removed and framed sections are rendered
+            assert "dashboard-header-island" not in content
+            assert "stats-panel-frame" in content
+            assert "quizzes-panel-frame" in content
+            assert "stat-island-orange" in content
+            assert "stat-island-blue" in content
+            assert "stat-island-purple" in content
+            assert "stat-island-green" in content
 
     def test_quiz_editor_renders_ok(self, test_teacher, test_quiz):
         client = Client()
@@ -134,20 +143,10 @@ class TestPhase08Frontend:
         assert "PERFECT SCORER!" in content
         assert "NEXT LEVEL" in content
 
-    def test_design_system_showcase_renders_ok(self):
+    def test_design_system_url_removed_returns_404(self):
         client = Client()
         response = client.get('/design-system/')
-        assert response.status_code == 200
-        content = response.content.decode('utf-8')
-        assert "EduPlay 3D Design System" in content
-        assert "Tanga Qilinglashi" in content
-        assert "Humo Qanoti" in content
-        assert "Qanotli Tulpor" in content
-        assert "Oltin Olma" in content
-        assert "Boqiy Chinor" in content
-        assert "Madina K." in content
-        assert "Sardorbek" in content
-        assert "student_home.jpg" in content
+        assert response.status_code == 404
 
     def test_static_files_accessible(self):
         base_dir = Path(__file__).resolve().parent.parent
@@ -171,7 +170,7 @@ class TestPhase08Frontend:
 
     def test_vector_svg_iconography_in_templates(self):
         client = Client()
-        pages = ['/login/', '/play/', '/design-system/']
+        pages = ['/login/', '/play/']
         for page in pages:
             resp = client.get(page)
             assert resp.status_code == 200
@@ -201,28 +200,39 @@ class TestPhase08Frontend:
         assert "Humo Qanoti" in content
         assert "Aziza Karimova" in content
 
-    def test_header_search_island_and_floating_ai_widget_rendered(self):
+    def test_header_search_island_and_floating_ai_widget_guest_vs_teacher(self, test_teacher):
         client = Client()
-        response = client.get('/')
-        assert response.status_code == 200
-        content = response.content.decode('utf-8')
-        # Center Search Capsule
-        assert 'id="navbarSearchIsland"' in content
-        assert 'id="globalSearchInput"' in content
-        assert 'id="searchResultsDropdown"' in content
-        assert 'search.svg' in content
-        # Floating Bottom-Right AI Assistant Widget
-        assert 'id="floatingAiWidget"' in content
-        assert 'id="floatingAiTrigger"' in content
-        assert 'id="aiCommandModal"' in content
-        assert 'id="aiChatBody"' in content
-        assert 'id="aiModalInput"' in content
-        assert 'data-ai-action="new-quiz"' in content
-        assert 'data-ai-action="live-game"' in content
-        assert 'data-ai-action="sound-toggle"' in content
-        # Scripts loaded
-        assert 'static/js/search.js' in content
-        assert 'static/js/ai_assistant.js' in content
+
+        # 1. Mehmon (Guest / Unauthenticated) holatida: qidiruv va AI asistent bo'lmasligi kerak
+        guest_resp = client.get('/')
+        assert guest_resp.status_code == 200
+        guest_content = guest_resp.content.decode('utf-8')
+        assert 'id="navbarSearchIsland"' not in guest_content
+        assert 'id="globalSearchInput"' not in guest_content
+        assert 'id="floatingAiWidget"' not in guest_content
+        assert 'id="floatingAiTrigger"' not in guest_content
+        assert 'static/js/search.js' not in guest_content
+        assert 'static/js/ai_assistant.js' not in guest_content
+
+        # 2. Ustoz profiliga kirganda (Authenticated Teacher): qidiruv va AI asistent ko'rinishi kerak
+        client.force_login(test_teacher)
+        teacher_resp = client.get('/')
+        assert teacher_resp.status_code == 200
+        teacher_content = teacher_resp.content.decode('utf-8')
+        assert 'id="navbarSearchIsland"' in teacher_content
+        assert 'id="globalSearchInput"' in teacher_content
+        assert 'id="searchResultsDropdown"' in teacher_content
+        assert 'search.svg' in teacher_content
+        assert 'id="floatingAiWidget"' in teacher_content
+        assert 'id="floatingAiTrigger"' in teacher_content
+        assert 'id="aiCommandModal"' in teacher_content
+        assert 'id="aiChatBody"' in teacher_content
+        assert 'id="aiModalInput"' in teacher_content
+        assert 'data-ai-action="new-quiz"' in teacher_content
+        assert 'data-ai-action="live-game"' in teacher_content
+        assert 'data-ai-action="sound-toggle"' in teacher_content
+        assert 'static/js/search.js' in teacher_content
+        assert 'static/js/ai_assistant.js' in teacher_content
 
     def test_circle_menu_downward_geometry_and_sound_toggle(self):
         from pathlib import Path

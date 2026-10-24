@@ -204,3 +204,202 @@ def test_api_quiz_crud_and_preview(auth_client, teacher):
     prev_res = auth_client.get(f'/api/v1/quizzes/{quiz_id}/student-preview/')
     assert prev_res.status_code == 200
     assert 'correct_answer' not in prev_res.data['questions'][0]
+
+
+@pytest.mark.django_db
+def test_api_quiz_save_full_with_multiple_question_types(auth_client, teacher):
+    """Test bulk saving a quiz with multiple 14 question types in a single atomic transaction."""
+    payload = {
+        'title': 'Universal 14 Question Types Assessment',
+        'subject': 'Fizika',
+        'grade_level': 8,
+        'status': 'published',
+        'description': 'Universal test with various question formats',
+        'questions': [
+            {
+                'type': 'single_choice',
+                'prompt': 'Yorug‘lik tezligi?',
+                'options': [{'id': 'opt_1', 'text': '300,000 km/s'}, {'id': 'opt_2', 'text': '150,000 km/s'}],
+                'correct_answer': 'opt_1',
+                'points': 1000,
+                'time_limit_seconds': 30
+            },
+            {
+                'type': 'multiple_choice',
+                'prompt': 'Vektor kattaliklarni tanlang:',
+                'options': [{'id': 'opt_1', 'text': 'Tezlik'}, {'id': 'opt_2', 'text': 'Kuch'}, {'id': 'opt_3', 'text': 'Massa'}],
+                'correct_answer': ['opt_1', 'opt_2'],
+                'points': 1000,
+                'time_limit_seconds': 30
+            },
+            {
+                'type': 'true_false',
+                'prompt': 'Suv 100 darajada qaynaydi.',
+                'options': [{'id': 'true', 'text': 'Rost'}, {'id': 'false', 'text': 'Yolg‘on'}],
+                'correct_answer': 'true',
+                'points': 1000,
+                'time_limit_seconds': 20
+            },
+            {
+                'type': 'open_short',
+                'prompt': 'O‘zbekiston poytaxti qaysi shahar?',
+                'options': [],
+                'correct_answer': 'Toshkent',
+                'accepted_alternatives': ['Tashkent'],
+                'points': 1000,
+                'time_limit_seconds': 30
+            },
+            {
+                'type': 'numeric',
+                'prompt': 'Vakuumdagi yorug‘lik tezligi (km/s):',
+                'options': {'tolerance': 100},
+                'correct_answer': {'value': 300000, 'tolerance': 100},
+                'points': 1000,
+                'time_limit_seconds': 30
+            },
+            {
+                'type': 'slider',
+                'prompt': 'O‘rtacha inson tanasi harorati:',
+                'options': {'min': 34, 'max': 42},
+                'correct_answer': {'target': 36.6, 'tolerance': 0.5},
+                'points': 1000,
+                'time_limit_seconds': 30
+            },
+            {
+                'type': 'math_equation',
+                'prompt': 'Nyutonning 2-qonuni formulasi:',
+                'options': [],
+                'correct_answer': 'F = m * a',
+                'points': 1000,
+                'time_limit_seconds': 30
+            },
+            {
+                'type': 'code_output',
+                'prompt': 'Natijani toping: print(10 + 20)',
+                'options': {'language': 'python', 'code': 'print(10 + 20)'},
+                'correct_answer': '30',
+                'points': 1000,
+                'time_limit_seconds': 30
+            },
+            {
+                'type': 'ordering',
+                'prompt': 'Bosqichlarni joylashtiring:',
+                'options': [{'id': 's1', 'text': 'Gipoteza'}, {'id': 's2', 'text': 'Tajriba'}],
+                'correct_answer': ['s1', 's2'],
+                'points': 1000,
+                'time_limit_seconds': 30
+            },
+            {
+                'type': 'match_pairs',
+                'prompt': 'Juftliklarni moslashtiring:',
+                'options': [{'id': 'p1', 'left': 'Massa', 'right': 'kg'}, {'id': 'p2', 'left': 'Vaqt', 'right': 's'}],
+                'correct_answer': {'p1': 'p1', 'p2': 'p2'},
+                'points': 1000,
+                'time_limit_seconds': 30
+            }
+        ]
+    }
+
+    # 1. Create quiz with bulk save
+    res = auth_client.post('/api/v1/quizzes/save-full/', payload, format='json')
+    assert res.status_code == 201
+    quiz_id = res.data['quiz_id']
+    assert quiz_id is not None
+
+    quiz = Quiz.objects.get(id=quiz_id)
+    assert quiz.title == 'Universal 14 Question Types Assessment'
+    assert quiz.status == 'published'
+    assert quiz.questions.count() == 10
+    # Published quiz must create QuizVersion snapshot
+    assert quiz.versions.count() == 1
+
+    # 2. Update existing quiz: change title and modify questions
+    payload['id'] = quiz_id
+    payload['title'] = 'Yangilangan Viktorina'
+    # Keep only first 2 questions and add 1 new
+    payload['questions'] = payload['questions'][:2]
+    payload['questions'].append({
+        'type': 'open_short',
+        'prompt': 'Yangi savol?',
+        'options': [],
+        'correct_answer': 'Javob',
+        'points': 1000,
+        'time_limit_seconds': 30
+    })
+
+    update_res = auth_client.post('/api/v1/quizzes/save-full/', payload, format='json')
+    assert update_res.status_code == 200
+
+    quiz.refresh_from_db()
+    assert quiz.title == 'Yangilangan Viktorina'
+    assert quiz.questions.count() == 3
+
+
+@pytest.mark.django_db
+def test_api_quiz_save_full_validation_failure(auth_client):
+    """Test that invalid question payload aborts transaction with 400 error."""
+    payload = {
+        'title': 'Xato Savol Test',
+        'subject': 'Fizika',
+        'questions': [
+            {
+                'type': 'single_choice',
+                'prompt': 'Xato variantlar',
+                'options': [{'id': 'opt_1', 'text': 'Faqat bitta variant'}], # Invalid: < 2 options
+                'correct_answer': 'opt_1',
+            }
+        ]
+    }
+    res = auth_client.post('/api/v1/quizzes/save-full/', payload, format='json')
+    assert res.status_code == 400
+    assert 'xatosi' in res.data['error']
+
+
+@pytest.mark.django_db
+def test_teacher_dashboard_dynamic_metrics(teacher):
+    """Test that teacher dashboard renders real metrics calculated from database."""
+    from django.test import Client
+    from apps.live_sessions.models import LiveSession, Participant, AnswerSubmission
+
+    # Create 2 quizzes
+    q1 = Quiz.objects.create(owner=teacher, title="Viktorina 1", subject="Fizika", grade_level=7, status="published")
+    q2 = Quiz.objects.create(owner=teacher, title="Viktorina 2", subject="Matematika", grade_level=8, status="draft")
+
+    # Create 1 LiveSession
+    session = LiveSession.objects.create(
+        quiz=q1,
+        host=teacher,
+        room_code="123456",
+        status="completed"
+    )
+
+    # Create 2 Participants
+    p1 = Participant.objects.create(session=session, nickname="Ali", score=1000)
+    p2 = Participant.objects.create(session=session, nickname="Vali", score=500)
+
+    # Create Questions & Submissions: 2 correct, 1 incorrect => accuracy 67%
+    quest = Question.objects.create(
+        quiz=q1,
+        type="single_choice",
+        prompt="Savol",
+        options=[{"id": "1", "text": "A"}],
+        correct_answer="1"
+    )
+    AnswerSubmission.objects.create(session=session, participant=p1, question=quest, submission_id=str(uuid.uuid4()), is_correct=True)
+    AnswerSubmission.objects.create(session=session, participant=p2, question=quest, submission_id=str(uuid.uuid4()), is_correct=True)
+    AnswerSubmission.objects.create(session=session, participant=p1, question=quest, submission_id=str(uuid.uuid4()), is_correct=False)
+
+    client = Client()
+    client.force_login(teacher)
+    response = client.get('/dashboard/')
+    assert response.status_code == 200
+    ctx = response.context
+    assert ctx['quizzes_count'] == 2
+    assert ctx['completed_sessions_count'] == 1
+    assert ctx['active_students_count'] == 2
+    assert ctx['average_accuracy'] == 67
+
+    content = response.content.decode('utf-8')
+    assert "Viktorina 1" in content
+    assert "Viktorina 2" in content
+    assert "67%" in content

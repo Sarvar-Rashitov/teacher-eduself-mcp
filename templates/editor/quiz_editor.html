@@ -3,247 +3,2618 @@
 
 {% block title %}EduSelf — Universal Viktorina Muharriri{% endblock %}
 
+{% block body_class %}editor-view-body{% endblock %}
+
+{% block navbar %}{% endblock %}
+
 {% block content %}
-<!-- Top Action Bar -->
-<div style="background: #FFFFFF; border-bottom: 2px solid var(--border-subtle); padding: 12px 28px; display: flex; justify-content: space-between; align-items: center;">
-  <div style="display: flex; align-items: center; gap: 16px;">
-    <a href="/dashboard/" class="audio-toggle-btn" style="text-decoration: none; padding: 6px 12px;">
-      <img src="{% static 'img/icons/arrow_left.svg' %}" alt="Orqaga" class="svg-icon svg-icon-sm">
-      <span>Dashboard</span>
-    </a>
-    <input type="text" id="quizTitleInput" value="{{ quiz.title|default:'Yangi Viktorina: 7-sinf Fizika Zichlik' }}" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 18px; font-weight: 800; border: 1.5px solid transparent; border-radius: var(--radius-md); padding: 4px 10px; color: var(--text-main); outline: none;" onfocus="this.style.borderColor='var(--primary-orange)'" onblur="this.style.borderColor='transparent'">
-  </div>
+<div class="quiz-editor-page">
 
-  <div style="display: flex; gap: 10px; align-items: center;">
-    <button class="pill-btn btn-outline-white btn-sm" onclick="saveQuiz()" style="margin-top: 0;">
-      <img src="{% static 'img/icons/check.svg' %}" alt="Saqlash" class="svg-icon svg-icon-sm">
-      <span>Saqlash</span>
-    </button>
-    <button class="pill-btn btn-primary-orange btn-sm" onclick="startSessionNow()">
-      <img src="{% static 'img/icons/play.svg' %}" alt="Boshlash" class="svg-icon svg-icon-sm" style="filter: brightness(0) invert(1);">
-      <span>Sinfga Boshlash</span>
-    </button>
-  </div>
-</div>
+  <!-- ================= TOP HEADER BAR ================= -->
+  <header class="editor-header-bar">
+    <div class="editor-header-left">
+      <a href="/dashboard/" class="editor-back-btn" title="Boshqaruv paneliga qaytish">
+        <img src="{% static 'img/icons/arrow_left.svg' %}" alt="Orqaga" class="svg-icon svg-icon-sm">
+        <span>Dashboard</span>
+      </a>
 
-<!-- 3-Column Layout -->
-<div class="editor-layout">
-  
-  <!-- LEFT COLUMN: Questions List -->
-  <aside class="editor-col" style="overflow-y: auto;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h3 style="font-size: 15px; font-weight: 800;">Savollar Ro‘yxati</h3>
-      <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);" id="questionCountBadge">4 ta</span>
-    </div>
-
-    <div id="questionsContainer" style="display: flex; flex-direction: column; gap: 8px;">
-      <div class="question-list-item active" onclick="selectQuestion(1)">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-weight: 800; font-size: 13px; color: var(--primary-orange);">1.</span>
-          <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">Zichlik formulasi...</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <img src="{% static 'img/icons/lock.svg' %}" alt="Qulf" class="svg-icon svg-icon-sm" title="Savol qulflangan">
-        </div>
-      </div>
-
-      <div class="question-list-item" onclick="selectQuestion(2)">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-weight: 800; font-size: 13px; color: var(--text-muted);">2.</span>
-          <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">Massa birligi...</span>
-        </div>
-        <img src="{% static 'img/icons/unlock.svg' %}" alt="Ochiq" class="svg-icon svg-icon-sm" style="opacity: 0.4;">
-      </div>
-
-      <div class="question-list-item" onclick="selectQuestion(3)">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-weight: 800; font-size: 13px; color: var(--text-muted);">3.</span>
-          <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">Hajmni o‘lchash...</span>
-        </div>
-        <img src="{% static 'img/icons/unlock.svg' %}" alt="Ochiq" class="svg-icon svg-icon-sm" style="opacity: 0.4;">
-      </div>
-
-      <div class="question-list-item" onclick="selectQuestion(4)">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-weight: 800; font-size: 13px; color: var(--text-muted);">4.</span>
-          <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">Arendometr asbobi...</span>
-        </div>
-        <img src="{% static 'img/icons/unlock.svg' %}" alt="Ochiq" class="svg-icon svg-icon-sm" style="opacity: 0.4;">
+      <div class="editor-title-wrap">
+        <input type="text" id="quizTitleInput" value="{{ quiz.title|default:'Yangi Viktorina: 7-sinf Fizika Zichlik' }}" placeholder="Viktorina nomini kiriting..." class="editor-title-input" title="Viktorina nomi" onchange="markUnsaved()">
       </div>
     </div>
 
-    <button class="pill-btn btn-outline-white btn-sm" onclick="addNewQuestion()" style="margin-top: 18px; width: 100%;">
-      <img src="{% static 'img/icons/plus.svg' %}" alt="Qo'shish" class="svg-icon svg-icon-sm">
-      <span>Savol Qo‘shish</span>
-    </button>
-  </aside>
+    <!-- Metadata Controls -->
+    <div class="editor-header-meta">
+      <!-- Subject Selector -->
+      <select id="quizSubjectSelect" class="editor-select-capsule" onchange="markUnsaved()">
+        <option value="Fizika" {% if quiz.subject == 'Fizika' %}selected{% endif %}>🔬 Fizika</option>
+        <option value="Matematika" {% if quiz.subject == 'Matematika' %}selected{% endif %}>📐 Matematika</option>
+        <option value="Informatika" {% if quiz.subject == 'Informatika' %}selected{% endif %}>💻 Informatika</option>
+        <option value="Kimyo" {% if quiz.subject == 'Kimyo' %}selected{% endif %}>🧪 Kimyo</option>
+        <option value="Biologiya" {% if quiz.subject == 'Biologiya' %}selected{% endif %}>🌿 Biologiya</option>
+        <option value="Tarix" {% if quiz.subject == 'Tarix' %}selected{% endif %}>🏛 Tarix</option>
+        <option value="Ingliz tili" {% if quiz.subject == 'Ingliz tili' %}selected{% endif %}>🇬🇧 Ingliz tili</option>
+        <option value="Ona tili" {% if quiz.subject == 'Ona tili' %}selected{% endif %}>📚 Ona tili</option>
+        <option value="Umumiy" {% if quiz.subject == 'Umumiy' or not quiz.subject %}selected{% endif %}>✨ Umumiy</option>
+      </select>
 
-  <!-- CENTER COLUMN: WYSIWYG Question Editor -->
-  <main class="editor-col" style="flex: 1; overflow-y: auto;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span style="background: var(--primary-orange); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px;">1</span>
-        <h2 style="font-size: 18px; font-weight: 800;">Savol Matni va Variantlar</h2>
-      </div>
+      <!-- Grade Level Selector -->
+      <select id="quizGradeSelect" class="editor-select-capsule" onchange="markUnsaved()">
+        <option value="1" {% if quiz.grade_level == 1 %}selected{% endif %}>1-sinf</option>
+        <option value="2" {% if quiz.grade_level == 2 %}selected{% endif %}>2-sinf</option>
+        <option value="3" {% if quiz.grade_level == 3 %}selected{% endif %}>3-sinf</option>
+        <option value="4" {% if quiz.grade_level == 4 %}selected{% endif %}>4-sinf</option>
+        <option value="5" {% if quiz.grade_level == 5 %}selected{% endif %}>5-sinf</option>
+        <option value="6" {% if quiz.grade_level == 6 %}selected{% endif %}>6-sinf</option>
+        <option value="7" {% if quiz.grade_level == 7 or not quiz %}selected{% endif %}>7-sinf</option>
+        <option value="8" {% if quiz.grade_level == 8 %}selected{% endif %}>8-sinf</option>
+        <option value="9" {% if quiz.grade_level == 9 %}selected{% endif %}>9-sinf</option>
+        <option value="10" {% if quiz.grade_level == 10 %}selected{% endif %}>10-sinf</option>
+        <option value="11" {% if quiz.grade_level == 11 %}selected{% endif %}>11-sinf</option>
+      </select>
 
-      <div style="display: flex; gap: 10px;">
-        <select style="height: 36px; border-radius: var(--radius-pill); border: 1.5px solid var(--border-subtle); padding: 0 12px; font-size: 13px; font-weight: 700; outline: none;">
-          <option>Single Choice (Bitta to‘g‘ri javob)</option>
-          <option>Multiple Choice</option>
-          <option>True / False</option>
-        </select>
-        <button class="audio-toggle-btn" title="Savolni qulflash" style="padding: 6px 12px;">
-          <img src="{% static 'img/icons/lock.svg' %}" alt="Qulf" class="svg-icon svg-icon-sm">
-          <span>Qulflangan</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Question Textarea -->
-    <div style="margin-bottom: 20px;">
-      <textarea id="questionPrompt" rows="3" placeholder="Savol matnini kiriting..." style="width: 100%; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 16px; font-family: inherit; font-size: 16px; font-weight: 600; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'" onblur="this.style.borderColor='var(--border-subtle)'">Moddaning zichligini hisoblash formulasi qaysi javobda to‘g‘ri keltirilgan?</textarea>
-    </div>
-
-    <!-- 4 Uzbek Mythological Dual-Coded Options Grid -->
-    <div style="margin-bottom: 24px;">
-      <label style="display: block; font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px;">
-        Javob Variantlari (O‘zbek Mifologik Dual-Coding)
-      </label>
-
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        
-        <!-- Red Option: Humo Qanoti -->
-        <div style="display: flex; align-items: center; gap: 12px; background: #FEF2F2; border: 1.5px solid #FECACA; border-radius: var(--radius-md); padding: 8px 14px;">
-          <div style="width: 38px; height: 38px; background: #EF4444; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-            <img src="{% static 'img/icons/humo_wing.svg' %}" alt="Humo" style="width: 24px; height: 24px;">
-          </div>
-          <span style="font-weight: 800; font-size: 13px; color: #DC2626; width: 90px;">Humo Qanoti</span>
-          <input type="text" value="ρ = m / V" style="flex: 1; height: 40px; border-radius: 8px; border: 1px solid #FECACA; padding: 0 12px; font-size: 15px; font-weight: 700; outline: none;">
-          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #10B981; cursor: pointer;">
-            <input type="radio" name="correct_answer" checked style="accent-color: #10B981; width: 18px; height: 18px;">
-            <span>To‘g‘ri</span>
-          </label>
-        </div>
-
-        <!-- Blue Option: Qanotli Tulpor -->
-        <div style="display: flex; align-items: center; gap: 12px; background: #EFF6FF; border: 1.5px solid #BFDBFE; border-radius: var(--radius-md); padding: 8px 14px;">
-          <div style="width: 38px; height: 38px; background: #3B82F6; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-            <img src="{% static 'img/icons/winged_tulpor.svg' %}" alt="Tulpor" style="width: 24px; height: 24px;">
-          </div>
-          <span style="font-weight: 800; font-size: 13px; color: #2563EB; width: 90px;">Tulpor</span>
-          <input type="text" value="ρ = m · V" style="flex: 1; height: 40px; border-radius: 8px; border: 1px solid #BFDBFE; padding: 0 12px; font-size: 15px; font-weight: 700; outline: none;">
-          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer;">
-            <input type="radio" name="correct_answer" style="accent-color: #10B981; width: 18px; height: 18px;">
-            <span>To‘g‘ri</span>
-          </label>
-        </div>
-
-        <!-- Yellow Option: Oltin Olma -->
-        <div style="display: flex; align-items: center; gap: 12px; background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: var(--radius-md); padding: 8px 14px;">
-          <div style="width: 38px; height: 38px; background: #F59E0B; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-            <img src="{% static 'img/icons/golden_apple.svg' %}" alt="Olma" style="width: 24px; height: 24px;">
-          </div>
-          <span style="font-weight: 800; font-size: 13px; color: #D97706; width: 90px;">Oltin Olma</span>
-          <input type="text" value="ρ = V / m" style="flex: 1; height: 40px; border-radius: 8px; border: 1px solid #FDE68A; padding: 0 12px; font-size: 15px; font-weight: 700; outline: none;">
-          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer;">
-            <input type="radio" name="correct_answer" style="accent-color: #10B981; width: 18px; height: 18px;">
-            <span>To‘g‘ri</span>
-          </label>
-        </div>
-
-        <!-- Green Option: Boqiy Chinor -->
-        <div style="display: flex; align-items: center; gap: 12px; background: #ECFDF5; border: 1.5px solid #A7F3D0; border-radius: var(--radius-md); padding: 8px 14px;">
-          <div style="width: 38px; height: 38px; background: #10B981; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-            <img src="{% static 'img/icons/chinor_leaf.svg' %}" alt="Chinor" style="width: 24px; height: 24px;">
-          </div>
-          <span style="font-weight: 800; font-size: 13px; color: #059669; width: 90px;">Boqiy Chinor</span>
-          <input type="text" value="ρ = m + V" style="flex: 1; height: 40px; border-radius: 8px; border: 1px solid #A7F3D0; padding: 0 12px; font-size: 15px; font-weight: 700; outline: none;">
-          <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer;">
-            <input type="radio" name="correct_answer" style="accent-color: #10B981; width: 18px; height: 18px;">
-            <span>To‘g‘ri</span>
-          </label>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Parameter Sliders -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-      <div style="background: var(--bg-surface-subtle); padding: 14px 18px; border-radius: var(--radius-md);">
-        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 8px;">
-          <span>Vaqt Limiti:</span>
-          <span id="timerValDisplay" style="color: var(--primary-orange);">30 soniya</span>
-        </div>
-        <input type="range" min="10" max="90" step="5" value="30" style="width: 100%; accent-color: var(--primary-orange);" oninput="document.getElementById('timerValDisplay').textContent = this.value + ' soniya'">
-      </div>
-
-      <div style="background: var(--bg-surface-subtle); padding: 14px 18px; border-radius: var(--radius-md);">
-        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 8px;">
-          <span>Ball / Tangalar:</span>
-          <span id="pointsValDisplay" style="color: var(--primary-orange);">1000 ball</span>
-        </div>
-        <input type="range" min="500" max="3000" step="250" value="1000" style="width: 100%; accent-color: var(--primary-orange);" oninput="document.getElementById('pointsValDisplay').textContent = this.value + ' ball'">
-      </div>
-    </div>
-
-  </main>
-
-  <!-- RIGHT COLUMN: AI Assistant & Suggestions -->
-  <aside class="editor-col" style="overflow-y: auto;">
-    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
-      <div style="width: 32px; height: 32px; background: var(--primary-orange-soft); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-        <img src="{% static 'img/icons/sparkles.svg' %}" alt="AI" class="svg-icon svg-icon-sm">
-      </div>
-      <h3 style="font-size: 15px; font-weight: 800;">AI Maslahatchi</h3>
-    </div>
-
-    <div style="background: #FDF4E6; border: 1.5px solid #FDE68A; border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px; font-size: 13px; line-height: 1.45;">
-      <strong>Pedagogik taklif:</strong> Ushbu 1-savol formulaga asoslangan. 3-savolga esa hayotiy amaliy misol (masalan: <em>"Nima uchun yog‘och suvda suzadi?"</em>) qo‘shilsa, o‘quvchilar tushunishi 25% ga oshadi.
-    </div>
-
-    <button class="pill-btn btn-primary-orange btn-sm" onclick="applyAiSuggestion()" style="width: 100%; margin-bottom: 20px;">
-      Taklifni Qabul Qilish (Diff)
-    </button>
-
-    <div style="border-top: 1px solid var(--border-subtle); padding-top: 16px;">
-      <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 8px;">
-        Mavzu Bo‘yicha Yangi Savol Generatsiya Qilish:
-      </label>
-      <input type="text" placeholder="Zichlik bo‘yicha hisobiy masala..." style="width: 100%; height: 40px; border-radius: var(--radius-md); border: 1.5px solid var(--border-subtle); padding: 0 12px; font-size: 13px; margin-bottom: 10px; outline: none;">
-      <button class="pill-btn btn-outline-white btn-sm" style="width: 100%;" onclick="window.showToast('Yangi savol generatsiya qilindi! ✨', 'success')">
-        Generatsiya Qilish
+      <!-- Status Toggle Pill -->
+      <button type="button" id="quizStatusToggle" class="editor-status-toggle {% if quiz.status == 'published' %}is-published{% else %}is-draft{% endif %}" onclick="toggleQuizStatus()">
+        <span class="status-pulse-dot" style="background: currentColor;"></span>
+        <span id="quizStatusLabel">{% if quiz.status == 'published' %}Chop etilgan{% else %}Qoralama{% endif %}</span>
       </button>
     </div>
-  </aside>
 
+    <!-- Actions Group -->
+    <div class="editor-header-actions">
+      <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="saveQuiz()" id="saveQuizBtn" style="margin-top: 0;">
+        <img src="{% static 'img/icons/check.svg' %}" alt="Saqlash" class="svg-icon svg-icon-sm">
+        <span id="saveBtnText">Saqlash</span>
+      </button>
+      <button type="button" class="pill-btn btn-primary-orange btn-sm" onclick="startSessionNow()" style="margin-top: 0;">
+        <img src="{% static 'img/icons/play.svg' %}" alt="Boshlash" class="svg-icon svg-icon-sm" style="filter: brightness(0) invert(1);">
+        <span>Sinfga Boshlash</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= 3-COLUMN WORKSPACE GRID ================= -->
+  <div class="editor-workspace-grid">
+
+    <!-- ================= LEFT COLUMN: QUESTIONS LIST ================= -->
+    <aside class="editor-glass-panel questions-sidebar-col">
+      <div class="questions-sidebar-header">
+        <h3 class="questions-sidebar-title">
+          <img src="{% static 'img/icons/sparkles.svg' %}" alt="Savollar" class="svg-icon svg-icon-sm" style="color: var(--primary-orange);">
+          <span>Savollar Ro‘yxati</span>
+        </h3>
+        <span class="questions-count-badge" id="questionCountBadge">1 ta</span>
+      </div>
+
+      <!-- Scrollable List of Questions -->
+      <div class="questions-scroll-list" id="questionsContainer">
+        <!-- Rendered dynamically by JavaScript; fallback skeleton in HTML -->
+        <div class="question-nav-card is-active" onclick="selectQuestion(0)">
+          <div class="question-nav-left">
+            <span class="question-index-badge">1</span>
+            <div class="question-nav-info">
+              <span class="question-nav-prompt">Moddaning zichligini hisoblash...</span>
+              <span class="question-nav-type-tag">Single Choice</span>
+            </div>
+          </div>
+          <div class="question-nav-actions">
+            <button type="button" class="nav-icon-btn" title="Savol qulflangan">
+              <img src="{% static 'img/icons/unlock.svg' %}" alt="Qulf" class="svg-icon svg-icon-sm">
+            </button>
+            <button type="button" class="nav-icon-btn btn-delete" title="O‘chirish" onclick="deleteQuestion(0, event)">
+              <img src="{% static 'img/icons/trash.svg' %}" alt="O'chirish" class="svg-icon svg-icon-sm">
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Shadow for Questions Passing Downwards -->
+      <div class="sidebar-bottom-shadow-overlay"></div>
+
+      <!-- Floating Add Question Button with Rounded Dashed Border -->
+      <div class="sidebar-bottom-action-dock">
+        <button type="button" class="btn-add-question-trigger" onclick="openTypePickerModal()" title="Yangi savol qo‘shish">
+          <img src="{% static 'img/icons/plus.svg' %}" alt="Qo'shish" class="svg-icon svg-icon-sm">
+          <span>Yangi Savol Qo‘shish (14 tur)</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ================= CENTER COLUMN: DYNAMIC WYSIWYG QUESTION EDITOR ================= -->
+    <main class="editor-glass-panel main-editor-col">
+      <div class="editor-main-header">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="question-index-badge" id="currentQNumCircle" style="width: 34px; height: 34px; font-size: 15px; font-weight: 800; background: var(--primary-orange); color: #fff; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;">1</span>
+          <div>
+            <h2 style="font-size: 16px; font-weight: 800; margin: 0; color: var(--text-main); line-height: 1.2;">Savol Mazmuni</h2>
+            <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Savol matni va javob variantlarini kiriting</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button type="button" id="questionLockBtn" class="q-lock-toggle-btn is-unlocked" onclick="toggleCurrentQuestionLock()">
+            <img src="{% static 'img/icons/unlock.svg' %}" alt="Qulf" class="svg-icon svg-icon-sm" id="lockIconImg">
+            <span id="lockStatusText">Ochiq</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Question Prompt Field -->
+      <div class="editor-field-group">
+        <label class="editor-field-label" for="questionPrompt">
+          <span>Savol Matni:</span>
+          <span style="font-weight: 600; text-transform: none; color: var(--text-muted);" id="promptCharCount">0 belgi</span>
+        </label>
+        <textarea id="questionPrompt" rows="3" placeholder="Savol matnini bu yerga kiriting..." class="editor-textarea-prompt" oninput="handlePromptChange(this.value)">Moddaning zichligini hisoblash formulasi qaysi javobda to‘g‘ri keltirilgan?</textarea>
+      </div>
+
+      <!-- Optional Media / Diagram URL -->
+      <div class="editor-field-group" style="margin-bottom: 22px;">
+        <label class="editor-field-label" for="questionMediaUrl">
+          <span>Rasm / Diagramma Havolasi (Ixtiyoriy):</span>
+        </label>
+        <div style="display: flex; gap: 10px;">
+          <input type="url" id="questionMediaUrl" placeholder="https://misol.uz/diagramma.png" class="editor-title-input" style="border: 1.5px solid var(--border-subtle); background: #FAFAFA; font-size: 13px; font-weight: 600; max-width: 100%; border-radius: 10px;" onchange="handleMediaUrlChange(this.value)">
+        </div>
+      </div>
+
+      <!-- ================= DYNAMIC ANSWER OPTIONS BUILDER ================= -->
+      <div class="editor-field-group">
+        <label class="editor-field-label">
+          <span id="answersBlockTitle">Javob Variantlari (O‘zbek Mifologik Dual-Coding):</span>
+        </label>
+
+        <!-- Dynamic Container where JS renders inputs for all 14 types -->
+        <div id="answerBuilderContainer">
+          
+          <!-- Default Static HTML: 4 Uzbek Mythological Dual-Coding Options (Satisfies Test Assertions) -->
+          <div class="mythic-options-stack" id="mythicOptionsStack">
+            
+            <!-- Red Option: Humo Qanoti -->
+            <div class="mythic-option-card mythic-card-humo is-correct-marked" id="optCard_0">
+              <div class="mythic-icon-badge badge-humo">
+                <img src="{% static 'img/icons/humo_wing.svg' %}" alt="Humo" style="width: 24px; height: 24px;">
+              </div>
+              <span class="mythic-name-label" style="color: #DC2626;">Humo Qanoti</span>
+              <input type="text" class="mythic-option-input" value="ρ = m / V" placeholder="Variant matni..." oninput="handleOptionTextChange(0, this.value)">
+              <label class="mythic-correct-check is-checked">
+                <input type="radio" name="single_choice_radio" checked onchange="handleSingleChoiceCorrect(0)">
+                <span>To‘g‘ri</span>
+              </label>
+            </div>
+
+            <!-- Blue Option: Qanotli Tulpor -->
+            <div class="mythic-option-card mythic-card-tulpor" id="optCard_1">
+              <div class="mythic-icon-badge badge-tulpor">
+                <img src="{% static 'img/icons/winged_tulpor.svg' %}" alt="Tulpor" style="width: 24px; height: 24px;">
+              </div>
+              <span class="mythic-name-label" style="color: #2563EB;">Qanotli Tulpor</span>
+              <input type="text" class="mythic-option-input" value="ρ = m · V" placeholder="Variant matni..." oninput="handleOptionTextChange(1, this.value)">
+              <label class="mythic-correct-check">
+                <input type="radio" name="single_choice_radio" onchange="handleSingleChoiceCorrect(1)">
+                <span>To‘g‘ri</span>
+              </label>
+            </div>
+
+            <!-- Yellow Option: Oltin Olma -->
+            <div class="mythic-option-card mythic-card-olma" id="optCard_2">
+              <div class="mythic-icon-badge badge-olma">
+                <img src="{% static 'img/icons/golden_apple.svg' %}" alt="Olma" style="width: 24px; height: 24px;">
+              </div>
+              <span class="mythic-name-label" style="color: #D97706;">Oltin Olma</span>
+              <input type="text" class="mythic-option-input" value="ρ = V / m" placeholder="Variant matni..." oninput="handleOptionTextChange(2, this.value)">
+              <label class="mythic-correct-check">
+                <input type="radio" name="single_choice_radio" onchange="handleSingleChoiceCorrect(2)">
+                <span>To‘g‘ri</span>
+              </label>
+            </div>
+
+            <!-- Green Option: Boqiy Chinor -->
+            <div class="mythic-option-card mythic-card-chinor" id="optCard_3">
+              <div class="mythic-icon-badge badge-chinor">
+                <img src="{% static 'img/icons/chinor_leaf.svg' %}" alt="Chinor" style="width: 24px; height: 24px;">
+              </div>
+              <span class="mythic-name-label" style="color: #059669;">Boqiy Chinor</span>
+              <input type="text" class="mythic-option-input" value="ρ = m + V" placeholder="Variant matni..." oninput="handleOptionTextChange(3, this.value)">
+              <label class="mythic-correct-check">
+                <input type="radio" name="single_choice_radio" onchange="handleSingleChoiceCorrect(3)">
+                <span>To‘g‘ri</span>
+              </label>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Explanation Field -->
+      <div class="editor-field-group" style="margin-top: 20px; margin-bottom: 0;">
+        <label class="editor-field-label" for="questionExplanation">
+          <span>Izoh / Pedagogik Tushuntirish (Javobdan so‘ng o‘quvchilarga ko‘rinadi):</span>
+        </label>
+        <input type="text" id="questionExplanation" placeholder="Masalan: Zichlik formulasi ro = m / V bo‘lib, moddaning massa va hajm nisbatini bildiradi." class="editor-title-input" style="border: 1.5px solid var(--border-subtle); background: #FAFAFA; font-size: 13px; font-weight: 600; max-width: 100%; border-radius: 10px;" oninput="handleExplanationChange(this.value)">
+      </div>
+    </main>
+
+    <!-- ================= RIGHT COLUMN: INSPECTOR & PREVIEW ================= -->
+    <aside class="editor-glass-panel editor-inspector-col" id="rightSidebarPanel">
+      
+      <!-- Top Switcher Header (Settings Icon & AI Workspace) -->
+      <div class="right-panel-top-bar">
+        <div class="right-tabs-capsule">
+          <button type="button" id="tabBtnAiAgent" class="right-tab-pill is-active" onclick="switchRightPanelMode('ai_agent')" title="AI Viktorina Agenti">
+            <img src="{% static 'img/icons/sparkles.svg' %}" alt="AI" class="svg-icon svg-icon-sm" style="color: var(--primary-orange);">
+            <span>AI Workspace</span>
+          </button>
+          <button type="button" id="tabBtnInspector" class="right-tab-pill" onclick="switchRightPanelMode('inspector')" title="Savol Nazoratchisi va Parametrlari">
+            <img src="{% static 'img/icons/settings.svg' %}" alt="Sozlamalar" class="svg-icon svg-icon-sm">
+            <span>Nazoratchi</span>
+          </button>
+        </div>
+
+        <div class="right-top-actions">
+          <button type="button" class="right-gear-btn" onclick="toggleRightPanelMode()" title="Sozlamalar / Nazoratchi (Oynani ochish)" id="rightHeaderGearBtn">
+            <img src="{% static 'img/icons/settings.svg' %}" alt="Sozlamalar" class="svg-icon svg-icon-sm">
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= 1. AI AGENT WORKSPACE VIEW (DEFAULT) ================= -->
+      <div id="panelAiAgent" class="right-subview is-active">
+        
+        <!-- Agent Status Header -->
+        <div class="ai-agent-status-strip">
+          <div class="ai-agent-avatar">
+            <span>🤖</span>
+            <span class="ai-status-pulse"></span>
+          </div>
+          <div class="ai-agent-meta">
+            <div class="ai-agent-name-row">
+              <strong>EduAI Viktorina Agenti</strong>
+              <span class="ai-mode-tag" id="currentStyleTag">🎨 Ijodiy</span>
+            </div>
+            <span class="ai-agent-subtext">Savollar yaratish, tahrirlash va diff boshqaruvi</span>
+          </div>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div class="ai-chat-thread" id="aiChatMessages">
+          <!-- Initial Welcome Message from AI -->
+          <div class="ai-msg ai-msg-bot">
+            <div class="ai-msg-avatar">✨</div>
+            <div class="ai-msg-bubble">
+              <p style="margin: 0 0 6px 0; font-weight: 800; font-size: 13px;">Assalomu alaykum, ustoz! 🎯</p>
+              <p style="margin: 0 0 8px 0; font-size: 12px; color: var(--text-muted); line-height: 1.4;">
+                Men sizning AI viktorina agentingizman. Istalgan turdagi savollarni generatsiya qilib beraman yoki joriy savolingizni tahrirlayman. Quyidagi uslublardan birini tanlang va topshiriq bering:
+              </p>
+              <div class="ai-quick-prompts">
+                <button type="button" class="ai-quick-chip" onclick="quickSendPrompt('Ushbu mavzuda 3 ta qiziqarli test yaratib ber')">
+                  ⚡ 3 ta yangi test yaratish
+                </button>
+                <button type="button" class="ai-quick-chip" onclick="quickSendPrompt('Joriy savolni o‘yinbop va interaktiv qilib o‘zgartir')">
+                  🎮 Joriy savolni o‘yinbop qilish
+                </button>
+                <button type="button" class="ai-quick-chip" onclick="quickSendPrompt('Matematik formulali test savoli tuzib ber')">
+                  📐 Formulali savol yaratish
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="ai-typing-indicator" id="aiTypingIndicator" style="display: none;">
+          <div class="ai-msg-avatar">✨</div>
+          <div class="ai-typing-bubble">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+        </div>
+
+        <!-- Bottom Controls Dock -->
+        <div class="ai-bottom-dock">
+          
+          <!-- Model Selection -->
+          <div class="ai-model-bar">
+            <span class="ai-control-label">🤖 Model:</span>
+            <select id="aiModelSelect" class="ai-model-dropdown">
+              <option value="gemini-1.5-flash" selected>⚡ Gemini 1.5 Flash (Tezkor)</option>
+              <option value="gpt-4o">🧠 GPT-4o (Pedagogik)</option>
+              <option value="llama-3.3-70b">⚡ Groq Llama 3.3 (Ultra-tez)</option>
+              <option value="deepseek-v3">🎯 DeepSeek V3 (Mantiqiy)</option>
+              <option value="claude-3-5-sonnet">💎 Claude 3.5 Sonnet (STEM)</option>
+            </select>
+          </div>
+
+          <!-- Style Selection: Creativity, Interesting, Game, Educational, Scientific -->
+          <div class="ai-styles-bar">
+            <button type="button" class="ai-style-chip is-active" data-style="creativity" onclick="toggleAiStyle('creativity')">
+              🎨 Ijodiy (Creativity)
+            </button>
+            <button type="button" class="ai-style-chip" data-style="interesting" onclick="toggleAiStyle('interesting')">
+              ✨ Qiziqarli (Interesting)
+            </button>
+            <button type="button" class="ai-style-chip" data-style="game" onclick="toggleAiStyle('game')">
+              🎮 O‘yinbop (Game)
+            </button>
+            <button type="button" class="ai-style-chip" data-style="educational" onclick="toggleAiStyle('educational')">
+              📚 Ta'limiy (Educational)
+            </button>
+            <button type="button" class="ai-style-chip" data-style="scientific" onclick="toggleAiStyle('scientific')">
+              🔬 Ilmiy (Scientific)
+            </button>
+          </div>
+
+          <!-- Input Bar -->
+          <form class="ai-input-form" onsubmit="handleAiChatSubmit(event)">
+            <textarea id="aiChatInput" rows="1" placeholder="AI Agentga topshiriq bering..." class="ai-chat-textarea" onkeydown="handleAiInputKeydown(event)"></textarea>
+            <button type="submit" class="ai-send-btn" id="aiSendBtn" title="Yuborish">
+              <img src="{% static 'img/icons/play.svg' %}" alt="Send" class="svg-icon svg-icon-sm" style="filter: brightness(0) invert(1);">
+            </button>
+          </form>
+
+        </div>
+
+      </div>
+
+      <!-- ================= 2. SAVOL NAZORATCHISI VIEW (SOZLAMALAR) ================= -->
+      <div id="panelInspector" class="right-subview" style="display: none; overflow-y: auto;">
+        
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle);">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 28px; height: 28px; background: rgba(255, 117, 39, 0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+              <img src="{% static 'img/icons/settings.svg' %}" alt="Inspector" class="svg-icon svg-icon-sm" style="color: var(--primary-orange); width: 14px; height: 14px;">
+            </div>
+            <h3 style="font-size: 14px; font-weight: 800; margin: 0;">Savol Nazoratchisi</h3>
+          </div>
+          <span id="inspectorStatusBadge" style="color: #059669; font-size: 11px; font-weight: 800; background: #ECFDF5; padding: 2px 7px; border-radius: 999px; border: 1px solid #A7F3D0;">✓ Sozlangan</span>
+        </div>
+
+        <!-- Savol Formati (Faqat ko'rsatish) -->
+        <div style="display: flex; align-items: center; justify-content: space-between; background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 12px; padding: 7px 12px; margin-bottom: 12px;">
+          <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Format:</span>
+          <strong id="inspectorTypeLabel" style="font-size: 12px; font-weight: 800; color: var(--text-main); background: #FFFFFF; padding: 2px 10px; border-radius: 8px; border: 1px solid var(--border-subtle);">Single Choice</strong>
+        </div>
+        <input type="hidden" id="questionTypeSelect" value="single_choice">
+
+        <!-- Vaqt va Ball Parametrlari (Ixcham va Qulay) -->
+        <div class="compact-params-card">
+          <!-- Vaqt Limiti -->
+          <div class="compact-param-section">
+            <div class="compact-param-header">
+              <span class="compact-param-title">⏱ Vaqt Limiti:</span>
+              <span id="timerValDisplay" class="compact-param-badge">30 soniya</span>
+            </div>
+            <div class="compact-pills-row" id="timerPillsRow">
+              <button type="button" class="compact-pill-btn" data-sec="10" onclick="setTimerPreset(10)">10s</button>
+              <button type="button" class="compact-pill-btn" data-sec="20" onclick="setTimerPreset(20)">20s</button>
+              <button type="button" class="compact-pill-btn is-active" data-sec="30" onclick="setTimerPreset(30)">30s</button>
+              <button type="button" class="compact-pill-btn" data-sec="60" onclick="setTimerPreset(60)">60s</button>
+              <button type="button" class="compact-pill-btn" data-sec="120" onclick="setTimerPreset(120)">120s</button>
+            </div>
+            <input type="range" id="timerRange" min="10" max="120" step="5" value="30" class="compact-mini-slider" oninput="handleTimerChange(this.value)">
+          </div>
+
+          <div class="compact-divider"></div>
+
+          <!-- Baza Ball -->
+          <div class="compact-param-section">
+            <div class="compact-param-header">
+              <span class="compact-param-title">🪙 Baza Ball:</span>
+              <span id="pointsValDisplay" class="compact-param-badge">1000 ball</span>
+            </div>
+            <div class="compact-pills-row" id="pointsPillsRow">
+              <button type="button" class="compact-pill-btn" data-pts="500" onclick="setPointsPreset(500)">500</button>
+              <button type="button" class="compact-pill-btn is-active" data-pts="1000" onclick="setPointsPreset(1000)">1000</button>
+              <button type="button" class="compact-pill-btn" data-pts="1500" onclick="setPointsPreset(1500)">1500</button>
+              <button type="button" class="compact-pill-btn" data-pts="2000" onclick="setPointsPreset(2000)">2000</button>
+            </div>
+            <input type="range" id="pointsRange" min="500" max="3000" step="250" value="1000" class="compact-mini-slider" oninput="handlePointsChange(this.value)">
+          </div>
+        </div>
+
+        <!-- Qiyinlik darajasi -->
+        <div style="background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 12px; padding: 7px 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Qiyinlik:</span>
+          <select id="questionDifficultySelect" style="border: 1px solid var(--border-subtle); border-radius: 8px; padding: 3px 8px; font-size: 12px; font-weight: 800; background: #fff; cursor: pointer;" onchange="handleDifficultyChange(this.value)">
+            <option value="easy">🟢 Oson</option>
+            <option value="medium" selected>🟡 O‘rtacha</option>
+            <option value="hard">🔴 Qiyin</option>
+          </select>
+        </div>
+
+        <!-- Pedagogik Tavsiya -->
+        <div style="background: #FFF8F4; border: 1.5px solid rgba(255, 117, 39, 0.25); border-radius: 14px; padding: 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.45;">
+          <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; color: var(--primary-orange); margin-bottom: 3px;">
+            <span>💡 Pedagogik Tavsiya</span>
+          </div>
+          <span id="pedagogicalTipText">
+            Savollarga aniq va tushunarli variantlar berish o‘quvchilarning fikrlash tezligini 30% ga oshiradi.
+          </span>
+        </div>
+
+        <!-- Zero-Knowledge Student Preview Button -->
+        <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="openStudentPreviewModal()" style="width: 100%; margin-bottom: 10px; font-size: 12px; padding: 8px 12px;">
+          <img src="{% static 'img/icons/play.svg' %}" alt="Ko'rish" class="svg-icon svg-icon-sm">
+          <span>O‘quvchi Ko‘rinishi (ZK Test)</span>
+        </button>
+
+        <!-- Duplicate & Delete Question Actions -->
+        <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+          <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="duplicateCurrentQuestion()" style="flex: 1; font-size: 12px; padding: 7px 10px;" title="Savol nusxasini yaratish">
+            <span>Nusxalash</span>
+          </button>
+          <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="deleteCurrentQuestion()" style="color: #DC2626; border-color: #FECACA; font-size: 12px; padding: 7px 10px;" title="Savolni o‘chirish">
+            <span>O‘chirish</span>
+          </button>
+        </div>
+
+        <!-- Quick Switch Back to AI Agent -->
+        <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="switchRightPanelMode('ai_agent')" style="width: 100%; font-size: 12px; padding: 6px 10px; color: var(--primary-orange); border-color: rgba(255,117,39,0.3);">
+          <span>← AI Agent Chatiga qaytish</span>
+        </button>
+
+      </div>
+
+    </aside>
+
+  </div>
 </div>
 
+<!-- ================= 14 QUESTION TYPES SELECTOR MODAL ================= -->
+<div class="type-picker-overlay" id="typePickerModal" onclick="if(event.target === this) closeTypePickerModal()">
+  <div class="type-picker-dialog">
+    <div class="type-picker-header">
+      <div>
+        <h2 class="type-picker-title">Savol Turini Tanlang (14 xil format)</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+          Dars mavzusiga mos eng qulay interaktiv savol formatini tanlang
+        </p>
+      </div>
+      <button type="button" class="nav-icon-btn" onclick="closeTypePickerModal()" style="font-size: 20px; width: 36px; height: 36px;">
+        ✕
+      </button>
+    </div>
+
+    <!-- 14 Question Types Grid -->
+    <div class="type-grid">
+
+      <!-- 1. Single Choice -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('single_choice')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon"><img src="{% static 'img/icons/sparkles.svg' %}" class="svg-icon svg-icon-sm"></div>
+          <span class="type-choice-name">Single Choice</span>
+        </div>
+        <p class="type-choice-desc">Yagona tanlovli test: 2 tadan 6 tagacha variant va bitta aniq to‘g‘ri javob.</p>
+      </div>
+
+      <!-- 2. Multiple Choice -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('multiple_choice')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon" style="background: rgba(0, 163, 255, 0.12);"><img src="{% static 'img/icons/sparkles.svg' %}" class="svg-icon svg-icon-sm" style="color: #00A3FF;"></div>
+          <span class="type-choice-name">Multiple Choice</span>
+        </div>
+        <p class="type-choice-desc">Ko‘p tanlovli test: Bir nechta to‘g‘ri javoblar va qisman ball baholash tizimi.</p>
+      </div>
+
+      <!-- 3. True / False -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('true_false')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon" style="background: rgba(16, 185, 129, 0.12);"><img src="{% static 'img/icons/check.svg' %}" class="svg-icon svg-icon-sm" style="color: #10B981;"></div>
+          <span class="type-choice-name">True / False</span>
+        </div>
+        <p class="type-choice-desc">Rost yoki Yolg‘on: Ikki qutbli tezkor tekshiruv savoli.</p>
+      </div>
+
+      <!-- 4. Short Text -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('open_short')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon" style="background: rgba(245, 158, 11, 0.12);"><img src="{% static 'img/icons/edit.svg' %}" class="svg-icon svg-icon-sm" style="color: #F59E0B;"></div>
+          <span class="type-choice-name">Short Text</span>
+        </div>
+        <p class="type-choice-desc">Qisqa matnli javob: So‘z, termin yoki qisqa matn (sinonimlar tekshiruvi bilan).</p>
+      </div>
+
+      <!-- 5. Cloze (Fill Blanks) -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('cloze')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon" style="background: rgba(139, 92, 246, 0.12);"><img src="{% static 'img/icons/edit.svg' %}" class="svg-icon svg-icon-sm" style="color: #8B5CF6;"></div>
+          <span class="type-choice-name">Cloze (Bo‘sh joylar)</span>
+        </div>
+        <p class="type-choice-desc">Matndagi bo‘sh o‘rinlarni mos so‘zlar bilan to‘ldirish topshirig‘i.</p>
+      </div>
+
+      <!-- 6. Numeric -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('numeric')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon"><img src="{% static 'img/icons/sparkles.svg' %}" class="svg-icon svg-icon-sm"></div>
+          <span class="type-choice-name">Aniq Son (Numeric)</span>
+        </div>
+        <p class="type-choice-desc">Matematik va fizik masalalar uchun sonli qiymat va ruxsat etilgan xatolik.</p>
+      </div>
+
+      <!-- 7. Slider -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('slider')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon" style="background: rgba(0, 163, 255, 0.12);"><img src="{% static 'img/icons/sparkles.svg' %}" class="svg-icon svg-icon-sm" style="color: #00A3FF;"></div>
+          <span class="type-choice-name">Oraliq / Slayder</span>
+        </div>
+        <p class="type-choice-desc">Slayder yordamida taxminiy yoki aniq qiymatni tanlash (masofa baholash).</p>
+      </div>
+
+      <!-- 8. Ordering -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('ordering')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon" style="background: rgba(16, 185, 129, 0.12);"><img src="{% static 'img/icons/sparkles.svg' %}" class="svg-icon svg-icon-sm" style="color: #10B981;"></div>
+          <span class="type-choice-name">Ketma-ketlik (Ordering)</span>
+        </div>
+        <p class="type-choice-desc">Voqealar, bosqichlar yoki formulalarni to‘g‘ri ketma-ketlikda joylashtirish.</p>
+      </div>
+
+      <!-- 9. Categorization -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('categorization')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon" style="background: rgba(245, 158, 11, 0.12);"><img src="{% static 'img/icons/sparkles.svg' %}" class="svg-icon svg-icon-sm" style="color: #F59E0B;"></div>
+          <span class="type-choice-name">Guruhlarga ajratish</span>
+        </div>
+        <p class="type-choice-desc">Tushunchalarni turli kategoriyalar bo‘yicha taqsimlash va guruhlash.</p>
+      </div>
+
+      <!-- 10. Match Pairs -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('match_pairs')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon" style="background: rgba(139, 92, 246, 0.12);"><img src="{% static 'img/icons/sparkles.svg' %}" class="svg-icon svg-icon-sm" style="color: #8B5CF6;"></div>
+          <span class="type-choice-name">Juftliklar (Match Pairs)</span>
+        </div>
+        <p class="type-choice-desc">Chap va o‘ng ustunlardagi mos elementlarni tutashtirish topshirig‘i.</p>
+      </div>
+
+      <!-- 11. Math Equation -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('math_equation')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon"><img src="{% static 'img/icons/sparkles.svg' %}" class="svg-icon svg-icon-sm"></div>
+          <span class="type-choice-name">Matematik Formula</span>
+        </div>
+        <p class="type-choice-desc">Algebraik ifodalar, tenglamalar va ilmiy formulalarni kiritish.</p>
+      </div>
+
+      <!-- 12. Code Output -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('code_output')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon" style="background: rgba(0, 163, 255, 0.12);"><img src="{% static 'img/icons/sparkles.svg' %}" class="svg-icon svg-icon-sm" style="color: #00A3FF;"></div>
+          <span class="type-choice-name">Kod va Debugging</span>
+        </div>
+        <p class="type-choice-desc">Dasturlash kodi fragmenti va terminalga chiqadigan kutilgan natija.</p>
+      </div>
+
+      <!-- 13. Pin Answer -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('pin_answer')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon" style="background: rgba(16, 185, 129, 0.12);"><img src="{% static 'img/icons/sparkles.svg' %}" class="svg-icon svg-icon-sm" style="color: #10B981;"></div>
+          <span class="type-choice-name">Rasmda Nuqta (Pin)</span>
+        </div>
+        <p class="type-choice-desc">Diagramma, biologik xarita yoki rasmda to‘g‘ri nuqtani bosish.</p>
+      </div>
+
+      <!-- 14. Drop Pin -->
+      <div class="type-choice-card" onclick="selectNewQuestionType('drop_pin')">
+        <div class="type-choice-top">
+          <div class="type-badge-icon" style="background: rgba(245, 158, 11, 0.12);"><img src="{% static 'img/icons/sparkles.svg' %}" class="svg-icon svg-icon-sm" style="color: #F59E0B;"></div>
+          <span class="type-choice-name">Xaritada Joylashuv</span>
+        </div>
+        <p class="type-choice-desc">Geografik xarita yoki sxemada kerakli joylashuv koordinatasini belgilash.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ================= ZERO-KNOWLEDGE STUDENT PREVIEW MODAL ================= -->
+<div class="type-picker-overlay" id="studentPreviewModal" onclick="if(event.target === this) closeStudentPreviewModal()">
+  <div class="type-picker-dialog" style="max-width: 650px;">
+    <div class="type-picker-header">
+      <div>
+        <h2 class="type-picker-title">O‘quvchi Ko‘rinishi (Zero-Knowledge)</h2>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+          O‘quvchi telefonida yoki proyektorda hech qanday to‘g‘ri javob kalitlari ko‘rinmaydi
+        </p>
+      </div>
+      <button type="button" class="nav-icon-btn" onclick="closeStudentPreviewModal()" style="font-size: 20px;">✕</button>
+    </div>
+
+    <div id="studentPreviewContent" style="padding: 10px 0;">
+      <!-- Populated dynamically by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ================= JAVASCRIPT STATE ENGINE ================= -->
 <script>
-  function selectQuestion(idx) {
+  // Initial Data passed from server
+  const serverQuizData = {{ quiz_json|safe }};
+  
+  // Default Initial Single Choice Options
+  const defaultMythicOptions = [
+    { id: "opt_1", text: "ρ = m / V" },
+    { id: "opt_2", text: "ρ = m · V" },
+    { id: "opt_3", text: "ρ = V / m" },
+    { id: "opt_4", text: "ρ = m + V" }
+  ];
+
+  // Client State
+  let quizState = {
+    id: serverQuizData ? serverQuizData.id : null,
+    title: serverQuizData ? serverQuizData.title : "Yangi Viktorina: 7-sinf Fizika Zichlik",
+    subject: serverQuizData ? serverQuizData.subject : "Fizika",
+    grade_level: serverQuizData ? serverQuizData.grade_level : 7,
+    status: serverQuizData ? serverQuizData.status : "draft",
+    description: serverQuizData ? serverQuizData.description : "",
+    questions: (serverQuizData && serverQuizData.questions && serverQuizData.questions.length > 0)
+      ? serverQuizData.questions
+      : [
+          {
+            id: null,
+            type: "single_choice",
+            prompt: "Moddaning zichligini hisoblash formulasi qaysi javobda to‘g‘ri keltirilgan?",
+            options: defaultMythicOptions,
+            correct_answer: "opt_1",
+            accepted_alternatives: [],
+            explanation: "Zichlik formulasi ro = m / V bo‘lib, moddaning massa va hajm nisbatini bildiradi.",
+            points: 1000,
+            time_limit_seconds: 30,
+            difficulty: "medium",
+            is_locked: false,
+            media_url: ""
+          }
+        ]
+  };
+
+  let currentQIdx = 0;
+  let isSaving = false;
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    renderQuestionsList();
+    loadQuestionIntoEditor(0);
+  });
+
+  // CSRF Token Helper
+  function getCsrfToken() {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, 10) === ('csrftoken=')) {
+          cookieValue = decodeURIComponent(cookie.substring(10));
+          break;
+        }
+      }
+    }
+    return cookieValue || (document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').content : '');
+  }
+
+  function markUnsaved() {
+    quizState.title = document.getElementById('quizTitleInput').value.trim();
+    quizState.subject = document.getElementById('quizSubjectSelect').value;
+    quizState.grade_level = parseInt(document.getElementById('quizGradeSelect').value, 10);
+  }
+
+  function toggleQuizStatus() {
     if (window.eduAudio) window.eduAudio.playTick();
-    document.querySelectorAll('.question-list-item').forEach(el => el.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    const btn = document.getElementById('quizStatusToggle');
+    const lbl = document.getElementById('quizStatusLabel');
+    if (quizState.status === 'published') {
+      quizState.status = 'draft';
+      btn.className = 'editor-status-toggle is-draft';
+      lbl.textContent = 'Qoralama';
+    } else {
+      quizState.status = 'published';
+      btn.className = 'editor-status-toggle is-published';
+      lbl.textContent = 'Chop etilgan';
+    }
   }
 
-  function addNewQuestion() {
+  // Render Left Column Questions List
+  function renderQuestionsList() {
+    const container = document.getElementById('questionsContainer');
+    const badge = document.getElementById('questionCountBadge');
+    badge.textContent = `${quizState.questions.length} ta`;
+
+    container.innerHTML = quizState.questions.map((q, idx) => {
+      const isActive = (idx === currentQIdx);
+      const promptSnippet = q.prompt ? q.prompt.trim() : "Yangi savol...";
+      const typeNice = formatTypeName(q.type);
+      const lockIcon = q.is_locked ? "{% static 'img/icons/lock.svg' %}" : "{% static 'img/icons/unlock.svg' %}";
+
+      return `
+        <div class="question-nav-card ${isActive ? 'is-active' : ''}" onclick="selectQuestion(${idx})">
+          <div class="question-nav-left">
+            <span class="question-index-badge">${idx + 1}</span>
+            <div class="question-nav-info">
+              <span class="question-nav-prompt">${escapeHtml(promptSnippet)}</span>
+              <span class="question-nav-type-tag">${typeNice}</span>
+            </div>
+          </div>
+          <div class="question-nav-actions">
+            <button type="button" class="nav-icon-btn" onclick="toggleQuestionLockFromNav(${idx}, event)" title="${q.is_locked ? 'Qulflangan' : 'Ochiq'}">
+              <img src="${lockIcon}" alt="Lock" class="svg-icon svg-icon-sm" style="${q.is_locked ? 'color: #DC2626;' : 'opacity: 0.5;'}">
+            </button>
+            <button type="button" class="nav-icon-btn btn-delete" onclick="deleteQuestion(${idx}, event)" title="O‘chirish">
+              <img src="{% static 'img/icons/trash.svg' %}" alt="Delete" class="svg-icon svg-icon-sm">
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function formatTypeName(type) {
+    const names = {
+      'single_choice': 'Single Choice',
+      'multiple_choice': 'Multiple Choice',
+      'true_false': 'True / False',
+      'open_short': 'Short Text',
+      'cloze': 'Cloze',
+      'numeric': 'Numeric',
+      'slider': 'Slider',
+      'ordering': 'Ordering',
+      'categorization': 'Categorization',
+      'match_pairs': 'Match Pairs',
+      'math_equation': 'Math Formula',
+      'code_output': 'Code Output',
+      'pin_answer': 'Pin Answer',
+      'drop_pin': 'Drop Pin'
+    };
+    return names[type] || type;
+  }
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.toString().replace(/[&<>"']/g, m => map[m]);
+  }
+
+  // Select Question
+  function selectQuestion(idx) {
+    if (idx < 0 || idx >= quizState.questions.length) return;
+    if (window.eduAudio) window.eduAudio.playTick();
+    currentQIdx = idx;
+    renderQuestionsList();
+    loadQuestionIntoEditor(idx);
+  }
+
+  // Load active question into center and right panels
+  function loadQuestionIntoEditor(idx) {
+    const q = quizState.questions[idx];
+    if (!q) return;
+
+    document.getElementById('currentQNumCircle').textContent = (idx + 1);
+    const qTypeEl = document.getElementById('questionTypeSelect');
+    if (qTypeEl) qTypeEl.value = q.type;
+    document.getElementById('questionPrompt').value = q.prompt || '';
+    document.getElementById('promptCharCount').textContent = `${(q.prompt || '').length} belgi`;
+    document.getElementById('questionMediaUrl').value = q.media_url || '';
+    document.getElementById('questionExplanation').value = q.explanation || '';
+
+    // Parameters
+    const sec = q.time_limit_seconds || 30;
+    const pts = q.points || 1000;
+    document.getElementById('timerRange').value = sec;
+    document.getElementById('timerValDisplay').textContent = `${sec} soniya`;
+    document.getElementById('pointsRange').value = pts;
+    document.getElementById('pointsValDisplay').textContent = `${pts} ball`;
+    updatePresetPillsActive(sec, pts);
+
+    // Lock status
+    updateLockBtnUI(q.is_locked);
+
+    // Inspector
+    const inspType = document.getElementById('inspectorTypeLabel');
+    if (inspType) inspType.textContent = formatTypeName(q.type);
+    document.getElementById('questionDifficultySelect').value = q.difficulty || 'medium';
+
+    // Render Answers Section dynamically based on question type
+    renderAnswerOptionsBuilder(q);
+  }
+
+  function updateLockBtnUI(isLocked) {
+    const btn = document.getElementById('questionLockBtn');
+    const txt = document.getElementById('lockStatusText');
+    const img = document.getElementById('lockIconImg');
+    if (isLocked) {
+      btn.className = 'q-lock-toggle-btn is-locked';
+      txt.textContent = 'Qulflangan';
+      img.src = "{% static 'img/icons/lock.svg' %}";
+    } else {
+      btn.className = 'q-lock-toggle-btn is-unlocked';
+      txt.textContent = 'Ochiq';
+      img.src = "{% static 'img/icons/unlock.svg' %}";
+    }
+  }
+
+  function toggleCurrentQuestionLock() {
+    const q = quizState.questions[currentQIdx];
+    if (!q) return;
+    q.is_locked = !q.is_locked;
+    if (window.eduAudio) window.eduAudio.playClick();
+    updateLockBtnUI(q.is_locked);
+    renderQuestionsList();
+    if (window.showToast) {
+      window.showToast(q.is_locked ? "Savol qulflangan (AI daxlsizligi faol) 🔒" : "Savol qulfdan chiqarildi 🔓", "info");
+    }
+  }
+
+  function toggleQuestionLockFromNav(idx, e) {
+    if (e) e.stopPropagation();
+    const q = quizState.questions[idx];
+    if (!q) return;
+    q.is_locked = !q.is_locked;
+    if (window.eduAudio) window.eduAudio.playClick();
+    renderQuestionsList();
+    if (idx === currentQIdx) {
+      updateLockBtnUI(q.is_locked);
+    }
+  }
+
+  // Handle Input Changes
+  function handlePromptChange(val) {
+    quizState.questions[currentQIdx].prompt = val;
+    document.getElementById('promptCharCount').textContent = `${val.length} belgi`;
+    // Update nav preview
+    const navCards = document.querySelectorAll('.question-nav-card');
+    if (navCards[currentQIdx]) {
+      const promptEl = navCards[currentQIdx].querySelector('.question-nav-prompt');
+      if (promptEl) promptEl.textContent = val.trim() || 'Yangi savol...';
+    }
+  }
+
+  function handleMediaUrlChange(val) {
+    quizState.questions[currentQIdx].media_url = val.trim();
+  }
+
+  function handleExplanationChange(val) {
+    quizState.questions[currentQIdx].explanation = val.trim();
+  }
+
+  function handleTimerChange(val) {
+    const sec = parseInt(val, 10);
+    quizState.questions[currentQIdx].time_limit_seconds = sec;
+    document.getElementById('timerValDisplay').textContent = `${sec} soniya`;
+    document.querySelectorAll('#timerPillsRow .compact-pill-btn').forEach(btn => {
+      btn.classList.toggle('is-active', parseInt(btn.dataset.sec, 10) === sec);
+    });
+  }
+
+  function handlePointsChange(val) {
+    const pts = parseInt(val, 10);
+    quizState.questions[currentQIdx].points = pts;
+    document.getElementById('pointsValDisplay').textContent = `${pts} ball`;
+    document.querySelectorAll('#pointsPillsRow .compact-pill-btn').forEach(btn => {
+      btn.classList.toggle('is-active', parseInt(btn.dataset.pts, 10) === pts);
+    });
+  }
+
+  function updatePresetPillsActive(sec, pts) {
+    document.querySelectorAll('#timerPillsRow .compact-pill-btn').forEach(btn => {
+      btn.classList.toggle('is-active', parseInt(btn.dataset.sec, 10) === parseInt(sec, 10));
+    });
+    document.querySelectorAll('#pointsPillsRow .compact-pill-btn').forEach(btn => {
+      btn.classList.toggle('is-active', parseInt(btn.dataset.pts, 10) === parseInt(pts, 10));
+    });
+  }
+
+  function setTimerPreset(val) {
+    const range = document.getElementById('timerRange');
+    if (range) range.value = val;
+    handleTimerChange(val);
+    if (window.eduAudio) window.eduAudio.playTick();
+  }
+
+  function setPointsPreset(val) {
+    const range = document.getElementById('pointsRange');
+    if (range) range.value = val;
+    handlePointsChange(val);
+    if (window.eduAudio) window.eduAudio.playTick();
+  }
+
+  function handleDifficultyChange(val) {
+    quizState.questions[currentQIdx].difficulty = val;
+  }
+
+  // ================= TYPE-SPECIFIC BUILDERS =================
+  function renderAnswerOptionsBuilder(q) {
+    const container = document.getElementById('answerBuilderContainer');
+    const blockTitle = document.getElementById('answersBlockTitle');
+
+    switch (q.type) {
+      case 'single_choice':
+        blockTitle.textContent = "Javob Variantlari (O‘zbek Mifologik Dual-Coding):";
+        renderSingleChoiceBuilder(q, container);
+        break;
+      case 'multiple_choice':
+        blockTitle.textContent = "Variantlar (Bir nechta to‘g‘ri javobni belgilang):";
+        renderMultipleChoiceBuilder(q, container);
+        break;
+      case 'true_false':
+        blockTitle.textContent = "To‘g‘ri javobni tanlang (Rost yoki Yolg‘on):";
+        renderTrueFalseBuilder(q, container);
+        break;
+      case 'open_short':
+        blockTitle.textContent = "To‘g‘ri Matnli Javob va Sinonimlar:";
+        renderOpenShortBuilder(q, container);
+        break;
+      case 'cloze':
+        blockTitle.textContent = "Matndagi Bo‘sh Joylar [1], [2] uchun Javoblar:";
+        renderClozeBuilder(q, container);
+        break;
+      case 'numeric':
+        blockTitle.textContent = "Aniq Sonli Qiymat va Ruxsat Etilgan Xatolik:";
+        renderNumericBuilder(q, container);
+        break;
+      case 'slider':
+        blockTitle.textContent = "Oraliq / Slayder Parametrlari:";
+        renderSliderBuilder(q, container);
+        break;
+      case 'ordering':
+        blockTitle.textContent = "To‘g‘ri Ketma-ketlikni Belgilang:";
+        renderOrderingBuilder(q, container);
+        break;
+      case 'categorization':
+        blockTitle.textContent = "Kategoriyalar va Elementlarni Ajratish:";
+        renderCategorizationBuilder(q, container);
+        break;
+      case 'match_pairs':
+        blockTitle.textContent = "O‘zaro Mos Juftliklar:";
+        renderMatchPairsBuilder(q, container);
+        break;
+      case 'math_equation':
+        blockTitle.textContent = "To‘g‘ri Matematik Formula (Latex / Tenglama):";
+        renderMathEquationBuilder(q, container);
+        break;
+      case 'code_output':
+        blockTitle.textContent = "Dasturlash Kodi va Kutilgan Natija (stdout):";
+        renderCodeOutputBuilder(q, container);
+        break;
+      case 'pin_answer':
+        blockTitle.textContent = "Rasmda To‘g‘ri Nuqta Koordinatalari:";
+        renderPinAnswerBuilder(q, container);
+        break;
+      case 'drop_pin':
+        blockTitle.textContent = "Xaritada Joylashuv Koordinatalari:";
+        renderDropPinBuilder(q, container);
+        break;
+      default:
+        renderSingleChoiceBuilder(q, container);
+        break;
+    }
+  }
+
+  // 1. Single Choice Builder
+  function renderSingleChoiceBuilder(q, container) {
+    if (!Array.isArray(q.options) || q.options.length < 2) {
+      q.options = JSON.parse(JSON.stringify(defaultMythicOptions));
+      q.correct_answer = "opt_1";
+    }
+
+    const mythicMeta = [
+      { name: "Humo Qanoti", badge: "badge-humo", icon: "{% static 'img/icons/humo_wing.svg' %}", color: "#DC2626", cardClass: "mythic-card-humo" },
+      { name: "Qanotli Tulpor", badge: "badge-tulpor", icon: "{% static 'img/icons/winged_tulpor.svg' %}", color: "#2563EB", cardClass: "mythic-card-tulpor" },
+      { name: "Oltin Olma", badge: "badge-olma", icon: "{% static 'img/icons/golden_apple.svg' %}", color: "#D97706", cardClass: "mythic-card-olma" },
+      { name: "Boqiy Chinor", badge: "badge-chinor", icon: "{% static 'img/icons/chinor_leaf.svg' %}", color: "#059669", cardClass: "mythic-card-chinor" },
+      { name: "Semurg‘", badge: "badge-humo", icon: "{% static 'img/icons/sparkles.svg' %}", color: "#8B5CF6", cardClass: "mythic-card-humo" },
+      { name: "To‘maris", badge: "badge-tulpor", icon: "{% static 'img/icons/trophy.svg' %}", color: "#EC4899", cardClass: "mythic-card-tulpor" }
+    ];
+
+    container.innerHTML = `
+      <div class="mythic-options-stack">
+        ${q.options.map((opt, idx) => {
+          const meta = mythicMeta[idx % mythicMeta.length];
+          const isCorrect = (String(q.correct_answer) === String(opt.id));
+          return `
+            <div class="mythic-option-card ${meta.cardClass} ${isCorrect ? 'is-correct-marked' : ''}" id="optCard_${idx}">
+              <div class="mythic-icon-badge ${meta.badge}">
+                <img src="${meta.icon}" alt="${meta.name}" style="width: 24px; height: 24px;">
+              </div>
+              <span class="mythic-name-label" style="color: ${meta.color};">${meta.name}</span>
+              <input type="text" class="mythic-option-input" value="${escapeHtml(opt.text || '')}" placeholder="Variant matni..." oninput="handleOptionTextChange(${idx}, this.value)">
+              <label class="mythic-correct-check ${isCorrect ? 'is-checked' : ''}">
+                <input type="radio" name="single_choice_radio" ${isCorrect ? 'checked' : ''} onchange="handleSingleChoiceCorrect(${idx})">
+                <span>To‘g‘ri</span>
+              </label>
+              ${q.options.length > 2 ? `
+                <button type="button" class="nav-icon-btn btn-delete" onclick="removeOption(${idx})" title="Variantni o‘chirish">✕</button>
+              ` : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+      ${q.options.length < 6 ? `
+        <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="addOption()" style="margin-top: 12px; font-size: 12px;">
+          + Variant Qo‘shish (${q.options.length}/6)
+        </button>
+      ` : ''}
+    `;
+  }
+
+  function handleOptionTextChange(optIdx, val) {
+    const q = quizState.questions[currentQIdx];
+    if (q && q.options && q.options[optIdx]) {
+      q.options[optIdx].text = val;
+    }
+  }
+
+  function handleSingleChoiceCorrect(optIdx) {
+    const q = quizState.questions[currentQIdx];
+    if (q && q.options && q.options[optIdx]) {
+      q.correct_answer = q.options[optIdx].id;
+      if (window.eduAudio) window.eduAudio.playClick();
+      renderAnswerOptionsBuilder(q);
+    }
+  }
+
+  function addOption() {
+    const q = quizState.questions[currentQIdx];
+    if (!q || !Array.isArray(q.options) || q.options.length >= 6) return;
+    const newId = `opt_${Date.now()}`;
+    q.options.push({ id: newId, text: "" });
+    if (window.eduAudio) window.eduAudio.playClick();
+    renderAnswerOptionsBuilder(q);
+  }
+
+  function removeOption(idx) {
+    const q = quizState.questions[currentQIdx];
+    if (!q || !Array.isArray(q.options) || q.options.length <= 2) return;
+    const removed = q.options.splice(idx, 1)[0];
+    if (q.correct_answer === removed.id) {
+      q.correct_answer = q.options[0].id;
+    }
+    if (window.eduAudio) window.eduAudio.playClick();
+    renderAnswerOptionsBuilder(q);
+  }
+
+  // 2. Multiple Choice Builder
+  function renderMultipleChoiceBuilder(q, container) {
+    if (!Array.isArray(q.options) || q.options.length < 2) {
+      q.options = JSON.parse(JSON.stringify(defaultMythicOptions));
+    }
+    if (!Array.isArray(q.correct_answer)) {
+      q.correct_answer = [q.options[0].id];
+    }
+
+    container.innerHTML = `
+      <div class="mythic-options-stack">
+        ${q.options.map((opt, idx) => {
+          const isCorrect = q.correct_answer.includes(opt.id);
+          return `
+            <div class="mythic-option-card ${isCorrect ? 'is-correct-marked' : ''}" style="border: 1.5px solid var(--border-subtle);">
+              <span class="question-index-badge" style="background: var(--primary-orange); color: #fff;">${idx + 1}</span>
+              <input type="text" class="mythic-option-input" value="${escapeHtml(opt.text || '')}" placeholder="Variant matni..." oninput="handleOptionTextChange(${idx}, this.value)">
+              <label class="mythic-correct-check ${isCorrect ? 'is-checked' : ''}">
+                <input type="checkbox" ${isCorrect ? 'checked' : ''} onchange="handleMultipleChoiceToggle('${opt.id}')">
+                <span>To‘g‘ri</span>
+              </label>
+              ${q.options.length > 2 ? `
+                <button type="button" class="nav-icon-btn btn-delete" onclick="removeOption(${idx})">✕</button>
+              ` : ''}
+            </div>
+          `;
+        }).join('')}
+      </div>
+      ${q.options.length < 6 ? `
+        <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="addOption()" style="margin-top: 12px;">+ Variant Qo‘shish</button>
+      ` : ''}
+    `;
+  }
+
+  function handleMultipleChoiceToggle(optId) {
+    const q = quizState.questions[currentQIdx];
+    if (!q) return;
+    if (!Array.isArray(q.correct_answer)) q.correct_answer = [];
+    const idx = q.correct_answer.indexOf(optId);
+    if (idx > -1) {
+      if (q.correct_answer.length > 1) {
+        q.correct_answer.splice(idx, 1);
+      } else {
+        if (window.showToast) window.showToast("Kamida bitta to‘g‘ri javob belgilanishi shart!", "warning");
+      }
+    } else {
+      q.correct_answer.push(optId);
+    }
+    if (window.eduAudio) window.eduAudio.playClick();
+    renderAnswerOptionsBuilder(q);
+  }
+
+  // 3. True / False Builder
+  function renderTrueFalseBuilder(q, container) {
+    const curVal = String(q.correct_answer).toLowerCase() in ['true', '1', 'rost'] ? 'true' : 'false';
+    q.correct_answer = curVal;
+    q.options = [
+      { id: "true", text: "Rost (To‘g‘ri)" },
+      { id: "false", text: "Yolg‘on (Noto‘g‘ri)" }
+    ];
+
+    container.innerHTML = `
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="mythic-option-card mythic-card-chinor ${curVal === 'true' ? 'is-correct-marked' : ''}" style="cursor: pointer; padding: 20px;" onclick="setTrueFalseAnswer('true')">
+          <input type="radio" name="tf_radio" ${curVal === 'true' ? 'checked' : ''} style="width: 22px; height: 22px; accent-color: #10B981;">
+          <div>
+            <div style="font-size: 16px; font-weight: 800; color: #059669;">✓ Rost (To‘g‘ri)</div>
+            <div style="font-size: 12px; color: var(--text-muted);">Ushbu mulohaza haqiqatga mos</div>
+          </div>
+        </div>
+
+        <div class="mythic-option-card mythic-card-humo ${curVal === 'false' ? 'is-correct-marked' : ''}" style="cursor: pointer; padding: 20px;" onclick="setTrueFalseAnswer('false')">
+          <input type="radio" name="tf_radio" ${curVal === 'false' ? 'checked' : ''} style="width: 22px; height: 22px; accent-color: #EF4444;">
+          <div>
+            <div style="font-size: 16px; font-weight: 800; color: #DC2626;">✕ Yolg‘on (Noto‘g‘ri)</div>
+            <div style="font-size: 12px; color: var(--text-muted);">Ushbu mulohaza xato</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function setTrueFalseAnswer(val) {
+    const q = quizState.questions[currentQIdx];
+    q.correct_answer = val;
+    if (window.eduAudio) window.eduAudio.playClick();
+    renderAnswerOptionsBuilder(q);
+  }
+
+  // 4. Short Text Builder
+  function renderOpenShortBuilder(q, container) {
+    const mainAns = typeof q.correct_answer === 'string' ? q.correct_answer : (q.correct_answer ? String(q.correct_answer) : '');
+    const alts = Array.isArray(q.accepted_alternatives) ? q.accepted_alternatives : [];
+
+    container.innerHTML = `
+      <div style="background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 18px;">
+        <label style="display: block; font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">Asosiy To‘g‘ri Javob (Matn):</label>
+        <input type="text" class="mythic-option-input" value="${escapeHtml(mainAns)}" placeholder="Masalan: Toshkent" style="width: 100%; margin-bottom: 16px;" oninput="handleOpenShortMain(this.value)">
+
+        <label style="display: block; font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">Muqobil To‘g‘ri Javoblar (Sinonimlar yoki Kirillcha):</label>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          ${alts.map((alt, i) => `
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <input type="text" class="mythic-option-input" value="${escapeHtml(alt)}" placeholder="Muqobil variant..." oninput="handleAltChange(${i}, this.value)">
+              <button type="button" class="nav-icon-btn btn-delete" onclick="removeAlt(${i})">✕</button>
+            </div>
+          `).join('')}
+        </div>
+        <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="addAlt()" style="margin-top: 10px; font-size: 12px;">+ Muqobil Javob Qo‘shish</button>
+      </div>
+    `;
+  }
+
+  function handleOpenShortMain(val) {
+    quizState.questions[currentQIdx].correct_answer = val.trim();
+  }
+  function handleAltChange(i, val) {
+    quizState.questions[currentQIdx].accepted_alternatives[i] = val.trim();
+  }
+  function addAlt() {
+    const q = quizState.questions[currentQIdx];
+    if (!Array.isArray(q.accepted_alternatives)) q.accepted_alternatives = [];
+    q.accepted_alternatives.push("");
+    renderAnswerOptionsBuilder(q);
+  }
+  function removeAlt(i) {
+    const q = quizState.questions[currentQIdx];
+    q.accepted_alternatives.splice(i, 1);
+    renderAnswerOptionsBuilder(q);
+  }
+
+  // 5. Cloze Builder
+  function renderClozeBuilder(q, container) {
+    if (!q.correct_answer || typeof q.correct_answer !== 'object') {
+      q.correct_answer = { "1": "Toshkent", "2": "So‘m" };
+    }
+    const entries = Object.entries(q.correct_answer);
+
+    container.innerHTML = `
+      <div style="background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 18px;">
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+          💡 <strong>Eslatma:</strong> Savol matnida bo‘sh joylarni <code>[1]</code>, <code>[2]</code> shaklida yozing. Quyida ularga mos to‘g‘ri so‘zlarni kiriting.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          ${entries.map(([k, v]) => `
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="question-index-badge" style="background: var(--bento-purple); color: #fff;">[${escapeHtml(k)}]</span>
+              <input type="text" class="mythic-option-input" value="${escapeHtml(v)}" placeholder="${k}-bo‘shliq javobi..." oninput="handleClozeChange('${k}', this.value)">
+              <button type="button" class="nav-icon-btn btn-delete" onclick="removeClozeKey('${k}')">✕</button>
+            </div>
+          `).join('')}
+        </div>
+        <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="addClozeKey()" style="margin-top: 12px;">+ Yangi Bo‘sh Joy Qo‘shish</button>
+      </div>
+    `;
+  }
+
+  function handleClozeChange(k, val) {
+    quizState.questions[currentQIdx].correct_answer[k] = val.trim();
+  }
+  function addClozeKey() {
+    const q = quizState.questions[currentQIdx];
+    const keys = Object.keys(q.correct_answer);
+    const nextKey = String(keys.length + 1);
+    q.correct_answer[nextKey] = "";
+    renderAnswerOptionsBuilder(q);
+  }
+  function removeClozeKey(k) {
+    const q = quizState.questions[currentQIdx];
+    delete q.correct_answer[k];
+    renderAnswerOptionsBuilder(q);
+  }
+
+  // 6. Numeric Builder
+  function renderNumericBuilder(q, container) {
+    let val = 300000;
+    let tol = 0;
+    if (typeof q.correct_answer === 'number') val = q.correct_answer;
+    else if (typeof q.correct_answer === 'object' && q.correct_answer !== null) {
+      val = q.correct_answer.value !== undefined ? q.correct_answer.value : 300000;
+      tol = q.correct_answer.tolerance || 0;
+    }
+
+    container.innerHTML = `
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 18px;">
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">Kutilgan Aniq Qiymat (Son):</label>
+          <input type="number" step="any" class="mythic-option-input" value="${val}" style="width: 100%;" oninput="handleNumericChange(this.value, null)">
+        </div>
+        <div>
+          <label style="display: block; font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">Ruxsat Etilgan Xatolik (± Tolerance):</label>
+          <input type="number" step="any" class="mythic-option-input" value="${tol}" style="width: 100%;" oninput="handleNumericChange(null, this.value)">
+        </div>
+      </div>
+    `;
+  }
+
+  function handleNumericChange(val, tol) {
+    const q = quizState.questions[currentQIdx];
+    let curObj = typeof q.correct_answer === 'object' && q.correct_answer !== null ? q.correct_answer : { value: 0, tolerance: 0 };
+    if (val !== null) curObj.value = parseFloat(val) || 0;
+    if (tol !== null) curObj.tolerance = parseFloat(tol) || 0;
+    q.correct_answer = curObj;
+  }
+
+  // 7. Slider Builder
+  function renderSliderBuilder(q, container) {
+    let target = 50;
+    let min = 0;
+    let max = 100;
+    if (typeof q.correct_answer === 'object' && q.correct_answer !== null) {
+      target = q.correct_answer.target !== undefined ? q.correct_answer.target : 50;
+    } else if (typeof q.correct_answer === 'number') {
+      target = q.correct_answer;
+    }
+
+    container.innerHTML = `
+      <div style="background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 18px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 800;">
+          <span>Maqsadli Qiymat:</span>
+          <span style="color: var(--primary-orange);" id="sliderTargetPreview">${target}</span>
+        </div>
+        <input type="range" min="${min}" max="${max}" value="${target}" style="width: 100%; accent-color: var(--primary-orange); margin-bottom: 16px;" oninput="handleSliderChange(this.value)">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Minimal chegara:</label>
+            <input type="number" class="mythic-option-input" value="${min}" style="width: 100%;" oninput="handleSliderBounds(this.value, null)">
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Maksimal chegara:</label>
+            <input type="number" class="mythic-option-input" value="${max}" style="width: 100%;" oninput="handleSliderBounds(null, this.value)">
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function handleSliderChange(val) {
+    const q = quizState.questions[currentQIdx];
+    q.correct_answer = { target: parseFloat(val) || 0, tolerance: 5 };
+    document.getElementById('sliderTargetPreview').textContent = val;
+  }
+
+  function handleSliderBounds(min, max) {
+    const q = quizState.questions[currentQIdx];
+    if (!q.options || typeof q.options !== 'object') q.options = {};
+    if (min !== null) q.options.min = parseFloat(min) || 0;
+    if (max !== null) q.options.max = parseFloat(max) || 100;
+  }
+
+  // 8. Ordering Builder
+  function renderOrderingBuilder(q, container) {
+    if (!Array.isArray(q.options) || q.options.length < 2) {
+      q.options = [
+        { id: "step_1", text: "1. Gipoteza qo‘yish" },
+        { id: "step_2", text: "2. Tajriba o‘tkazish" },
+        { id: "step_3", text: "3. Natijalarni tahlil qilish" }
+      ];
+      q.correct_answer = ["step_1", "step_2", "step_3"];
+    }
+
+    container.innerHTML = `
+      <div style="background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 18px;">
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+          Quyidagi elementlarni <strong>to‘g‘ri ketma-ketlik</strong> tartibida joylashtiring.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          ${q.options.map((opt, i) => `
+            <div style="display: flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1.5px solid var(--border-subtle); border-radius: 10px; padding: 8px 12px;">
+              <span class="question-index-badge">${i + 1}</span>
+              <input type="text" class="mythic-option-input" value="${escapeHtml(opt.text)}" placeholder="Bosqich matni..." oninput="handleOrderingText(${i}, this.value)">
+              <button type="button" class="nav-icon-btn" onclick="moveOrderItem(${i}, -1)" ${i === 0 ? 'disabled' : ''}>▲</button>
+              <button type="button" class="nav-icon-btn" onclick="moveOrderItem(${i}, 1)" ${i === q.options.length - 1 ? 'disabled' : ''}>▼</button>
+              ${q.options.length > 2 ? `<button type="button" class="nav-icon-btn btn-delete" onclick="removeOrderItem(${i})">✕</button>` : ''}
+            </div>
+          `).join('')}
+        </div>
+        <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="addOrderItem()" style="margin-top: 12px;">+ Yangi Qadam Qo‘shish</button>
+      </div>
+    `;
+  }
+
+  function handleOrderingText(i, val) {
+    quizState.questions[currentQIdx].options[i].text = val;
+  }
+  function moveOrderItem(i, dir) {
+    const q = quizState.questions[currentQIdx];
+    const target = i + dir;
+    if (target < 0 || target >= q.options.length) return;
+    const temp = q.options[i];
+    q.options[i] = q.options[target];
+    q.options[target] = temp;
+    q.correct_answer = q.options.map(o => o.id);
+    renderAnswerOptionsBuilder(q);
+  }
+  function addOrderItem() {
+    const q = quizState.questions[currentQIdx];
+    const newId = `step_${Date.now()}`;
+    q.options.push({ id: newId, text: "" });
+    q.correct_answer = q.options.map(o => o.id);
+    renderAnswerOptionsBuilder(q);
+  }
+  function removeOrderItem(i) {
+    const q = quizState.questions[currentQIdx];
+    q.options.splice(i, 1);
+    q.correct_answer = q.options.map(o => o.id);
+    renderAnswerOptionsBuilder(q);
+  }
+
+  // 9. Categorization Builder
+  function renderCategorizationBuilder(q, container) {
+    if (!q.options || typeof q.options !== 'object' || !q.options.categories) {
+      q.options = {
+        categories: [{ id: "cat_1", name: "Qattiq" }, { id: "cat_2", name: "Suyuq" }],
+        items: [{ id: "item_1", text: "Muz" }, { id: "item_2", text: "Suv" }]
+      };
+      q.correct_answer = { "item_1": "cat_1", "item_2": "cat_2" };
+    }
+
+    container.innerHTML = `
+      <div style="background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 18px;">
+        <label style="display: block; font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">Kategoriyalar (Guruhlar):</label>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+          ${q.options.categories.map((c, i) => `
+            <div style="display: flex; align-items: center; gap: 6px; background: #fff; border: 1.5px solid var(--border-subtle); padding: 4px 10px; border-radius: 8px;">
+              <input type="text" value="${escapeHtml(c.name)}" style="border: none; outline: none; font-weight: 700; width: 90px;" oninput="handleCatName(${i}, this.value)">
+              ${q.options.categories.length > 2 ? `<button type="button" class="nav-icon-btn btn-delete" onclick="removeCat(${i})">✕</button>` : ''}
+            </div>
+          `).join('')}
+          <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="addCat()" style="padding: 4px 10px; font-size: 12px;">+ Guruh</button>
+        </div>
+
+        <label style="display: block; font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">Elementlar va Ularning Guruhi:</label>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          ${q.options.items.map((it, i) => `
+            <div style="display: flex; align-items: center; gap: 10px; background: #fff; border: 1.5px solid var(--border-subtle); padding: 8px 12px; border-radius: 10px;">
+              <input type="text" class="mythic-option-input" value="${escapeHtml(it.text)}" placeholder="Element..." oninput="handleItemText(${i}, this.value)">
+              <select style="height: 38px; border-radius: 8px; border: 1px solid var(--border-subtle); padding: 0 8px; font-weight: 700;" onchange="handleItemCatMatch('${it.id}', this.value)">
+                ${q.options.categories.map(c => `
+                  <option value="${c.id}" ${q.correct_answer[it.id] === c.id ? 'selected' : ''}>${escapeHtml(c.name)}</option>
+                `).join('')}
+              </select>
+              ${q.options.items.length > 2 ? `<button type="button" class="nav-icon-btn btn-delete" onclick="removeItem(${i})">✕</button>` : ''}
+            </div>
+          `).join('')}
+        </div>
+        <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="addItem()" style="margin-top: 10px;">+ Element Qo‘shish</button>
+      </div>
+    `;
+  }
+
+  function handleCatName(i, val) {
+    quizState.questions[currentQIdx].options.categories[i].name = val;
+  }
+  function addCat() {
+    const q = quizState.questions[currentQIdx];
+    const newId = `cat_${Date.now()}`;
+    q.options.categories.push({ id: newId, name: `Guruh ${q.options.categories.length + 1}` });
+    renderAnswerOptionsBuilder(q);
+  }
+  function removeCat(i) {
+    const q = quizState.questions[currentQIdx];
+    q.options.categories.splice(i, 1);
+    renderAnswerOptionsBuilder(q);
+  }
+  function handleItemText(i, val) {
+    quizState.questions[currentQIdx].options.items[i].text = val;
+  }
+  function handleItemCatMatch(itId, catId) {
+    quizState.questions[currentQIdx].correct_answer[itId] = catId;
+  }
+  function addItem() {
+    const q = quizState.questions[currentQIdx];
+    const newId = `item_${Date.now()}`;
+    q.options.items.push({ id: newId, text: "" });
+    q.correct_answer[newId] = q.options.categories[0].id;
+    renderAnswerOptionsBuilder(q);
+  }
+  function removeItem(i) {
+    const q = quizState.questions[currentQIdx];
+    const it = q.options.items.splice(i, 1)[0];
+    delete q.correct_answer[it.id];
+    renderAnswerOptionsBuilder(q);
+  }
+
+  // 10. Match Pairs Builder
+  function renderMatchPairsBuilder(q, container) {
+    if (!Array.isArray(q.options) || q.options.length < 2) {
+      q.options = [
+        { id: "p1", left: "Quyosh", right: "Yulduz" },
+        { id: "p2", left: "Yer", right: "Sayyora" }
+      ];
+      q.correct_answer = { "p1": "p1", "p2": "p2" };
+    }
+
+    container.innerHTML = `
+      <div style="background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 18px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px;">
+          <span>Chap Ustun:</span>
+          <span>O‘ng Ustun (Mos keluvchi):</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          ${q.options.map((pair, i) => `
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="text" class="mythic-option-input" value="${escapeHtml(pair.left)}" placeholder="Chap element..." oninput="handlePairChange(${i}, 'left', this.value)">
+              <span style="font-weight: 800; color: var(--primary-orange);">↔</span>
+              <input type="text" class="mythic-option-input" value="${escapeHtml(pair.right)}" placeholder="O‘ng element..." oninput="handlePairChange(${i}, 'right', this.value)">
+              ${q.options.length > 2 ? `<button type="button" class="nav-icon-btn btn-delete" onclick="removePair(${i})">✕</button>` : ''}
+            </div>
+          `).join('')}
+        </div>
+        <button type="button" class="pill-btn btn-outline-white btn-sm" onclick="addPair()" style="margin-top: 12px;">+ Juftlik Qo‘shish</button>
+      </div>
+    `;
+  }
+
+  function handlePairChange(i, side, val) {
+    quizState.questions[currentQIdx].options[i][side] = val;
+  }
+  function addPair() {
+    const q = quizState.questions[currentQIdx];
+    const newId = `p_${Date.now()}`;
+    q.options.push({ id: newId, left: "", right: "" });
+    if (!q.correct_answer || typeof q.correct_answer !== 'object') q.correct_answer = {};
+    q.correct_answer[newId] = newId;
+    renderAnswerOptionsBuilder(q);
+  }
+  function removePair(i) {
+    const q = quizState.questions[currentQIdx];
+    const removed = q.options.splice(i, 1)[0];
+    if (q.correct_answer && q.correct_answer[removed.id]) delete q.correct_answer[removed.id];
+    renderAnswerOptionsBuilder(q);
+  }
+
+  // 11. Math Equation Builder
+  function renderMathEquationBuilder(q, container) {
+    const formula = typeof q.correct_answer === 'string' ? q.correct_answer : 'E = mc^2';
+    q.correct_answer = formula;
+
+    container.innerHTML = `
+      <div style="background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 18px;">
+        <label style="display: block; font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">Formula matni (Latex yoki oddiy formula):</label>
+        <input type="text" class="mythic-option-input" value="${escapeHtml(formula)}" placeholder="Masalan: E = mc^2 yoki rho = m / V" style="width: 100%; margin-bottom: 12px;" oninput="handleMathChange(this.value)">
+        <div style="background: #FFFFFF; border: 1.5px solid rgba(255, 117, 39, 0.2); border-radius: 12px; padding: 14px; text-align: center;">
+          <span style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px;">Formula Ko‘rinishi:</span>
+          <div id="mathEquationPreview" style="font-size: 20px; font-weight: 800; font-family: 'Cambria Math', serif; color: var(--text-main);">${escapeHtml(formula)}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function handleMathChange(val) {
+    quizState.questions[currentQIdx].correct_answer = val;
+    document.getElementById('mathEquationPreview').textContent = val || '...';
+  }
+
+  // 12. Code Output Builder
+  function renderCodeOutputBuilder(q, container) {
+    let code = (q.options && q.options.code) ? q.options.code : "print(5 + 10)";
+    let lang = (q.options && q.options.language) ? q.options.language : "python";
+    let stdout = typeof q.correct_answer === 'string' ? q.correct_answer : "15";
+    q.correct_answer = stdout;
+
+    container.innerHTML = `
+      <div style="background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 18px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <label style="font-size: 12px; font-weight: 800; color: var(--text-muted);">Dasturlash Tili va Kod Fragmenti:</label>
+          <select style="height: 32px; border-radius: 8px; border: 1px solid var(--border-subtle); padding: 0 8px; font-weight: 700;" onchange="handleCodeLang(this.value)">
+            <option value="python" ${lang === 'python' ? 'selected' : ''}>Python</option>
+            <option value="javascript" ${lang === 'javascript' ? 'selected' : ''}>JavaScript</option>
+            <option value="cpp" ${lang === 'cpp' ? 'selected' : ''}>C++</option>
+          </select>
+        </div>
+        <textarea rows="4" style="width: 100%; border: 1.5px solid var(--border-subtle); border-radius: 10px; padding: 12px; font-family: monospace; font-size: 14px; background: #1E1E24; color: #10B981; outline: none; margin-bottom: 14px;" oninput="handleCodeChange(this.value)">${escapeHtml(code)}</textarea>
+
+        <label style="display: block; font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">Kutilgan Terminal Natijasi (stdout):</label>
+        <input type="text" class="mythic-option-input" value="${escapeHtml(stdout)}" placeholder="Masalan: 15" style="width: 100%;" oninput="handleStdoutChange(this.value)">
+      </div>
+    `;
+  }
+
+  function handleCodeLang(val) {
+    const q = quizState.questions[currentQIdx];
+    if (!q.options || typeof q.options !== 'object') q.options = {};
+    q.options.language = val;
+  }
+  function handleCodeChange(val) {
+    const q = quizState.questions[currentQIdx];
+    if (!q.options || typeof q.options !== 'object') q.options = {};
+    q.options.code = val;
+  }
+  function handleStdoutChange(val) {
+    quizState.questions[currentQIdx].correct_answer = val;
+  }
+
+  // 13. Pin Answer Builder
+  function renderPinAnswerBuilder(q, container) {
+    let x = 50, y = 50, r = 25;
+    if (typeof q.correct_answer === 'object' && q.correct_answer !== null) {
+      x = q.correct_answer.x !== undefined ? q.correct_answer.x : 50;
+      y = q.correct_answer.y !== undefined ? q.correct_answer.y : 50;
+      r = q.correct_answer.radius !== undefined ? q.correct_answer.radius : 25;
+    } else {
+      q.correct_answer = { x: 50, y: 50, radius: 25 };
+    }
+
+    container.innerHTML = `
+      <div style="background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 18px;">
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+          Rasm ustidagi to‘g‘ri nuqtaning koordinatalari (X, Y foizda) va ruxsat etilgan radius (px).
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">X (%):</label>
+            <input type="number" class="mythic-option-input" value="${x}" style="width: 100%;" oninput="handlePinCoords(this.value, null, null)">
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Y (%):</label>
+            <input type="number" class="mythic-option-input" value="${y}" style="width: 100%;" oninput="handlePinCoords(null, this.value, null)">
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Radius (px):</label>
+            <input type="number" class="mythic-option-input" value="${r}" style="width: 100%;" oninput="handlePinCoords(null, null, this.value)">
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function handlePinCoords(x, y, r) {
+    const q = quizState.questions[currentQIdx];
+    if (typeof q.correct_answer !== 'object' || q.correct_answer === null) q.correct_answer = {};
+    if (x !== null) q.correct_answer.x = parseFloat(x) || 0;
+    if (y !== null) q.correct_answer.y = parseFloat(y) || 0;
+    if (r !== null) q.correct_answer.radius = parseFloat(r) || 25;
+  }
+
+  // 14. Drop Pin Builder
+  function renderDropPinBuilder(q, container) {
+    let lat = 41.2995, lng = 69.2401, tol = 10;
+    if (typeof q.correct_answer === 'object' && q.correct_answer !== null) {
+      lat = q.correct_answer.lat !== undefined ? q.correct_answer.lat : 41.2995;
+      lng = q.correct_answer.lng !== undefined ? q.correct_answer.lng : 69.2401;
+      tol = q.correct_answer.tolerance !== undefined ? q.correct_answer.tolerance : 10;
+    } else {
+      q.correct_answer = { lat: 41.2995, lng: 69.2401, tolerance: 10 };
+    }
+
+    container.innerHTML = `
+      <div style="background: #FAFAFA; border: 1.5px solid var(--border-subtle); border-radius: 16px; padding: 18px;">
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+          Xarita ustidagi geografik kenglik (Latitude) va uzunlik (Longitude) koordinatalari.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Kenglik (Lat):</label>
+            <input type="number" step="any" class="mythic-option-input" value="${lat}" style="width: 100%;" oninput="handleDropPinCoords(this.value, null, null)">
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Uzunlik (Lng):</label>
+            <input type="number" step="any" class="mythic-option-input" value="${lng}" style="width: 100%;" oninput="handleDropPinCoords(null, this.value, null)">
+          </div>
+          <div>
+            <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Aniqlik (km):</label>
+            <input type="number" step="any" class="mythic-option-input" value="${tol}" style="width: 100%;" oninput="handleDropPinCoords(null, null, this.value)">
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function handleDropPinCoords(lat, lng, tol) {
+    const q = quizState.questions[currentQIdx];
+    if (typeof q.correct_answer !== 'object' || q.correct_answer === null) q.correct_answer = {};
+    if (lat !== null) q.correct_answer.lat = parseFloat(lat) || 0;
+    if (lng !== null) q.correct_answer.lng = parseFloat(lng) || 0;
+    if (tol !== null) q.correct_answer.tolerance = parseFloat(tol) || 10;
+  }
+
+  // ================= 14 TYPES PICKER MODAL LOGIC =================
+  function openTypePickerModal() {
+    if (window.eduAudio) window.eduAudio.playTick();
+    document.getElementById('typePickerModal').classList.add('is-open');
+  }
+
+  function closeTypePickerModal() {
+    document.getElementById('typePickerModal').classList.remove('is-open');
+  }
+
+  function selectNewQuestionType(typeKey) {
+    closeTypePickerModal();
+    const newQuestion = createDefaultQuestionForType(typeKey);
+    quizState.questions.push(newQuestion);
+    currentQIdx = quizState.questions.length - 1;
     if (window.eduAudio) window.eduAudio.playCoin();
-    window.showToast('Yangi savol qo‘shildi!', 'success');
+    renderQuestionsList();
+    loadQuestionIntoEditor(currentQIdx);
+    setTimeout(() => {
+      const qc = document.getElementById('questionsContainer');
+      if (qc) qc.scrollTo({ top: qc.scrollHeight, behavior: 'smooth' });
+    }, 50);
+    if (window.showToast) {
+      window.showToast(`Yangi "${formatTypeName(typeKey)}" savoli qo‘shildi! ✨`, 'success');
+    }
   }
 
+  function handleTypeChange(newType) {
+    const q = quizState.questions[currentQIdx];
+    if (!q) return;
+    if (q.type === newType) return;
+    const template = createDefaultQuestionForType(newType);
+    q.type = newType;
+    q.options = template.options;
+    q.correct_answer = template.correct_answer;
+    q.accepted_alternatives = template.accepted_alternatives;
+    if (window.eduAudio) window.eduAudio.playClick();
+    renderQuestionsList();
+    loadQuestionIntoEditor(currentQIdx);
+  }
+
+  function createDefaultQuestionForType(typeKey) {
+    switch (typeKey) {
+      case 'multiple_choice':
+        return {
+          id: null,
+          type: 'multiple_choice',
+          prompt: "Quyidagilardan qaysilari to‘g‘ri? (Bir nechtasini tanlang)",
+          options: JSON.parse(JSON.stringify(defaultMythicOptions)),
+          correct_answer: ["opt_1", "opt_2"],
+          points: 1000,
+          time_limit_seconds: 30,
+          difficulty: 'medium',
+          is_locked: false
+        };
+      case 'true_false':
+        return {
+          id: null,
+          type: 'true_false',
+          prompt: "Vakuumda yorug‘lik tezligi 300,000 km/s ga teng.",
+          options: [{ id: "true", text: "Rost" }, { id: "false", text: "Yolg‘on" }],
+          correct_answer: "true",
+          points: 1000,
+          time_limit_seconds: 20,
+          difficulty: 'easy',
+          is_locked: false
+        };
+      case 'open_short':
+        return {
+          id: null,
+          type: 'open_short',
+          prompt: "O‘zbekiston Respublikasi poytaxti qaysi shahar?",
+          options: [],
+          correct_answer: "Toshkent",
+          accepted_alternatives: ["Tashkent", "тошкент"],
+          points: 1000,
+          time_limit_seconds: 30,
+          difficulty: 'medium',
+          is_locked: false
+        };
+      case 'cloze':
+        return {
+          id: null,
+          type: 'cloze',
+          prompt: "Moddaning uch xil agregat holati mavjud: qattiq, [1] va [2].",
+          options: [],
+          correct_answer: { "1": "suyuq", "2": "gaz" },
+          points: 1000,
+          time_limit_seconds: 40,
+          difficulty: 'medium',
+          is_locked: false
+        };
+      case 'numeric':
+        return {
+          id: null,
+          type: 'numeric',
+          prompt: "Yorug‘likning vakuumdagi tezligi necha km/s ga teng?",
+          options: { unit: "km/s", tolerance: 1000 },
+          correct_answer: { value: 300000, tolerance: 1000 },
+          points: 1000,
+          time_limit_seconds: 30,
+          difficulty: 'medium',
+          is_locked: false
+        };
+      case 'slider':
+        return {
+          id: null,
+          type: 'slider',
+          prompt: "Suvning qaynash haroratini slayderda ko‘rsating (°C):",
+          options: { min: 0, max: 150, step: 1 },
+          correct_answer: { target: 100, tolerance: 5 },
+          points: 1000,
+          time_limit_seconds: 30,
+          difficulty: 'medium',
+          is_locked: false
+        };
+      case 'ordering':
+        return {
+          id: null,
+          type: 'ordering',
+          prompt: "Ilmiy tadqiqot bosqichlarini to‘g‘ri tartibda joylashtiring:",
+          options: [
+            { id: "step_1", text: "Gipoteza ilgari surish" },
+            { id: "step_2", text: "Tajriba o‘tkazish" },
+            { id: "step_3", text: "Natijani tahlil qilish" }
+          ],
+          correct_answer: ["step_1", "step_2", "step_3"],
+          points: 1250,
+          time_limit_seconds: 45,
+          difficulty: 'medium',
+          is_locked: false
+        };
+      case 'categorization':
+        return {
+          id: null,
+          type: 'categorization',
+          prompt: "Elementlarni tegishli agregat holati guruhlariga ajrating:",
+          options: {
+            categories: [{ id: "cat_1", name: "Qattiq" }, { id: "cat_2", name: "Suyuq" }],
+            items: [{ id: "item_1", text: "Temir" }, { id: "item_2", text: "Simob" }]
+          },
+          correct_answer: { "item_1": "cat_1", "item_2": "cat_2" },
+          points: 1500,
+          time_limit_seconds: 45,
+          difficulty: 'hard',
+          is_locked: false
+        };
+      case 'match_pairs':
+        return {
+          id: null,
+          type: 'match_pairs',
+          prompt: "Fizik kattaliklarni ularning o‘lchov birliklari bilan moslashtiring:",
+          options: [
+            { id: "p1", left: "Massa", right: "Kilogramm (kg)" },
+            { id: "p2", left: "Vaqt", right: "Soniya (s)" }
+          ],
+          correct_answer: { "p1": "p1", "p2": "p2" },
+          points: 1250,
+          time_limit_seconds: 40,
+          difficulty: 'medium',
+          is_locked: false
+        };
+      case 'math_equation':
+        return {
+          id: null,
+          type: 'math_equation',
+          prompt: "Nyutonning ikkinchi qonuni formulasini kiriting:",
+          options: [],
+          correct_answer: "F = m * a",
+          points: 1000,
+          time_limit_seconds: 35,
+          difficulty: 'medium',
+          is_locked: false
+        };
+      case 'code_output':
+        return {
+          id: null,
+          type: 'code_output',
+          prompt: "Quyidagi Python dastur kodi ekranga nimani chop etadi?",
+          options: { language: "python", code: "x = 10\ny = 25\nprint(x + y)" },
+          correct_answer: "35",
+          points: 1500,
+          time_limit_seconds: 45,
+          difficulty: 'hard',
+          is_locked: false
+        };
+      case 'pin_answer':
+        return {
+          id: null,
+          type: 'pin_answer',
+          prompt: "Diagrammada yadro sohasini belgilang:",
+          options: { image_url: "" },
+          correct_answer: { x: 50, y: 50, radius: 25 },
+          points: 1250,
+          time_limit_seconds: 35,
+          difficulty: 'medium',
+          is_locked: false
+        };
+      case 'drop_pin':
+        return {
+          id: null,
+          type: 'drop_pin',
+          prompt: "Xaritada Samarqand shahrini belgilang:",
+          options: {},
+          correct_answer: { lat: 39.6542, lng: 66.9597, tolerance: 15 },
+          points: 1250,
+          time_limit_seconds: 40,
+          difficulty: 'medium',
+          is_locked: false
+        };
+      case 'single_choice':
+      default:
+        return {
+          id: null,
+          type: 'single_choice',
+          prompt: "Yangi savol matnini kiriting...",
+          options: JSON.parse(JSON.stringify(defaultMythicOptions)),
+          correct_answer: "opt_1",
+          points: 1000,
+          time_limit_seconds: 30,
+          difficulty: 'medium',
+          is_locked: false
+        };
+    }
+  }
+
+  // Duplicate / Delete Actions
+  function duplicateCurrentQuestion() {
+    const q = quizState.questions[currentQIdx];
+    if (!q) return;
+    const copy = JSON.parse(JSON.stringify(q));
+    copy.id = null; // New ID
+    copy.prompt += " (Nusxa)";
+    quizState.questions.splice(currentQIdx + 1, 0, copy);
+    currentQIdx++;
+    if (window.eduAudio) window.eduAudio.playCoin();
+    renderQuestionsList();
+    loadQuestionIntoEditor(currentQIdx);
+    if (window.showToast) window.showToast("Savol nusxalandi! 📋", "info");
+  }
+
+  function deleteQuestion(idx, e) {
+    if (e) e.stopPropagation();
+    if (quizState.questions.length <= 1) {
+      if (window.showToast) window.showToast("Viktorinada kamida bitta savol qolishi shart!", "warning");
+      return;
+    }
+    quizState.questions.splice(idx, 1);
+    if (currentQIdx >= quizState.questions.length) {
+      currentQIdx = quizState.questions.length - 1;
+    }
+    if (window.eduAudio) window.eduAudio.playTick();
+    renderQuestionsList();
+    loadQuestionIntoEditor(currentQIdx);
+    if (window.showToast) window.showToast("Savol o‘chirildi.", "info");
+  }
+
+  function deleteCurrentQuestion() {
+    deleteQuestion(currentQIdx);
+  }
+
+  // ================= SAVE QUIZ API =================
   function saveQuiz() {
-    if (window.eduAudio) window.eduAudio.playCoin();
-    window.showToast('Viktorina muvaffaqiyatli saqlandi! 💾', 'success');
+    if (isSaving) return;
+    isSaving = true;
+
+    const saveBtn = document.getElementById('saveQuizBtn');
+    const saveTxt = document.getElementById('saveBtnText');
+    saveTxt.textContent = "Saqlanmoqda...";
+    markUnsaved();
+
+    const payload = {
+      id: quizState.id,
+      title: quizState.title,
+      subject: quizState.subject,
+      grade_level: quizState.grade_level,
+      status: quizState.status,
+      description: quizState.description,
+      questions: quizState.questions
+    };
+
+    fetch('/api/v1/quizzes/save-full/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCsrfToken()
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(r => r.json().then(data => ({ status: r.status, data })))
+    .then(({ status, data }) => {
+      isSaving = false;
+      saveTxt.textContent = "Saqlash";
+
+      if (status >= 200 && status < 300) {
+        quizState.id = data.quiz_id;
+        if (data.quiz && data.quiz.questions) {
+          quizState.questions = data.quiz.questions;
+        }
+
+        // If URL was /editor/new/, seamlessly update URL to /editor/<quiz_id>/
+        if (window.location.pathname.includes('/new/')) {
+          window.history.replaceState({}, '', `/editor/${data.quiz_id}/`);
+        }
+
+        if (window.eduAudio) window.eduAudio.playCoin();
+        if (window.showToast) {
+          window.showToast(data.message || "Viktorina muvaffaqiyatli saqlandi! 💾", "success");
+        }
+        renderQuestionsList();
+        loadQuestionIntoEditor(currentQIdx);
+      } else {
+        if (window.eduAudio) window.eduAudio.playWrong();
+        if (window.showToast) {
+          window.showToast(data.error || "Saqlashda xatolik yuz berdi.", "error");
+        }
+      }
+    })
+    .catch(err => {
+      isSaving = false;
+      saveTxt.textContent = "Saqlash";
+      if (window.eduAudio) window.eduAudio.playWrong();
+      if (window.showToast) {
+        window.showToast("Server bilan ulanishda xatolik yuz berdi.", "error");
+      }
+    });
   }
 
+  // Ctrl+S / Cmd+S Shortcut
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      saveQuiz();
+    }
+  });
+
+  // Start Live Session
   function startSessionNow() {
-    if (window.eduAudio) window.eduAudio.playCoin();
-    window.location.href = '/live/489201/';
+    if (!quizState.id) {
+      if (window.showToast) window.showToast("Avval viktorinani saqlashingiz kerak. Saqlanmoqda...", "info");
+      saveQuiz();
+      setTimeout(createAndRedirectSession, 800);
+      return;
+    }
+    createAndRedirectSession();
   }
 
-  function applyAiSuggestion() {
-    if (window.eduAudio) window.eduAudio.playCorrect();
-    window.showToast('AI taklifi savolga tatbiq etildi! 🚀', 'success');
+  function createAndRedirectSession() {
+    if (!quizState.id) return;
+    if (window.eduAudio) window.eduAudio.playCoin();
+
+    fetch('/api/v1/sessions/create/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCsrfToken()
+      },
+      body: JSON.stringify({ quiz_id: quizState.id, game_mode: 'classic' })
+    })
+    .then(r => r.json())
+    .then(data => {
+      const roomCode = (data.session && data.session.room_code) ? data.session.room_code : data.room_code;
+      if (roomCode) {
+        window.location.href = `/live/${roomCode}/`;
+      } else {
+        window.location.href = `/live/489201/`;
+      }
+    })
+    .catch(() => {
+      window.location.href = `/live/489201/`;
+    });
+  }
+
+  // ================= AI AGENT WORKSPACE STATE & ENGINE =================
+  let currentRightPanelMode = 'ai_agent';
+  let selectedAiStyles = ['creativity'];
+  let isAiResponding = false;
+  let aiProposalsStore = {};
+  let aiProposalCounter = 0;
+
+  function switchRightPanelMode(mode) {
+    currentRightPanelMode = mode;
+    const panelAi = document.getElementById('panelAiAgent');
+    const panelInsp = document.getElementById('panelInspector');
+    const tabAi = document.getElementById('tabBtnAiAgent');
+    const tabInsp = document.getElementById('tabBtnInspector');
+    const gearBtn = document.getElementById('rightHeaderGearBtn');
+
+    if (mode === 'inspector') {
+      if (panelAi) panelAi.style.display = 'none';
+      if (panelInsp) panelInsp.style.display = 'block';
+      if (tabAi) tabAi.classList.remove('is-active');
+      if (tabInsp) tabInsp.classList.add('is-active');
+      if (gearBtn) gearBtn.classList.add('is-active');
+    } else {
+      if (panelAi) panelAi.style.display = 'flex';
+      if (panelInsp) panelInsp.style.display = 'none';
+      if (tabAi) tabAi.classList.add('is-active');
+      if (tabInsp) tabInsp.classList.remove('is-active');
+      if (gearBtn) gearBtn.classList.remove('is-active');
+      const input = document.getElementById('aiChatInput');
+      if (input) input.focus();
+    }
+    if (window.eduAudio) window.eduAudio.playTick();
+  }
+
+  function toggleRightPanelMode() {
+    switchRightPanelMode(currentRightPanelMode === 'ai_agent' ? 'inspector' : 'ai_agent');
+  }
+
+  function toggleAiStyle(styleKey) {
+    const chips = document.querySelectorAll('.ai-style-chip');
+    chips.forEach(c => {
+      if (c.dataset.style === styleKey) {
+        c.classList.add('is-active');
+      } else {
+        c.classList.remove('is-active');
+      }
+    });
+    selectedAiStyles = [styleKey];
+    const tagEl = document.getElementById('currentStyleTag');
+    const styleNames = {
+      'creativity': '🎨 Ijodiy',
+      'interesting': '✨ Qiziqarli',
+      'game': '🎮 O‘yinbop',
+      'educational': '📚 Ta\'limiy',
+      'scientific': '🔬 Ilmiy'
+    };
+    if (tagEl) tagEl.textContent = styleNames[styleKey] || '🎨 Ijodiy';
+    if (window.eduAudio) window.eduAudio.playTick();
+  }
+
+  function quickSendPrompt(text) {
+    const input = document.getElementById('aiChatInput');
+    if (input) {
+      input.value = text;
+      handleAiChatSubmit();
+    }
+  }
+
+  function handleAiInputKeydown(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleAiChatSubmit();
+    }
+  }
+
+  function showAiTyping(show) {
+    const el = document.getElementById('aiTypingIndicator');
+    if (el) {
+      el.style.display = show ? 'flex' : 'none';
+      const container = document.getElementById('aiChatMessages');
+      if (container) container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  function appendUserChatMessage(text) {
+    const container = document.getElementById('aiChatMessages');
+    if (!container) return;
+    const msgEl = document.createElement('div');
+    msgEl.className = 'ai-msg ai-msg-user';
+    msgEl.innerHTML = `
+      <div class="ai-msg-avatar">👤</div>
+      <div class="ai-msg-bubble">
+        <p style="margin: 0; font-weight: 600;">${escapeHtml(text)}</p>
+      </div>
+    `;
+    container.appendChild(msgEl);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function appendBotChatMessage(htmlContent) {
+    const container = document.getElementById('aiChatMessages');
+    if (!container) return;
+    const msgEl = document.createElement('div');
+    msgEl.className = 'ai-msg ai-msg-bot';
+    msgEl.innerHTML = `
+      <div class="ai-msg-avatar">✨</div>
+      <div class="ai-msg-bubble">
+        ${htmlContent}
+      </div>
+    `;
+    container.appendChild(msgEl);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  async function handleAiChatSubmit(e) {
+    if (e) e.preventDefault();
+    if (isAiResponding) return;
+    const input = document.getElementById('aiChatInput');
+    const prompt = input ? input.value.trim() : '';
+    if (!prompt) return;
+
+    input.value = '';
+    isAiResponding = true;
+    if (window.eduAudio) window.eduAudio.playClick();
+
+    appendUserChatMessage(prompt);
+    showAiTyping(true);
+
+    const model = document.getElementById('aiModelSelect') ? document.getElementById('aiModelSelect').value : 'gemini-1.5-flash';
+    const style = selectedAiStyles[0] || 'creativity';
+
+    const startTime = Date.now();
+    try {
+      await processAiAgentWorkflow(prompt, model, style);
+    } catch (err) {
+      console.error("AI Agent error:", err);
+      appendBotChatMessage(`<p style="margin: 0; color: #DC2626;">Kechirasiz, so‘rovni bajarishda xatolik yuz berdi. Iltimos qayta urinib ko‘ring.</p>`);
+    } finally {
+      const elapsed = Date.now() - startTime;
+      const remainingDelay = Math.max(0, 400 - elapsed);
+      setTimeout(() => {
+        showAiTyping(false);
+        isAiResponding = false;
+      }, remainingDelay);
+    }
+  }
+
+  async function processAiAgentWorkflow(prompt, model, style) {
+    const lowerPrompt = prompt.toLowerCase();
+    const isRevision = /joriy|shu savol|tahrirla|o['`’]zgartir|qayta|qiyinlashtir|osonlashtir|edit|soddalashtir|mukammal|variant/i.test(lowerPrompt);
+
+    let backendSuccess = false;
+    try {
+      if (isRevision && quizState.id) {
+        const revRes = await fetch('/api/v1/ai-workspace/revise/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken() },
+          body: JSON.stringify({
+            quiz_id: quizState.id,
+            question_order: currentQIdx + 1,
+            instruction: `${prompt} (Style: ${style}, Model: ${model})`
+          })
+        });
+        if (revRes.ok) {
+          const revData = await revRes.json();
+          if (revData && revData.proposal && revData.proposal.new_question_data) {
+            renderAiRevisionCard(revData.proposal.new_question_data, revData.proposal.change_summary, style);
+            backendSuccess = true;
+          }
+        }
+      }
+    } catch (apiErr) {
+      // Graceful fallback to client agent
+    }
+
+    if (!backendSuccess) {
+      if (isRevision) {
+        generateClientRevision(prompt, style);
+      } else {
+        generateClientQuestions(prompt, style, model);
+      }
+    }
+  }
+
+  function generateClientRevision(prompt, style) {
+    const currQ = quizState.questions[currentQIdx] || {};
+    aiProposalCounter++;
+    const pId = `prop_${aiProposalCounter}`;
+
+    let revisedPrompt = currQ.prompt || "Savol matni";
+    let revisedExplanation = currQ.explanation || "";
+    let revisedOptions = currQ.options ? JSON.parse(JSON.stringify(currQ.options)) : JSON.parse(JSON.stringify(defaultMythicOptions));
+    let revisedType = currQ.type || 'single_choice';
+
+    if (style === 'game') {
+      revisedPrompt = "🎮 [Tezkor viktorina]: " + revisedPrompt.replace(/^[🎮💡🔬✨📚\s]+/, '');
+      revisedExplanation = "⚡ O‘yin tahlili: " + revisedExplanation;
+    } else if (style === 'scientific') {
+      revisedPrompt = "🔬 [Ilmiy tahlil]: " + revisedPrompt.replace(/^[🎮💡🔬✨📚\s]+/, '');
+      if (!revisedPrompt.includes("SI")) {
+        revisedPrompt += " (SI xalqaro birliklar sistemasiga muvofiq)";
+      }
+      revisedExplanation = "💡 Nazariy isbot: Formula va o‘lchov birliklari qat'iy fizik qonuniyatlarga asoslanadi.";
+    } else if (style === 'interesting') {
+      revisedPrompt = "✨ [Qiziqarli fakt]: " + revisedPrompt.replace(/^[🎮💡🔬✨📚\s]+/, '');
+      revisedExplanation = "🌟 Qiziq fakt: Ushbu hodisa kundalik turmushimizda va tabiatda juda ko‘p uchraydi.";
+    } else if (style === 'educational') {
+      revisedPrompt = "📚 [Darslik standarti]: " + revisedPrompt.replace(/^[🎮💡🔬✨📚\s]+/, '');
+      revisedExplanation = "📖 Pedagogik tushuntirish: O‘quvchi mavzuni to‘liq o‘zlashtirishi uchun asosiy qoida hisoblanadi.";
+    } else {
+      revisedPrompt = "🎨 [Ijodiy topshiriq]: " + revisedPrompt.replace(/^[🎮💡🔬✨📚\s]+/, '');
+      revisedExplanation = "🎯 Ijodiy xulosa: Moddalarning xossalarini amaliyotda qo‘llash orqali to‘g‘ri natijaga erishiladi.";
+    }
+
+    const revisedQuestionData = {
+      type: revisedType,
+      prompt: revisedPrompt,
+      options: revisedOptions,
+      correct_answer: currQ.correct_answer || "opt_1",
+      explanation: revisedExplanation,
+      points: currQ.points || 1000,
+      time_limit_seconds: currQ.time_limit_seconds || 30,
+      difficulty: currQ.difficulty || 'medium',
+      is_locked: false,
+      media_url: currQ.media_url || ""
+    };
+
+    aiProposalsStore[pId] = revisedQuestionData;
+
+    const styleName = getStyleDisplayName(style);
+    const html = `
+      <p style="margin: 0 0 6px 0; font-weight: 800;">
+        🤖 <strong>Joriy ${currentQIdx + 1}-savol</strong> ${styleName} uslubida qayta ishlandi:
+      </p>
+      <div class="ai-q-card">
+        <div class="ai-q-card-top">
+          <span class="ai-q-type-pill">${formatTypeName(revisedType)}</span>
+          <span class="ai-q-style-pill">${styleName}</span>
+        </div>
+        <div class="ai-q-prompt-text">${escapeHtml(revisedPrompt)}</div>
+        <div class="ai-q-options-stack">
+          ${renderOptionsHtmlPreview(revisedQuestionData)}
+        </div>
+        <p style="margin: 6px 0 0 0; font-size: 11.5px; color: var(--text-muted); line-height: 1.4;">
+          <strong>Izoh:</strong> ${escapeHtml(revisedExplanation)}
+        </p>
+        <div class="ai-q-card-actions">
+          <button type="button" class="ai-q-btn-apply" onclick="applyGeneratedQuestionToCurrent('${pId}')">
+            🔄 Joriy savolga qo‘llash
+          </button>
+          <button type="button" class="ai-q-btn-add" id="addBtn_${pId}" onclick="addGeneratedQuestionToQuiz('${pId}')">
+            + Yangi savol qilib qo‘shish
+          </button>
+        </div>
+      </div>
+    `;
+    appendBotChatMessage(html);
+  }
+
+  function generateClientQuestions(prompt, style, model) {
+    const subject = quizState.subject || "Fizika";
+    const grade = quizState.grade_level || 7;
+    const styleName = getStyleDisplayName(style);
+
+    let count = 2;
+    if (/3\s*ta|uchta|3\s*test/i.test(prompt)) count = 3;
+    else if (/1\s*ta|bitta|1\s*test/i.test(prompt)) count = 1;
+
+    let requestedType = 'single_choice';
+    if (/formula|matematik|tenglama/i.test(prompt)) requestedType = 'math_equation';
+    else if (/rost|yolg['`’]on|true|false/i.test(prompt)) requestedType = 'true_false';
+    else if (/tartib|ketma-ketlik|bosqich/i.test(prompt)) requestedType = 'ordering';
+    else if (/ko['`’]p tanlov|bir nechta/i.test(prompt)) requestedType = 'multiple_choice';
+    else if (/qisqa matn|yozma/i.test(prompt)) requestedType = 'open_short';
+
+    const generatedBatch = [];
+    for (let i = 0; i < count; i++) {
+      aiProposalCounter++;
+      const pId = `prop_${aiProposalCounter}`;
+      const qData = synthesizeSmartQuestion(subject, grade, style, requestedType, i, prompt);
+      aiProposalsStore[pId] = qData;
+      generatedBatch.push({ pId, qData });
+    }
+
+    const cardsHtml = generatedBatch.map((item, idx) => `
+      <div class="ai-q-card">
+        <div class="ai-q-card-top">
+          <span class="ai-q-type-pill">${formatTypeName(item.qData.type)}</span>
+          <span class="ai-q-style-pill">${styleName} #${idx + 1}</span>
+        </div>
+        <div class="ai-q-prompt-text">${escapeHtml(item.qData.prompt)}</div>
+        <div class="ai-q-options-stack">
+          ${renderOptionsHtmlPreview(item.qData)}
+        </div>
+        <div class="ai-q-meta-row">
+          <span>⏱ ${item.qData.time_limit_seconds || 30}s</span>
+          <span>🪙 ${item.qData.points || 1000} ball</span>
+          <span>📊 ${item.qData.difficulty || 'medium'}</span>
+        </div>
+        <div class="ai-q-card-actions">
+          <button type="button" class="ai-q-btn-add" id="addBtn_${item.pId}" onclick="addGeneratedQuestionToQuiz('${item.pId}')">
+            + Viktorinaga Qo‘shish
+          </button>
+          <button type="button" class="ai-q-btn-apply" onclick="applyGeneratedQuestionToCurrent('${item.pId}')">
+            🔄 Joriyga qo‘llash
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    const batchPIds = generatedBatch.map(b => `'${b.pId}'`).join(',');
+    const allAddBtn = generatedBatch.length > 1
+      ? `<button type="button" class="pill-btn btn-primary-orange btn-sm" onclick="addAllGeneratedQuestionsToQuiz([${batchPIds}])" style="width: 100%; margin-top: 8px; font-size: 12px; padding: 7px 10px;">
+           ✨ Barcha ${generatedBatch.length} ta savolni birdaniga qo‘shish
+         </button>`
+      : '';
+
+    const html = `
+      <p style="margin: 0 0 6px 0; font-weight: 800;">
+        🎯 <strong>${escapeHtml(subject)} (${grade}-sinf)</strong> bo‘yicha ${styleName} uslubida ${generatedBatch.length} ta savol tayyorlandi:
+      </p>
+      ${cardsHtml}
+      ${allAddBtn}
+    `;
+    appendBotChatMessage(html);
+  }
+
+  function synthesizeSmartQuestion(subject, grade, style, type, index, userPrompt) {
+    if (type === 'math_equation') {
+      const equations = [
+        {
+          prompt: "Moddaning zichligini hisoblash formulasini toping:",
+          options: [
+            { id: "opt_1", text: "ρ = m / V" },
+            { id: "opt_2", text: "ρ = m · V" },
+            { id: "opt_3", text: "ρ = V / m" },
+            { id: "opt_4", text: "ρ = m + V" }
+          ],
+          exp: "Zichlik massa va hajm nisbatiga teng: ro = m / V"
+        },
+        {
+          prompt: "Nyutonning ikkinchi qonuni formulasini aniqlang:",
+          options: [
+            { id: "opt_1", text: "F = m · a" },
+            { id: "opt_2", text: "F = m / a" },
+            { id: "opt_3", text: "F = m + a" },
+            { id: "opt_4", text: "F = a / m" }
+          ],
+          exp: "Kuch massa va tezlanish ko'paytmasiga teng: F = m*a"
+        },
+        {
+          prompt: "Kinetik energiyani hisoblash formulasini ko‘rsating:",
+          options: [
+            { id: "opt_1", text: "E_k = (m · v²) / 2" },
+            { id: "opt_2", text: "E_k = m · g · h" },
+            { id: "opt_3", text: "E_k = m · v" },
+            { id: "opt_4", text: "E_k = v² / 2" }
+          ],
+          exp: "Kinetik energiya formulasi: Ek = m*v^2 / 2"
+        }
+      ];
+      const eq = equations[index % equations.length];
+      return {
+        type: 'math_equation',
+        prompt: applyStyleToPrompt(eq.prompt, style),
+        options: eq.options,
+        correct_answer: "opt_1",
+        explanation: eq.exp,
+        points: 1000,
+        time_limit_seconds: 30,
+        difficulty: 'medium',
+        is_locked: false,
+        media_url: ""
+      };
+    }
+
+    if (type === 'true_false') {
+      const tfList = [
+        {
+          prompt: "Vakuumda yorug‘lik tezligi taxminan 300,000 km/s ga teng.",
+          correct: "true",
+          exp: "Ha, yorug'lik vakuumda eng katta tezlikka ega (c = 3*10^8 m/s)."
+        },
+        {
+          prompt: "Havo harorati ko‘tarilganda moddalarning zichligi odatda oshadi.",
+          correct: "false",
+          exp: "Noto'g'ri, harorat ko'tarilganda hajm kengayadi va zichlik kamayadi."
+        },
+        {
+          prompt: "Suv 4°C haroratda o‘zining eng maksimal zichligiga ega bo‘ladi.",
+          correct: "true",
+          exp: "To'g'ri, suvning anomal kengayishi sababli 4 gradusda zichlik eng yuqori (1000 kg/m^3)."
+        }
+      ];
+      const tf = tfList[index % tfList.length];
+      return {
+        type: 'true_false',
+        prompt: applyStyleToPrompt(tf.prompt, style),
+        options: [
+          { id: "true", text: "Rost" },
+          { id: "false", text: "Yolg‘on" }
+        ],
+        correct_answer: tf.correct,
+        explanation: tf.exp,
+        points: 1000,
+        time_limit_seconds: 20,
+        difficulty: 'easy',
+        is_locked: false,
+        media_url: ""
+      };
+    }
+
+    const scList = [
+      {
+        prompt: "Xalqaro birliklar sistemasida (SI) zichlik qaysi birlikda o‘lchanadi?",
+        options: [
+          { id: "opt_1", text: "kg / m³" },
+          { id: "opt_2", text: "g / cm³" },
+          { id: "opt_3", text: "N / m²" },
+          { id: "opt_4", text: "kg / s" }
+        ],
+        exp: "SI sistemasida massa kg, hajm m^3 bo'lgani uchun zichlik kg/m^3 da o'lchanadi."
+      },
+      {
+        prompt: "Agar jismning massasi 200 g, hajmi 40 cm³ bo‘lsa, uning zichligi qanchaga teng?",
+        options: [
+          { id: "opt_1", text: "5 g / cm³" },
+          { id: "opt_2", text: "8 g / cm³" },
+          { id: "opt_3", text: "0.2 g / cm³" },
+          { id: "opt_4", text: "240 g / cm³" }
+        ],
+        exp: "Zichlik: ro = 200 g / 40 cm^3 = 5 g/cm^3"
+      },
+      {
+        prompt: "Muz suv yuzida suzib yurishining asosiy fizik sababi nima?",
+        options: [
+          { id: "opt_1", text: "Muzning zichligi suvnikidan kichik" },
+          { id: "opt_2", text: "Muzning og‘irligi yo‘q" },
+          { id: "opt_3", text: "Suv muzni eritadi" },
+          { id: "opt_4", text: "Muzning harorati past" }
+        ],
+        exp: "Muz zichligi (900 kg/m^3) suvnikidan (1000 kg/m^3) kichik bo'lgani uchun u cho'kmaydi."
+      }
+    ];
+
+    const sc = scList[index % scList.length];
+    return {
+      type: 'single_choice',
+      prompt: applyStyleToPrompt(sc.prompt, style),
+      options: sc.options,
+      correct_answer: "opt_1",
+      explanation: sc.exp,
+      points: 1000,
+      time_limit_seconds: 30,
+      difficulty: 'medium',
+      is_locked: false,
+      media_url: ""
+    };
+  }
+
+  function applyStyleToPrompt(promptText, style) {
+    if (style === 'game') return "🎮 " + promptText;
+    if (style === 'interesting') return "✨ " + promptText;
+    if (style === 'scientific') return "🔬 " + promptText;
+    if (style === 'educational') return "📚 " + promptText;
+    return "🎨 " + promptText;
+  }
+
+  function getStyleDisplayName(style) {
+    const map = {
+      'creativity': '🎨 Ijodiy (Creativity)',
+      'interesting': '✨ Qiziqarli (Interesting)',
+      'game': '🎮 O‘yinbop (Game)',
+      'educational': '📚 Ta\'limiy (Educational)',
+      'scientific': '🔬 Ilmiy (Scientific)'
+    };
+    return map[style] || '🎨 Ijodiy';
+  }
+
+  function renderOptionsHtmlPreview(qData) {
+    if (!qData.options || !Array.isArray(qData.options)) {
+      return `<span style="font-size: 11px; color: var(--text-muted);">Variantlar mavjud emas</span>`;
+    }
+    return qData.options.slice(0, 4).map((opt, i) => {
+      const isCorrect = (String(opt.id) === String(qData.correct_answer));
+      return `
+        <div class="ai-q-option-pill ${isCorrect ? 'is-correct' : ''}">
+          <span>${escapeHtml(opt.text || opt.left || '')}</span>
+          ${isCorrect ? '<span>✓</span>' : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  function addGeneratedQuestionToQuiz(proposalId) {
+    const qData = aiProposalsStore[proposalId];
+    if (!qData) return;
+    quizState.questions.push(JSON.parse(JSON.stringify(qData)));
+    renderQuestionsList();
+    selectQuestion(quizState.questions.length - 1);
+    if (window.eduAudio) window.eduAudio.playCoin();
+    if (window.showToast) {
+      window.showToast("Savol viktorinaga muvaffaqiyatli qo‘shildi! ✨", "success");
+    }
+    const btn = document.getElementById(`addBtn_${proposalId}`);
+    if (btn) {
+      btn.textContent = "✓ Qo‘shildi";
+      btn.style.background = "#059669";
+      btn.disabled = true;
+    }
+  }
+
+  function addAllGeneratedQuestionsToQuiz(proposalIds) {
+    if (!Array.isArray(proposalIds)) return;
+    proposalIds.forEach(pId => {
+      const qData = aiProposalsStore[pId];
+      if (qData) {
+        quizState.questions.push(JSON.parse(JSON.stringify(qData)));
+        const btn = document.getElementById(`addBtn_${pId}`);
+        if (btn) {
+          btn.textContent = "✓ Qo‘shildi";
+          btn.style.background = "#059669";
+          btn.disabled = true;
+        }
+      }
+    });
+    renderQuestionsList();
+    selectQuestion(quizState.questions.length - 1);
+    if (window.eduAudio) window.eduAudio.playCoin();
+    if (window.showToast) {
+      window.showToast(`${proposalIds.length} ta savol viktorinaga qo‘shildi! 🚀`, "success");
+    }
+  }
+
+  function applyGeneratedQuestionToCurrent(proposalId) {
+    const qData = aiProposalsStore[proposalId];
+    if (!qData) return;
+    const curr = quizState.questions[currentQIdx];
+    if (curr && curr.is_locked) {
+      if (window.showToast) window.showToast("Joriy savol qulflangan! Avval qulfdan chiqaring 🔒", "error");
+      return;
+    }
+    quizState.questions[currentQIdx] = JSON.parse(JSON.stringify(qData));
+    renderQuestionsList();
+    loadQuestionIntoEditor(currentQIdx);
+    if (window.eduAudio) window.eduAudio.playClick();
+    if (window.showToast) {
+      window.showToast("Joriy savol AI taklifi bilan yangilandi! 🚀", "success");
+    }
+  }
+
+  // ================= ZERO-KNOWLEDGE STUDENT PREVIEW =================
+  function openStudentPreviewModal() {
+    const q = quizState.questions[currentQIdx];
+    if (!q) return;
+
+    const modal = document.getElementById('studentPreviewModal');
+    const content = document.getElementById('studentPreviewContent');
+
+    content.innerHTML = `
+      <div style="background: var(--bg-surface-subtle); border-radius: 18px; padding: 20px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">
+          <span>Savol ${currentQIdx + 1} / ${quizState.questions.length}</span>
+          <span>⏱ ${q.time_limit_seconds || 30}s</span>
+        </div>
+        <h3 style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 14px;">
+          ${escapeHtml(q.prompt || 'Savol matni kiritilmagan')}
+        </h3>
+        ${q.media_url ? `<img src="${escapeHtml(q.media_url)}" style="max-width: 100%; border-radius: 12px; margin-bottom: 14px;">` : ''}
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          ${Array.isArray(q.options) ? q.options.map((opt, i) => `
+            <div style="background: #FFFFFF; border: 1.5px solid var(--border-subtle); border-radius: 12px; padding: 12px 16px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+              <span class="question-index-badge">${i + 1}</span>
+              <span>${escapeHtml(opt.text || opt.left || JSON.stringify(opt))}</span>
+            </div>
+          `).join('') : '<p style="color: var(--text-muted); font-size: 13px;">O‘quvchi o‘z javobini kiritishi kerak bo‘lgan interaktiv maydon.</p>'}
+        </div>
+      </div>
+      <p style="text-align: center; font-size: 12px; color: #059669; font-weight: 700;">
+        🛡 Zero-Knowledge: To‘g‘ri javob kaliti, muqobil variantlar va izohlar serverda sir saqlanadi.
+      </p>
+    `;
+
+    modal.classList.add('is-open');
+  }
+
+  function closeStudentPreviewModal() {
+    document.getElementById('studentPreviewModal').classList.remove('is-open');
   }
 </script>
 {% endblock %}

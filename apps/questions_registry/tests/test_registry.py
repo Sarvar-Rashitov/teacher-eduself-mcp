@@ -30,6 +30,13 @@ def test_registry_contains_all_core_types():
         "cloze",
         "open_short",
         "short_text",
+        "numeric",
+        "slider",
+        "pin_answer",
+        "drop_pin",
+        "match_pairs",
+        "math_equation",
+        "code_output",
     ]
     for type_id in expected_types:
         assert question_type_registry.has(type_id) is True
@@ -221,3 +228,113 @@ def test_sanitize_for_student_scrubs_is_correct():
         assert "correct" not in opt
         assert "id" in opt
         assert "text" in opt
+
+
+# -----------------------------------------------------------------------------
+# New Assessment Question Types (Numeric, Slider, Pin, Pairs, Math, Code)
+# -----------------------------------------------------------------------------
+
+def test_numeric_question_evaluation():
+    plugin = question_type_registry.get("numeric")
+    correct = {"value": 3.14, "tolerance": 0.05}
+    assert plugin.validate_payload([], correct) is True
+
+    # Exact
+    is_corr, score = plugin.check_answer("3.14", correct)
+    assert is_corr is True and score == 1.0
+
+    # Within tolerance
+    is_corr, score = plugin.check_answer(3.18, correct)
+    assert is_corr is True and score == 1.0
+
+    # Outside tolerance
+    is_corr, score = plugin.check_answer(3.30, correct)
+    assert is_corr is False and score == 0.0
+
+
+def test_slider_question_evaluation():
+    plugin = question_type_registry.get("slider")
+    correct = {"min": 0, "max": 100, "target": 50, "tolerance": 10}
+    assert plugin.validate_payload([], correct) is True
+
+    # Exact hit
+    is_corr, score = plugin.check_answer(50, correct)
+    assert is_corr is True and score == 1.0
+
+    # Within tolerance (gradient partial score)
+    is_corr, score = plugin.check_answer(55, correct)
+    assert is_corr is True and score >= 0.5
+
+    # Out of tolerance
+    is_corr, score = plugin.check_answer(75, correct)
+    assert is_corr is False and score == 0.0
+
+
+def test_pin_answer_question_evaluation():
+    plugin = question_type_registry.get("pin_answer")
+    correct = {"x": 100, "y": 150, "radius": 20}
+    assert plugin.validate_payload([], correct) is True
+
+    # Hit inside radius
+    is_corr, score = plugin.check_answer({"x": 105, "y": 148}, correct)
+    assert is_corr is True and score == 1.0
+
+    # Miss outside radius
+    is_corr, score = plugin.check_answer({"x": 150, "y": 200}, correct)
+    assert is_corr is False and score == 0.0
+
+
+def test_drop_pin_question_evaluation():
+    plugin = question_type_registry.get("drop_pin")
+    correct = {"lat": 41.31, "lng": 69.24, "tolerance": 0.5}
+    assert plugin.validate_payload([], correct) is True
+
+    is_corr, score = plugin.check_answer({"lat": 41.32, "lng": 69.25}, correct)
+    assert is_corr is True and score == 1.0
+
+
+def test_match_pairs_question_evaluation():
+    plugin = question_type_registry.get("match_pairs")
+    pairs = [
+        {"id": "p1", "left": "Toshkent", "right": "O‘zbekiston"},
+        {"id": "p2", "left": "Parij", "right": "Fransiya"},
+        {"id": "p3", "left": "Tokio", "right": "Yaponiya"},
+    ]
+    assert plugin.validate_payload(pairs, pairs) is True
+
+    # Full correct match
+    submission = {
+        "Toshkent": "O‘zbekiston",
+        "Parij": "Fransiya",
+        "Tokio": "Yaponiya"
+    }
+    is_corr, score = plugin.check_answer(submission, pairs)
+    assert is_corr is True and score == 1.0
+
+    # Partial match
+    partial_sub = {
+        "Toshkent": "O‘zbekiston",
+        "Parij": "Yaponiya",
+        "Tokio": "Fransiya"
+    }
+    is_corr, score = plugin.check_answer(partial_sub, pairs)
+    assert score == pytest.approx(0.33, 0.05)
+
+
+def test_math_equation_question_evaluation():
+    plugin = question_type_registry.get("math_equation")
+    correct = "E = m * c^2"
+    assert plugin.validate_payload([], correct) is True
+
+    is_corr, score = plugin.check_answer("e = m * c^2", correct)
+    assert is_corr is True and score == 1.0
+
+
+def test_code_output_question_evaluation():
+    plugin = question_type_registry.get("code_output")
+    correct = "Salom, Dunyo!"
+    assert plugin.validate_payload([], correct) is True
+
+    is_corr, score = plugin.check_answer("Salom, Dunyo!\n", correct)
+    assert is_corr is True and score == 1.0
+

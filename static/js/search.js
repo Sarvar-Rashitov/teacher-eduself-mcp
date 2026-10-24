@@ -16,8 +16,7 @@
     { title: "Matematika: Oddiy Kasrlar", category: "Viktorina", icon: "/static/img/icons/sparkles.svg", href: "/editor/new/" },
     { title: "Biologiya: Hujayra Tuzilishi", category: "Viktorina", icon: "/static/img/icons/sparkles.svg", href: "/editor/new/" },
     { title: "Kimyo: Davriy Jadval Asoslari", category: "Viktorina", icon: "/static/img/icons/sparkles.svg", href: "/editor/new/" },
-    { title: "Informatika: AI va Algoritmlar", category: "Viktorina", icon: "/static/img/icons/sparkles.svg", href: "/editor/new/" },
-    { title: "EduPlay 3D Dizayn Tizimi", category: "Vitrina", icon: "/static/img/icons/settings.svg", href: "/design-system/" },
+    { title: "Informatika: AI va Algoritmlar", category: "Viktorina", icon: "/static/img/icons/sparkles.svg", href: "/editor/new/" }
   ];
 
   document.addEventListener('DOMContentLoaded', () => {

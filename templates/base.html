@@ -29,7 +29,8 @@
       </a>
     </div>
 
-    <!-- Center Floating Island: Search Capsule (Xuddi shu headerlar dizaynida) -->
+    <!-- Center Floating Island: Search Capsule (Faqat tizimga kirgan ustozlar uchun) -->
+    {% if user.is_authenticated %}
     <div class="navbar-island navbar-island-search" id="navbarSearchIsland">
       <div class="search-input-wrapper">
         <img src="{% static 'img/icons/search.svg' %}" alt="Qidiruv" class="search-icon">
@@ -39,6 +40,7 @@
       <!-- Quick Search Results Dropdown -->
       <div class="search-results-dropdown" id="searchResultsDropdown" style="display: none;"></div>
     </div>
+    {% endif %}
 
     <!-- Right Floating Island: Navigation & Quick Actions Capsule -->
     <div class="navbar-island navbar-island-actions">
@@ -74,7 +76,8 @@
   <!-- ================= Global Toast Container ================= -->
   <div id="globalToastContainer"></div>
 
-  <!-- ================= Floating Bottom-Right AI Assistant Widget ================= -->
+  <!-- ================= Floating Bottom-Right AI Assistant Widget (Faqat tizimga kirgan ustozlar uchun) ================= -->
+  {% if user.is_authenticated %}
   <div class="floating-ai-widget" id="floatingAiWidget">
     <!-- Popover AI Command Modal -->
     <div class="ai-command-modal" id="aiCommandModal" style="display: none;">
@@ -130,14 +133,17 @@
       <span class="ai-trigger-text">AI Asistent</span>
     </button>
   </div>
+  {% endif %}
 
   <!-- Core Scripts -->
   <script src="{% static 'js/audio.js' %}"></script>
   <script src="{% static 'js/components.js' %}"></script>
   <script src="{% static 'js/circle_menu.js' %}"></script>
   <script src="{% static 'js/globe_3d.js' %}"></script>
+  {% if user.is_authenticated %}
   <script src="{% static 'js/search.js' %}"></script>
   <script src="{% static 'js/ai_assistant.js' %}"></script>
+  {% endif %}
   {% block extra_js %}{% endblock %}
 </body>
 </html>

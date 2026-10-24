@@ -27,6 +27,9 @@ INSTALLED_APPS = [
     # Daphne ASGI server must be listed before staticfiles
     'daphne',
 
+    # Jazzmin Admin Theme (must be before django.contrib.admin)
+    'jazzmin',
+
     # Django Core Applications
     'django.contrib.admin',
     'django.contrib.auth',
@@ -219,4 +222,196 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+
+# ==============================================================================
+# Django Jazzmin Administration Theme Configuration
+# ==============================================================================
+JAZZMIN_SETTINGS = {
+    # Title on the window
+    "site_title": "EduSelf Admin",
+
+    # Title on the login screen (19 chars max)
+    "site_header": "EduSelf",
+
+    # Title on the brand (19 chars max)
+    "site_brand": "EduSelf Teacher",
+
+    # Logo to use for your site, must be present in static files
+    "site_logo": "img/icons/sparkles.svg",
+
+    # CSS classes that are applied to the logo above
+    "site_logo_classes": "img-circle",
+
+    # Relative path to a favicon for your site
+    "site_icon": "img/icons/sparkles.svg",
+
+    # Welcome text on the login screen
+    "welcome_sign": "EduSelf Teacher Boshqaruv Tizimiga Xush Kelibsiz",
+
+    # Copyright on the footer
+    "copyright": "EduSelf Teacher Platform",
+
+    # List of model admins to search from the search bar
+    "search_model": ["authentication.User", "quizzes.Quiz"],
+
+    ############
+    # Top Menu #
+    ############
+    "topmenu_links": [
+        {"name": "Asosiy Sahifa", "url": "home", "icon": "fas fa-home", "permissions": ["auth.view_user"]},
+        {"name": "O‘qituvchi Boshqaruvi", "url": "dashboard", "icon": "fas fa-chalkboard-teacher"},
+        {"model": "authentication.User", "icon": "fas fa-user-shield"},
+        {"model": "quizzes.Quiz", "icon": "fas fa-brain"},
+    ],
+
+    #############
+    # User Menu #
+    #############
+    "usermenu_links": [
+        {"name": "EduSelf Dashboard", "url": "dashboard", "icon": "fas fa-tachometer-alt"},
+    ],
+
+    #############
+    # Side Menu #
+    #############
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+
+    "order_with_respect_to": [
+        "authentication",
+        "quizzes",
+        "live_sessions",
+        "game_engine",
+        "ai_workspace",
+        "ai_gateway",
+        "mcp_server",
+        "sheets_sync",
+        "django_celery_beat",
+        "auth",
+    ],
+
+    # Custom icons for side menu apps and models (FontAwesome 5 & 6)
+    "icons": {
+        # App Icons
+        "auth": "fas fa-shield-alt",
+        "authentication": "fas fa-user-lock",
+        "quizzes": "fas fa-brain",
+        "live_sessions": "fas fa-broadcast-tower",
+        "game_engine": "fas fa-gamepad",
+        "ai_gateway": "fas fa-microchip",
+        "ai_workspace": "fas fa-robot",
+        "mcp_server": "fas fa-network-wired",
+        "sheets_sync": "fas fa-table",
+        "django_celery_beat": "fas fa-clock",
+
+        # Authentication Models
+        "authentication.user": "fas fa-user-shield",
+        "authentication.User": "fas fa-user-shield",
+        "authentication.organization": "fas fa-school",
+        "authentication.Organization": "fas fa-school",
+        "authentication.teacherprofile": "fas fa-id-card",
+        "authentication.TeacherProfile": "fas fa-id-card",
+
+        # Quizzes Models
+        "quizzes.quiz": "fas fa-brain",
+        "quizzes.Quiz": "fas fa-brain",
+        "quizzes.question": "fas fa-question-circle",
+        "quizzes.Question": "fas fa-question-circle",
+        "quizzes.quizversion": "fas fa-code-branch",
+        "quizzes.QuizVersion": "fas fa-code-branch",
+
+        # Live Sessions Models
+        "live_sessions.livesession": "fas fa-gamepad",
+        "live_sessions.LiveSession": "fas fa-gamepad",
+        "live_sessions.participant": "fas fa-users",
+        "live_sessions.Participant": "fas fa-users",
+        "live_sessions.answersubmission": "fas fa-check-double",
+        "live_sessions.AnswerSubmission": "fas fa-check-double",
+
+        # AI Gateway Models
+        "ai_gateway.userapikey": "fas fa-key",
+        "ai_gateway.UserApiKey": "fas fa-key",
+        "ai_gateway.tokenusagelog": "fas fa-chart-line",
+        "ai_gateway.TokenUsageLog": "fas fa-chart-line",
+        "ai_gateway.aiproviderkey": "fas fa-key",
+        "ai_gateway.aiusagelog": "fas fa-chart-line",
+
+        # Sheets Sync Models
+        "sheets_sync.sheetmapping": "fas fa-file-excel",
+        "sheets_sync.SheetMapping": "fas fa-file-excel",
+        "sheets_sync.sheetsynclog": "fas fa-history",
+        "sheets_sync.SheetSyncLog": "fas fa-history",
+        "sheets_sync.googlesheetsync": "fas fa-file-excel",
+
+        # Django Celery Beat Models
+        "django_celery_beat.periodictask": "fas fa-tasks",
+        "django_celery_beat.PeriodicTask": "fas fa-tasks",
+        "django_celery_beat.crontabschedule": "fas fa-calendar-alt",
+        "django_celery_beat.CrontabSchedule": "fas fa-calendar-alt",
+        "django_celery_beat.intervalschedule": "fas fa-stopwatch",
+        "django_celery_beat.IntervalSchedule": "fas fa-stopwatch",
+        "django_celery_beat.clockedschedule": "fas fa-bell",
+        "django_celery_beat.ClockedSchedule": "fas fa-bell",
+        "django_celery_beat.solarschedule": "fas fa-sun",
+        "django_celery_beat.SolarSchedule": "fas fa-sun",
+
+        # Auth Groups
+        "auth.group": "fas fa-users-cog",
+        "auth.Group": "fas fa-users-cog",
+    },
+    "default_icon_parents": "fas fa-folder",
+    "default_icon_children": "fas fa-layer-group",
+
+    #################
+    # Related Modal #
+    #################
+    "related_modal_active": True,
+
+    #############
+    # UI Tweaks #
+    #############
+    "custom_css": None,
+    "custom_js": None,
+    "use_google_fonts_cdn": True,
+    "show_ui_builder": False,
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {
+        "authentication.User": "collapsible",
+        "quizzes.Quiz": "vertical_tabs",
+    },
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-orange",
+    "accent": "accent-orange",
+    "navbar": "navbar-dark navbar-orange",
+    "no_navbar_border": True,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-warning",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "default",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-warning",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success",
+    },
+}
 
