@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}EduSelf Teacher — EduPlay 3D Gamification{% endblock %}</title>
+
+  <!-- Prevent Theme Flicker: Apply Telegram Dark/Light mode immediately before render -->
+  <script>
+    (function() {
+      try {
+        const savedTheme = localStorage.getItem('eduself_theme');
+        const theme = savedTheme ? savedTheme : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark-theme');
+        } else {
+          document.documentElement.classList.remove('dark-theme');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Core Critical Telegram Theme & Round-Button Fallback -->
+  <style id="critical-telegram-theme">
+    /* Telegram Theme Variables */
+    :root, html[data-theme="light"] {
+      --bg-warm: #F1F4F7;
+      --bg-surface: #FFFFFF;
+      --bg-surface-subtle: #F7F9FB;
+      --border-subtle: #DFE5EC;
+      --border-hover: #CBD5E1;
+      --header-bg: #FFFFFF;
+      --card-bg: #FFFFFF;
+      --card-row-bg: #F8FAFC;
+      --text-main: #1C242F;
+      --text-muted: #707579;
+      --text-white: #FFFFFF;
+      --tg-blue: #2481CC;
+      --primary-orange: #FF6A00;
+      --primary-green: #2EA63A;
+      --shadow-card: 0px 8px 24px rgba(28, 36, 47, 0.06);
+    }
+    [data-theme="dark"], html.dark-theme, body.dark-theme {
+      --bg-warm: #0E1621;
+      --bg-surface: #17212B;
+      --bg-surface-subtle: #242F3D;
+      --border-subtle: #242F3D;
+      --border-hover: #334458;
+      --header-bg: #17212B;
+      --card-bg: #17212B;
+      --card-row-bg: #242F3D;
+      --text-main: #FFFFFF;
+      --text-muted: #8E9CA9;
+      --text-white: #FFFFFF;
+      --tg-blue: #2AABEE;
+      --primary-orange: #FF8A33;
+      --primary-green: #31B545;
+      --shadow-card: 0px 10px 28px rgba(0, 0, 0, 0.4);
+    }
+
+    body {
+      background-color: var(--bg-warm);
+      color: var(--text-main);
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* ZERO SHARP CORNERS: All buttons, pills and badges are 100% round capsules */
+    button, input[type="button"], input[type="submit"],
+    .pill-button-primary, .pill-button-green, .pill-button-blue, .pill-button-secondary,
+    .btn, .pill-badge, .audio-btn, .theme-toggle-btn, .tg-theme-switch {
+      border-radius: 9999px !important;
+      outline: none !important;
+    }
+
+    /* All Cards and Containers have generous, organic 28px rounding */
+    .bento-card, .quiz-item-row, .bento-card-surface {
+      border-radius: 28px !important;
+    }
+  </style>
+
+  <!-- EduPlay 3D Design System Stylesheet (with cache-busting version) -->
+  <link rel="stylesheet" href="{% static 'css/eduplay_3d.css' %}?v=tg2026_v6">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Global Header / Navbar (Telegram Styled) -->
+  <header class="showcase-header" style="background: var(--header-bg); border-bottom: 1.5px solid var(--border-subtle); transition: background-color 0.25s ease;">
+    <div class="header-container" style="max-width: 1440px; width: 100%; margin: 0 auto; padding: 12px 28px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
+      <div class="brand-badge">
+        <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 12px; color: inherit;">
+          <div class="logo-icon" style="width: 42px; height: 42px; border-radius: 50% !important; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF7B1C, #FF5A00); font-size: 20px; box-shadow: 0 4px 12px rgba(255,106,0,0.35);">✨</div>
+          <div>
+            <h1 class="brand-title" style="color: var(--text-main); margin: 0; font-size: 20px; font-weight: 800; line-height: 1.2;">EduSelf</h1>
+            <p class="brand-subtitle" style="color: var(--text-muted); margin: 0; font-size: 12px; font-weight: 600;">EduPlay 3D Gamified Learning</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="nav-links" style="display: flex; gap: 14px; align-items: center;">
+        {% if user.is_authenticated %}
+          <a href="/dashboard/" class="nav-link font-heading" style="text-decoration: none; color: var(--text-main); font-size: 14px; font-weight: 700; padding: 6px 14px; border-radius: 9999px;">📊 Dashboard</a>
+          <a href="/editor/new/" class="nav-link font-heading" style="text-decoration: none; color: var(--text-main); font-size: 14px; font-weight: 700; padding: 6px 14px; border-radius: 9999px;">➕ Yangi Viktorina</a>
+        {% endif %}
+        <a href="/play/" class="nav-link font-heading" style="text-decoration: none; color: var(--primary-orange); font-size: 14px; font-weight: 800; padding: 6px 14px; border-radius: 9999px; background: var(--primary-orange-soft); border: 1.5px solid var(--primary-orange-border);">🎮 O‘yin (Play)</a>
+      </nav>
+
+      <!-- Header Actions (Telegram Theme Switch, Audio, Coins, User) -->
+      <div class="audio-controls" style="display: flex; align-items: center; gap: 12px;">
+        
+        <!-- Telegram-Style Animated Night Mode Switch -->
+        <button class="tg-theme-switch" id="themeToggleBtn" type="button" title="Tungi / Kunduzgi rejim (Telegram uslubida)">
+          <div class="tg-switch-track" id="tgSwitchTrack">
+            <div class="tg-switch-thumb" id="tgSwitchThumb">
+              <span id="themeThumbIcon">☀️</span>
+            </div>
+          </div>
+          <span class="tg-switch-label hide-mobile" id="themeText">Kunduzgi</span>
+        </button>
+
+        <!-- Audio Mute/Unmute (Pill Rounded) -->
+        <button class="audio-btn" id="muteToggleBtn" title="Tovushni yoqish / o'chirish" style="border-radius: 9999px !important; border: 1.5px solid var(--border-subtle); background: var(--bg-surface-subtle); color: var(--text-main); padding: 7px 16px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+          <span>🔊</span> <span class="hide-mobile">Tovush</span>
+        </button>
+
+        <!-- Coin Pill (Pill Rounded) -->
+        <div class="coin-reward-pill" style="margin-bottom: 0; padding: 6px 14px; font-size: 14px; border-radius: 9999px !important; background: rgba(255,168,52,0.15); border: 1.5px solid rgba(255,168,52,0.4); color: #FFA834; font-weight: 800; display: flex; align-items: center; gap: 6px;">
+          <span>🪙</span>
+          <span id="globalCoinCount">1,420</span>
+        </div>
+
+        {% if user.is_authenticated %}
+          <a href="/auth/profile/" style="text-decoration: none;" title="Profil: {{ user.username }}">
+            <div class="avatar-circle" style="width: 40px; height: 40px; font-size: 19px; border-radius: 50% !important; border: 2.5px solid var(--primary-orange); box-shadow: 0 4px 10px rgba(255,106,0,0.25); display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-surface-subtle);">
+              {% if user.avatar_url %}
+                <img src="{{ user.avatar_url }}" alt="{{ user.username }}" style="width: 100%; height: 100%; object-fit: cover;">
+              {% else %}
+                🧑‍🏫
+              {% endif %}
+            </div>
+          </a>
+        {% else %}
+          <a href="/auth/login/" class="pill-button-primary" style="height: 42px; padding: 0 20px; font-size: 14px; text-decoration: none; width: auto; border-radius: 9999px !important;">
+            Kirish
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="page-container" style="min-height: calc(100vh - 120px); transition: background-color 0.25s ease;">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- Global Audio & Component Scripts -->
+  <script src="{% static 'js/audio.js' %}"></script>
+  <script>
+    // Initialize procedural audio synthesizer singleton
+    window.eduAudio = new EduPlayAudio();
+    document.addEventListener('click', () => {
+      if (window.eduAudio) window.eduAudio.init();
+    }, { once: true });
+
+    // Telegram Theme Switcher Logic
+    (function() {
+      const themeBtn = document.getElementById('themeToggleBtn');
+      const themeThumb = document.getElementById('tgSwitchThumb');
+      const themeThumbIcon = document.getElementById('themeThumbIcon');
+      const themeText = document.getElementById('themeText');
+
+      function applyTheme(theme, animate = true) {
+        const isDark = (theme === 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+        if (document.body) {
+          document.body.setAttribute('data-theme', theme);
+          if (isDark) {
+            document.documentElement.classList.add('dark-theme');
+            document.body.classList.add('dark-theme');
+          } else {
+            document.documentElement.classList.remove('dark-theme');
+            document.body.classList.remove('dark-theme');
+          }
+        }
+        localStorage.setItem('eduself_theme', theme);
+
+        // Update Telegram Switch UI
+        if (themeThumbIcon) {
+          themeThumbIcon.textContent = isDark ? '🌙' : '☀️';
+        }
+        if (themeText) {
+          themeText.textContent = isDark ? 'Tungi' : 'Kunduzgi';
+        }
+      }
+
+      // Initial theme apply
+      const savedTheme = localStorage.getItem('eduself_theme') || 'light';
+      applyTheme(savedTheme, false);
+
+      // Toggle click handler
+      if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+          const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+          const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          applyTheme(nextTheme, true);
+
+          // Audio Pop feedback
+          if (window.eduAudio && typeof window.eduAudio.playCoin === 'function') {
+            window.eduAudio.playCoin();
+          }
+        });
+      }
+    })();
+  </script>
+  <script src="{% static 'js/components.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

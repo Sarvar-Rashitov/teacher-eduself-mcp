@@ -1,0 +1,963 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Viktorina Muharriri — EduSelf Teacher{% endblock %}
+
+{% block content %}
+<div class="editor-container" style="max-width: 1440px; margin: 28px auto; padding: 0 28px; width: 100%; box-sizing: border-box;">
+
+  <!-- Editor Top Bar -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+    <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+      <a href="/dashboard/" class="pill-button-secondary" style="height: 44px; padding: 0 20px; text-decoration: none; border-radius: 9999px !important;">
+        <span>←</span> Boshqaruvga
+      </a>
+      
+      <!-- Quiz Title & Subject Inputs -->
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <input type="text" id="quizTitleInput" value="{{ quiz.title|default:'Yangi Viktorina' }}" placeholder="Viktorina nomi..." style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; color: var(--text-main); background: var(--bg-surface-subtle); border: 1.5px solid var(--border-subtle); border-radius: 9999px !important; padding: 6px 18px; outline: none; width: 280px; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--tg-blue)'" onblur="this.style.borderColor='var(--border-subtle)'">
+        
+        <input type="text" id="quizSubjectInput" value="{{ quiz.subject|default:'Informatika' }}" placeholder="Fan..." style="font-size: 13px; font-weight: 700; color: var(--text-muted); background: var(--bg-surface-subtle); border: 1.5px solid var(--border-subtle); border-radius: 9999px !important; padding: 6px 14px; outline: none; width: 140px;">
+
+        <select id="quizGradeInput" style="font-size: 13px; font-weight: 700; color: var(--text-muted); background: var(--bg-surface-subtle); border: 1.5px solid var(--border-subtle); border-radius: 9999px !important; padding: 6px 14px; outline: none;">
+          <option value="5" {% if quiz.grade_level == 5 %}selected{% endif %}>5-sinf</option>
+          <option value="6" {% if quiz.grade_level == 6 %}selected{% endif %}>6-sinf</option>
+          <option value="7" {% if quiz.grade_level == 7 or not quiz %}selected{% endif %}>7-sinf</option>
+          <option value="8" {% if quiz.grade_level == 8 %}selected{% endif %}>8-sinf</option>
+          <option value="9" {% if quiz.grade_level == 9 %}selected{% endif %}>9-sinf</option>
+          <option value="10" {% if quiz.grade_level == 10 %}selected{% endif %}>10-sinf</option>
+          <option value="11" {% if quiz.grade_level == 11 %}selected{% endif %}>11-sinf</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <button type="button" class="pill-button-blue" id="openAIModalBtn" style="height: 46px; padding: 0 22px; border-radius: 9999px !important; cursor: pointer;">
+        <span>🤖</span> AI Yordamchi
+      </button>
+      <button type="button" class="pill-button-primary" id="saveQuizBtn" style="height: 46px; padding: 0 26px; border-radius: 9999px !important; cursor: pointer;">
+        <span>💾</span> Saqlash
+      </button>
+    </div>
+  </div>
+
+  <!-- Success / Alert Toast Notification Banner -->
+  <div id="editorToast" style="display: none; background: #2EA63A; color: #FFFFFF; padding: 12px 24px; border-radius: 9999px !important; margin-bottom: 20px; font-weight: 800; font-size: 14px; align-items: center; justify-content: space-between; box-shadow: 0 8px 24px rgba(46,166,58,0.35); animation: popIn 0.25s ease;">
+    <span id="toastMessage">✅ Viktorina muvaffaqiyatli saqlandi!</span>
+    <button onclick="document.getElementById('editorToast').style.display='none'" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer;">✕</button>
+  </div>
+
+  <!-- Main 2-Column Editor Layout -->
+  <div style="display: grid; grid-template-columns: 310px 1fr; gap: 24px;">
+    
+    <!-- LEFT: Questions Sidebar -->
+    <div class="bento-card bento-card-surface" style="padding: 22px; height: fit-content; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <span class="font-heading" style="font-size: 16px; color: var(--text-main);">Savollar Ro‘yxati (<span id="totalQuestionsCount">1</span>)</span>
+        <button id="addQuestionBtn" type="button" class="pill-button-green" style="padding: 6px 16px; font-size: 13px; height: 34px; border-radius: 9999px !important; cursor: pointer;">
+          + Yangi
+        </button>
+      </div>
+
+      <div id="questionsSidebarList" style="display: flex; flex-direction: column; gap: 10px; max-height: 520px; overflow-y: auto; padding-right: 4px;">
+        <!-- Injected dynamically by JavaScript -->
+      </div>
+    </div>
+
+    <!-- RIGHT: Active Question Details Form -->
+    <div class="bento-card bento-card-surface" style="padding: 30px; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle);">
+      
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+        <h3 id="currentQuestionTitle" class="font-heading" style="font-size: 18px; color: var(--text-main); margin: 0;">
+          1-savolni tahrirlash
+        </h3>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" id="duplicateQuestionBtn" title="Bu savoldan nusxa olish" style="background: rgba(36,129,204,0.12); color: var(--tg-blue); border: 1.5px solid #54A9EB; border-radius: 9999px !important; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <span>📋</span> Nusxalash
+          </button>
+          <button type="button" id="deleteQuestionBtn" title="Bu savolni o‘chirish" style="background: rgba(239,68,68,0.12); color: #EF4444; border: 1.5px solid #F87171; border-radius: 9999px !important; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+            <span>🗑️</span> O‘chirish
+          </button>
+        </div>
+      </div>
+
+      <!-- Question Prompt Input -->
+      <div style="margin-bottom: 22px;">
+        <label style="display: block; font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">Savol Matni</label>
+        <textarea id="questionPromptInput" rows="3" style="width: 100%; border-radius: 20px; background: var(--bg-surface-subtle); color: var(--text-main); border: 2px solid var(--border-subtle); padding: 14px 18px; font-size: 15px; font-family: inherit; outline: none; transition: all 0.2s;" placeholder="Savolingizni shu yerga yozing..." onfocus="this.style.borderColor='var(--tg-blue)'" onblur="this.style.borderColor='var(--border-subtle)'"></textarea>
+      </div>
+
+      <!-- Question Media / Image Section -->
+      <div style="margin-bottom: 22px;">
+        <label style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">
+          <span style="display: flex; align-items: center; gap: 6px;">🖼️ Savol Rasmi <span style="font-size: 12px; font-weight: 600; color: var(--text-muted);">(Ixtiyoriy)</span></span>
+          <span style="font-size: 11.5px; font-weight: 600; color: var(--text-muted);">PNG, JPG, WebP, GIF, SVG (max 10MB)</span>
+        </label>
+        
+        <!-- Image Preview Card -->
+        <div id="qImagePreviewCard" style="display: none; position: relative; margin-bottom: 12px; border-radius: 20px; overflow: hidden; border: 2px solid var(--border-subtle); max-height: 220px; background: rgba(0,0,0,0.06); text-align: center;">
+          <img id="qImagePreviewImg" src="" alt="Savol rasmi" style="max-height: 216px; width: auto; max-width: 100%; object-fit: contain; margin: 0 auto; display: block;">
+          <button type="button" id="removeQImageBtn" title="Rasmni olib tashlash" style="position: absolute; top: 10px; right: 10px; background: rgba(239,68,68,0.9); color: #fff; border: none; border-radius: 9999px !important; width: 32px; height: 32px; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); box-shadow: 0 2px 8px rgba(0,0,0,0.25);">
+            ✕
+          </button>
+        </div>
+
+        <!-- Image Upload & URL input controls -->
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <input type="file" id="qImageFileInput" accept="image/*" style="display: none;">
+          <button type="button" id="triggerQImageUploadBtn" style="background: rgba(36,129,204,0.12); color: var(--tg-blue); border: 1.5px solid #54A9EB; border-radius: 9999px !important; padding: 9px 18px; font-size: 13.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+            <span id="qUploadSpinner" style="display: none;">⏳</span>
+            <span>📁 Kompyuterdan Rasm Yuklash</span>
+          </button>
+          
+          <div style="flex: 1; min-width: 220px; display: flex; align-items: center; background: var(--bg-surface-subtle); border: 1.5px solid var(--border-subtle); border-radius: 9999px !important; padding: 0 16px; height: 42px;">
+            <span style="color: var(--text-muted); font-size: 13px; margin-right: 8px;">🔗</span>
+            <input type="url" id="qImageUrlInput" placeholder="Yoki rasm havolasini (URL) kiriting..." style="flex: 1; border: none; background: transparent; color: var(--text-main); font-size: 13.5px; outline: none;">
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 Options (Dual-Coded Claymorphism) -->
+      <div style="margin-bottom: 26px;">
+        <label style="display: block; font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 12px;">Variantlar (To‘g‘ri javob doirachasini belgilang)</label>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          
+          <!-- Option A: Red Triangle -->
+          <div style="display: flex; align-items: center; gap: 10px; background: rgba(239,68,68,0.12); border: 2px solid #F87171; border-radius: 9999px !important; padding: 8px 18px;">
+            <span style="color: #EF4444; font-size: 20px; font-weight: 900;">▲</span>
+            <input type="text" id="optInput0" class="option-input" placeholder="Variant A" style="flex: 1; border: none; background: transparent; color: var(--text-main); font-size: 14px; font-weight: 700; outline: none;">
+            <input type="radio" name="correct_answer_radio" value="0" title="To'g'ri javob deb belgilash" style="width: 20px; height: 20px; accent-color: var(--primary-orange); cursor: pointer;">
+          </div>
+
+          <!-- Option B: Blue Diamond -->
+          <div style="display: flex; align-items: center; gap: 10px; background: rgba(36,129,204,0.12); border: 2px solid #54A9EB; border-radius: 9999px !important; padding: 8px 18px;">
+            <span style="color: var(--tg-blue); font-size: 20px; font-weight: 900;">◆</span>
+            <input type="text" id="optInput1" class="option-input" placeholder="Variant B" style="flex: 1; border: none; background: transparent; color: var(--text-main); font-size: 14px; font-weight: 700; outline: none;">
+            <input type="radio" name="correct_answer_radio" value="1" title="To'g'ri javob deb belgilash" style="width: 20px; height: 20px; accent-color: var(--primary-orange); cursor: pointer;">
+          </div>
+
+          <!-- Option C: Yellow Circle -->
+          <div style="display: flex; align-items: center; gap: 10px; background: rgba(245,158,11,0.12); border: 2px solid #FCD34D; border-radius: 9999px !important; padding: 8px 18px;">
+            <span style="color: #F59E0B; font-size: 20px; font-weight: 900;">●</span>
+            <input type="text" id="optInput2" class="option-input" placeholder="Variant C" style="flex: 1; border: none; background: transparent; color: var(--text-main); font-size: 14px; font-weight: 700; outline: none;">
+            <input type="radio" name="correct_answer_radio" value="2" title="To'g'ri javob deb belgilash" style="width: 20px; height: 20px; accent-color: var(--primary-orange); cursor: pointer;">
+          </div>
+
+          <!-- Option D: Green Square -->
+          <div style="display: flex; align-items: center; gap: 10px; background: rgba(46,166,58,0.12); border: 2px solid #4CD964; border-radius: 9999px !important; padding: 8px 18px;">
+            <span style="color: var(--primary-green); font-size: 20px; font-weight: 900;">■</span>
+            <input type="text" id="optInput3" class="option-input" placeholder="Variant D" style="flex: 1; border: none; background: transparent; color: var(--text-main); font-size: 14px; font-weight: 700; outline: none;">
+            <input type="radio" name="correct_answer_radio" value="3" title="To'g'ri javob deb belgilash" style="width: 20px; height: 20px; accent-color: var(--primary-orange); cursor: pointer;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings: Time & Points -->
+      <div style="display: flex; gap: 20px; align-items: center; padding-top: 20px; border-top: 1.5px solid var(--border-subtle); flex-wrap: wrap;">
+        <div>
+          <label style="font-size: 13px; font-weight: 800; color: var(--text-muted); display: block; margin-bottom: 6px;">⏱️ Vaqt (soniya)</label>
+          <select id="questionTimeSelect" style="border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 8px 18px; font-size: 14px; font-weight: 700; outline: none;">
+            <option value="15">15 soniya</option>
+            <option value="30" selected>30 soniya</option>
+            <option value="60">60 soniya</option>
+            <option value="90">90 soniya</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="font-size: 13px; font-weight: 800; color: var(--text-muted); display: block; margin-bottom: 6px;">🪙 Ball</label>
+          <select id="questionPointsSelect" style="border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 8px 18px; font-size: 14px; font-weight: 700; outline: none;">
+            <option value="500">500 ball</option>
+            <option value="1000" selected>1000 ball</option>
+            <option value="2000">2000 ball</option>
+          </select>
+        </div>
+
+        <div style="margin-left: auto;">
+          <label style="font-size: 13px; font-weight: 700; color: var(--text-main); display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" id="lockQuestionCheckbox" style="width: 18px; height: 18px; accent-color: var(--primary-orange); cursor: pointer;"> 🔒 AI o‘zgartirishidan qulflash (Lock)
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- AI Modal Helper -->
+<div id="aiModal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); z-index: 100; align-items: center; justify-content: center; padding: 20px;">
+  <div class="bento-card bento-card-surface" style="width: 580px; max-width: 95vw; max-height: 90vh; overflow-y: auto; padding: 32px; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle); box-shadow: var(--shadow-modal);">
+    <h3 class="font-heading" style="font-size: 22px; color: var(--text-main); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+      <span>🤖</span> AI Viktorina Generatori
+    </h3>
+    <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px; font-weight: 500; line-height: 1.4;">
+      Mavzu, maxsus ko'rsatma (prompt) yoki darslik matnini kiriting. AI siz bergan prompt bo'yicha mukammal va takrorlanmas savollar tuzib beradi.
+    </p>
+    
+    <div style="margin-bottom: 16px;">
+      <label style="display: block; font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
+        🎯 Test Mavzusi
+      </label>
+      <input type="text" id="aiTopicInput" placeholder="Masalan: Nyuton qonunlari, Quyosh tizimi, Python asoslari..." style="width: 100%; height: 48px; border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 0 20px; font-size: 14.5px; outline: none; transition: border-color 0.2s;">
+    </div>
+
+    <div style="margin-bottom: 16px;">
+      <label style="display: block; font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
+        💡 O'qituvchi Ko'rsatmasi (Maxsus Prompt)
+      </label>
+      <textarea id="aiPromptInput" rows="3" placeholder="Masalan: Faqat amaliy hayotiy misollar va mantiqiy masalalar bo'lsin. Formulalar LaTeX formatida yozilsin. Savollar o'quvchilarda tanqidiy fikrlashni rivojlantirsin..." style="width: 100%; border-radius: 20px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 12px 18px; font-size: 13.5px; outline: none; resize: vertical; line-height: 1.4; transition: border-color 0.2s;"></textarea>
+    </div>
+
+    <div style="margin-bottom: 18px;">
+      <label style="display: block; font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">
+        📖 Darslik matni yoki konspekt (Ixtiyoriy)
+      </label>
+      <textarea id="aiTextInput" rows="3" placeholder="Darslikdagi matn, qoida yoki konspektni shu yerga kiriting. AI aynan shu manbadan savollar tuzadi..." style="width: 100%; border-radius: 20px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 12px 18px; font-size: 13.5px; outline: none; resize: vertical; line-height: 1.4; transition: border-color 0.2s;"></textarea>
+    </div>
+
+    <div style="display: flex; gap: 14px; margin-bottom: 24px;">
+      <div style="flex: 1;">
+        <label style="display: block; font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">Savollar soni (Limit)</label>
+        <select id="aiQuestionCount" style="width: 100%; height: 46px; border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 0 16px; font-size: 14px; font-weight: 700; outline: none; cursor: pointer;">
+          <option value="3">3 ta savol</option>
+          <option value="5" selected>5 ta savol</option>
+          <option value="10">10 ta savol</option>
+          <option value="15">15 ta savol</option>
+          <option value="20">20 ta savol</option>
+          <option value="25">25 ta savol</option>
+          <option value="30">30 ta savol</option>
+          <option value="40">40 ta savol</option>
+          <option value="50">50 ta savol</option>
+          <option value="75">75 ta savol</option>
+          <option value="100">100 ta savol</option>
+        </select>
+      </div>
+      <div style="flex: 1;">
+        <label style="display: block; font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 6px;">Til</label>
+        <select id="aiLanguage" style="width: 100%; height: 46px; border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 0 16px; font-size: 14px; font-weight: 700; outline: none; cursor: pointer;">
+          <option value="uz" selected>O‘zbekcha</option>
+          <option value="en">Inglizcha</option>
+          <option value="ru">Ruscha</option>
+        </select>
+      </div>
+    </div>
+    
+    <div style="display: flex; gap: 12px; justify-content: flex-end; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 18px;">
+      <button type="button" class="pill-button-secondary" id="closeAIModalBtn" style="height: 44px; padding: 0 22px; border-radius: 9999px !important; cursor: pointer;">
+        Bekor Qilish
+      </button>
+      <button type="button" class="pill-button-blue" id="submitAIGenerateBtn" style="height: 44px; padding: 0 26px; border-radius: 9999px !important; cursor: pointer;">
+        <span id="aiBtnSpinner" style="display: none;">⏳</span> <span>Generatsiya Qilish</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Core Interactive Quiz Editor Logic -->
+<script id="editorQuestionsData" type="application/json">{{ questions_json|safe }}</script>
+<script>
+(function() {
+  const quizId = "{{ quiz.id|default:'' }}";
+  let rawQuestions = [];
+  try {
+    const rawDataEl = document.getElementById('editorQuestionsData');
+    rawQuestions = rawDataEl ? JSON.parse(rawDataEl.textContent || '[]') : [];
+  } catch (e) {
+    console.warn("Could not parse questions JSON:", e);
+    rawQuestions = [];
+  }
+
+  // Fallback initial state if new quiz
+  let questions = (rawQuestions && rawQuestions.length > 0) ? rawQuestions : [
+    {
+      id: null,
+      type: "single_choice",
+      prompt: "O‘zbekiston poytaxti qaysi shahar?",
+      options: [
+        { id: "opt_1", text: "Toshkent" },
+        { id: "opt_2", text: "Samarqand" },
+        { id: "opt_3", text: "Buxoro" },
+        { id: "opt_4", text: "Xiva" }
+      ],
+      correct_answer: "opt_1",
+      time_limit_seconds: 30,
+      points: 1000,
+      is_locked: false,
+      media_url: null,
+      media_type: null
+    }
+  ];
+
+  let activeIndex = 0;
+
+  // DOM Elements
+  const sidebarList = document.getElementById('questionsSidebarList');
+  const totalCountBadge = document.getElementById('totalQuestionsCount');
+  const currentTitle = document.getElementById('currentQuestionTitle');
+  const promptInput = document.getElementById('questionPromptInput');
+  const optInputs = [
+    document.getElementById('optInput0'),
+    document.getElementById('optInput1'),
+    document.getElementById('optInput2'),
+    document.getElementById('optInput3')
+  ];
+  const radioButtons = document.querySelectorAll('input[name="correct_answer_radio"]');
+  const timeSelect = document.getElementById('questionTimeSelect');
+  const pointsSelect = document.getElementById('questionPointsSelect');
+  const lockCheckbox = document.getElementById('lockQuestionCheckbox');
+  const addBtn = document.getElementById('addQuestionBtn');
+  const duplicateBtn = document.getElementById('duplicateQuestionBtn');
+  const deleteBtn = document.getElementById('deleteQuestionBtn');
+  const saveBtn = document.getElementById('saveQuizBtn');
+  const toast = document.getElementById('editorToast');
+  const toastMessage = document.getElementById('toastMessage');
+
+  // Media / Image Elements
+  const qImagePreviewCard = document.getElementById('qImagePreviewCard');
+  const qImagePreviewImg = document.getElementById('qImagePreviewImg');
+  const removeQImageBtn = document.getElementById('removeQImageBtn');
+  const triggerQImageUploadBtn = document.getElementById('triggerQImageUploadBtn');
+  const qImageFileInput = document.getElementById('qImageFileInput');
+  const qImageUrlInput = document.getElementById('qImageUrlInput');
+  const qUploadSpinner = document.getElementById('qUploadSpinner');
+
+  // AI Modal Elements
+  const openAIModalBtn = document.getElementById('openAIModalBtn');
+  const aiModal = document.getElementById('aiModal');
+  const closeAIModalBtn = document.getElementById('closeAIModalBtn');
+  const submitAIGenerateBtn = document.getElementById('submitAIGenerateBtn');
+  const aiTopicInput = document.getElementById('aiTopicInput');
+  const aiPromptInput = document.getElementById('aiPromptInput');
+  const aiTextInput = document.getElementById('aiTextInput');
+  const aiQuestionCount = document.getElementById('aiQuestionCount');
+
+  // Render Sidebar
+  function renderSidebar() {
+    sidebarList.innerHTML = '';
+    totalCountBadge.textContent = questions.length;
+
+    questions.forEach((q, idx) => {
+      const item = document.createElement('div');
+      item.className = 'q-sidebar-item' + (idx === activeIndex ? ' active' : '');
+      item.style.cssText = `padding: 12px 14px; border-radius: 18px; background: ${idx === activeIndex ? 'rgba(36,129,204,0.15)' : 'var(--card-row-bg)'}; border: 1.5px solid ${idx === activeIndex ? 'var(--tg-blue)' : 'var(--border-subtle)'}; cursor: pointer; transition: all 0.15s;`;
+      
+      const hasImage = Boolean(q.media_url);
+      item.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 12px; font-weight: 800; color: ${idx === activeIndex ? 'var(--tg-blue)' : 'var(--text-muted)'};">${idx + 1}-savol</span>
+          <div style="display: flex; align-items: center; gap: 4px;">
+            ${hasImage ? '<span title="Rasm biriktirilgan" style="font-size: 12px;">🖼️</span>' : ''}
+            ${q.is_locked ? '<span style="font-size: 11px;">🔒</span>' : ''}
+          </div>
+        </div>
+        <p style="font-size: 13px; color: var(--text-main); margin: 3px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600;">
+          ${q.prompt || 'Yangi savol...'}
+        </p>
+      `;
+
+      item.addEventListener('click', () => {
+        saveCurrentFormToActive();
+        activeIndex = idx;
+        loadActiveQuestionIntoForm();
+        renderSidebar();
+        if (window.eduAudio && typeof window.eduAudio.playTick === 'function') {
+          window.eduAudio.playTick();
+        }
+      });
+
+      sidebarList.appendChild(item);
+    });
+  }
+
+  // Load Active Question Data to Form
+  function loadActiveQuestionIntoForm() {
+    const q = questions[activeIndex];
+    if (!q) return;
+
+    currentTitle.textContent = `${activeIndex + 1}-savolni tahrirlash`;
+    promptInput.value = q.prompt || '';
+
+    // Image preview & URL input
+    const imgUrl = q.media_url || '';
+    if (qImageUrlInput) {
+      qImageUrlInput.value = imgUrl;
+    }
+    if (imgUrl) {
+      qImagePreviewImg.src = imgUrl;
+      qImagePreviewCard.style.display = 'block';
+    } else {
+      qImagePreviewImg.src = '';
+      qImagePreviewCard.style.display = 'none';
+    }
+
+    // Options
+    const opts = q.options || [];
+    for (let i = 0; i < 4; i++) {
+      const textVal = opts[i] ? (typeof opts[i] === 'string' ? opts[i] : (opts[i].text || '')) : '';
+      optInputs[i].value = textVal;
+    }
+
+    // Correct Answer Radio
+    let matchedRadio = 0;
+    if (opts.length > 0) {
+      opts.forEach((opt, i) => {
+        const optId = typeof opt === 'string' ? `opt_${i+1}` : (opt.id || `opt_${i+1}`);
+        if (q.correct_answer === optId || q.correct_answer === (typeof opt === 'string' ? opt : opt.text)) {
+          matchedRadio = i;
+        }
+      });
+    }
+    radioButtons.forEach((r, idx) => {
+      r.checked = (idx === matchedRadio);
+    });
+
+    timeSelect.value = q.time_limit_seconds || 30;
+    pointsSelect.value = q.points || 1000;
+    lockCheckbox.checked = !!q.is_locked;
+  }
+
+  // Save Form Inputs into Memory State
+  function saveCurrentFormToActive() {
+    if (!questions[activeIndex]) return;
+
+    const promptVal = promptInput.value.trim();
+    const opts = [];
+    let chosenAnswerId = "opt_1";
+
+    for (let i = 0; i < 4; i++) {
+      const optId = `opt_${i + 1}`;
+      opts.push({
+        id: optId,
+        text: optInputs[i].value.trim() || `Variant ${String.fromCharCode(65 + i)}`
+      });
+      if (radioButtons[i].checked) {
+        chosenAnswerId = optId;
+      }
+    }
+
+    const currentImg = qImageUrlInput ? qImageUrlInput.value.trim() : '';
+
+    questions[activeIndex].prompt = promptVal;
+    questions[activeIndex].options = opts;
+    questions[activeIndex].correct_answer = chosenAnswerId;
+    questions[activeIndex].time_limit_seconds = parseInt(timeSelect.value, 10);
+    questions[activeIndex].points = parseInt(pointsSelect.value, 10);
+    questions[activeIndex].is_locked = lockCheckbox.checked;
+    questions[activeIndex].media_url = currentImg || null;
+    questions[activeIndex].media_type = currentImg ? 'image' : null;
+  }
+
+  // Real-time input listener to update sidebar preview
+  promptInput.addEventListener('input', () => {
+    if (questions[activeIndex]) {
+      questions[activeIndex].prompt = promptInput.value.trim();
+      renderSidebar();
+    }
+  });
+
+  // Media / Image Listeners
+  if (qImageUrlInput) {
+    qImageUrlInput.addEventListener('input', () => {
+      const val = qImageUrlInput.value.trim();
+      if (questions[activeIndex]) {
+        questions[activeIndex].media_url = val || null;
+        questions[activeIndex].media_type = val ? 'image' : null;
+      }
+      if (val) {
+        qImagePreviewImg.src = val;
+        qImagePreviewCard.style.display = 'block';
+      } else {
+        qImagePreviewImg.src = '';
+        qImagePreviewCard.style.display = 'none';
+      }
+      renderSidebar();
+    });
+  }
+
+  if (removeQImageBtn) {
+    removeQImageBtn.addEventListener('click', () => {
+      if (qImageUrlInput) qImageUrlInput.value = '';
+      if (qImagePreviewImg) qImagePreviewImg.src = '';
+      if (qImagePreviewCard) qImagePreviewCard.style.display = 'none';
+      if (questions[activeIndex]) {
+        questions[activeIndex].media_url = null;
+        questions[activeIndex].media_type = null;
+      }
+      renderSidebar();
+    });
+  }
+
+  if (triggerQImageUploadBtn && qImageFileInput) {
+    triggerQImageUploadBtn.addEventListener('click', () => {
+      qImageFileInput.click();
+    });
+
+    qImageFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+      const csrfToken = tokenMeta ? tokenMeta.getAttribute('content') : '';
+
+      if (qUploadSpinner) qUploadSpinner.style.display = 'inline';
+      triggerQImageUploadBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/quizzes/upload-image/', {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+          },
+          body: formData
+        });
+        const data = await res.json();
+        if (res.ok && data.url) {
+          if (qImageUrlInput) qImageUrlInput.value = data.url;
+          if (qImagePreviewImg) qImagePreviewImg.src = data.url;
+          if (qImagePreviewCard) qImagePreviewCard.style.display = 'block';
+          if (questions[activeIndex]) {
+            questions[activeIndex].media_url = data.url;
+            questions[activeIndex].media_type = 'image';
+          }
+          renderSidebar();
+        } else {
+          alert(data.error || 'Rasm yuklashda xatolik yuz berdi');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Rasm yuklashda tarmoq xatoligi yuz berdi');
+      } finally {
+        if (qUploadSpinner) qUploadSpinner.style.display = 'none';
+        triggerQImageUploadBtn.disabled = false;
+        qImageFileInput.value = '';
+      }
+    });
+  }
+
+  // 1. ADD NEW QUESTION BUTTON
+  addBtn.addEventListener('click', () => {
+    saveCurrentFormToActive();
+    const newQ = {
+      id: null,
+      type: "single_choice",
+      prompt: "Yangi savol matni...",
+      options: [
+        { id: "opt_1", text: "Variant A" },
+        { id: "opt_2", text: "Variant B" },
+        { id: "opt_3", text: "Variant C" },
+        { id: "opt_4", text: "Variant D" }
+      ],
+      correct_answer: "opt_1",
+      time_limit_seconds: 30,
+      points: 1000,
+      is_locked: false,
+      media_url: null,
+      media_type: null
+    };
+    questions.push(newQ);
+    activeIndex = questions.length - 1;
+    loadActiveQuestionIntoForm();
+    renderSidebar();
+
+    if (window.eduAudio && typeof window.eduAudio.playCoin === 'function') {
+      window.eduAudio.playCoin();
+    }
+  });
+
+  // 2. DELETE QUESTION BUTTON
+  deleteBtn.addEventListener('click', () => {
+    if (questions.length <= 1) {
+      alert("Viktorinada kamida bitta savol bo'lishi shart!");
+      return;
+    }
+    if (confirm("Haqiqatan ham bu savolni o‘chirmoqchimisiz?")) {
+      questions.splice(activeIndex, 1);
+      if (activeIndex >= questions.length) {
+        activeIndex = questions.length - 1;
+      }
+      loadActiveQuestionIntoForm();
+      renderSidebar();
+    }
+  });
+
+  // 2B. DUPLICATE QUESTION BUTTON
+  if (duplicateBtn) {
+    duplicateBtn.addEventListener('click', () => {
+      saveCurrentFormToActive();
+      const curr = questions[activeIndex];
+      if (!curr) return;
+      const cloned = JSON.parse(JSON.stringify(curr));
+      cloned.id = null;
+      cloned.prompt = `${cloned.prompt} (nusxa)`;
+      questions.splice(activeIndex + 1, 0, cloned);
+      activeIndex = activeIndex + 1;
+      loadActiveQuestionIntoForm();
+      renderSidebar();
+      if (window.eduAudio && typeof window.eduAudio.playCoin === 'function') {
+        window.eduAudio.playCoin();
+      }
+    });
+  }
+
+  // Real-time synchronization for options and settings
+  optInputs.forEach((inp, idx) => {
+    inp.addEventListener('input', () => {
+      if (questions[activeIndex] && questions[activeIndex].options[idx]) {
+        questions[activeIndex].options[idx].text = inp.value.trim();
+      }
+    });
+  });
+
+  radioButtons.forEach((r, idx) => {
+    r.addEventListener('change', () => {
+      if (r.checked && questions[activeIndex]) {
+        questions[activeIndex].correct_answer = `opt_${idx + 1}`;
+        if (window.eduAudio && typeof window.eduAudio.playTick === 'function') {
+          window.eduAudio.playTick();
+        }
+      }
+    });
+  });
+
+  timeSelect.addEventListener('change', () => {
+    if (questions[activeIndex]) {
+      questions[activeIndex].time_limit_seconds = parseInt(timeSelect.value, 10);
+    }
+  });
+
+  pointsSelect.addEventListener('change', () => {
+    if (questions[activeIndex]) {
+      questions[activeIndex].points = parseInt(pointsSelect.value, 10);
+    }
+  });
+
+  lockCheckbox.addEventListener('change', () => {
+    if (questions[activeIndex]) {
+      questions[activeIndex].is_locked = lockCheckbox.checked;
+      renderSidebar();
+    }
+  });
+
+  // 3. SAVE QUIZ BUTTON (Calls API)
+  saveBtn.addEventListener('click', async () => {
+    saveCurrentFormToActive();
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span>⏳</span> Saqlanmoqda...';
+
+    const title = document.getElementById('quizTitleInput').value.trim() || 'Yangi Viktorina';
+    const subject = document.getElementById('quizSubjectInput').value.trim() || 'Informatika';
+    const grade = parseInt(document.getElementById('quizGradeInput').value, 10) || 7;
+
+    const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = tokenMeta ? tokenMeta.getAttribute('content') : '';
+
+    try {
+      let targetQuizId = quizId;
+
+      // Create new quiz if not exists
+      if (!targetQuizId) {
+        const createRes = await fetch('/api/quizzes/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+          },
+          body: JSON.stringify({
+            title: title,
+            subject: subject,
+            grade_level: grade,
+            description: `${subject} bo'yicha ${grade}-sinf interaktiv viktorinasi`
+          })
+        });
+        const createData = await createRes.json();
+        if (createRes.ok && createData.id) {
+          targetQuizId = createData.id;
+        } else {
+          throw new Error(createData.error || 'Viktorina yaratishda xatolik');
+        }
+      } else {
+        // Update existing quiz details
+        await fetch(`/api/quizzes/${targetQuizId}/`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+          },
+          body: JSON.stringify({
+            title: title,
+            subject: subject,
+            grade_level: grade,
+          })
+        });
+      }
+
+      // Save each question
+      for (let i = 0; i < questions.length; i++) {
+        const q = questions[i];
+        const payload = {
+          type: "single_choice",
+          prompt: q.prompt || `Savol #${i + 1}`,
+          options: q.options,
+          correct_answer: q.correct_answer,
+          time_limit_seconds: q.time_limit_seconds || 30,
+          points: q.points || 1000,
+          order_index: i,
+          is_locked: !!q.is_locked,
+          media_url: q.media_url || null,
+          media_type: q.media_url ? (q.media_type || "image") : null,
+        };
+
+        if (q.id) {
+          await fetch(`/api/quizzes/${targetQuizId}/questions/${q.id}/`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          const qRes = await fetch(`/api/quizzes/${targetQuizId}/questions/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify(payload)
+          });
+          const qData = await qRes.json();
+          if (qRes.ok && qData.id) {
+            q.id = qData.id;
+          }
+        }
+      }
+
+      // Success feedback
+      toastMessage.textContent = '✅ Viktorina muvaffaqiyatli saqlandi!';
+      toast.style.display = 'flex';
+      setTimeout(() => { toast.style.display = 'none'; }, 4000);
+
+      if (window.eduAudio && typeof window.eduAudio.playVictory === 'function') {
+        window.eduAudio.playVictory();
+      }
+
+      // If created a new quiz, redirect to its editor URL
+      if (!quizId && targetQuizId) {
+        window.history.replaceState({}, '', `/editor/${targetQuizId}/`);
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert('Xatolik: ' + err.message);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = '<span>💾</span> Saqlash';
+    }
+  });
+
+  // 4. AI MODAL OPEN / CLOSE
+  openAIModalBtn.addEventListener('click', () => {
+    aiModal.style.display = 'flex';
+    aiTopicInput.focus();
+  });
+
+  closeAIModalBtn.addEventListener('click', () => {
+    aiModal.style.display = 'none';
+  });
+
+  aiTopicInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      submitAIGenerateBtn.click();
+    }
+  });
+
+  // 5. AI GENERATE QUESTIONS
+  submitAIGenerateBtn.addEventListener('click', async () => {
+    const topic = aiTopicInput.value.trim();
+    const customPrompt = aiPromptInput ? aiPromptInput.value.trim() : '';
+    const textContent = aiTextInput ? aiTextInput.value.trim() : '';
+
+    if (!topic && !customPrompt && !textContent) {
+      alert("Iltimos, test mavzusi, o'qituvchi prompti yoki darslik matnini kiriting!");
+      return;
+    }
+
+    const count = parseInt(aiQuestionCount.value, 10) || 5;
+    const lang = document.getElementById('aiLanguage').value || 'uz';
+    const grade = parseInt(document.getElementById('quizGradeInput').value, 10) || 7;
+
+    submitAIGenerateBtn.disabled = true;
+    document.getElementById('aiBtnSpinner').style.display = 'inline';
+
+    try {
+      const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+      const csrfToken = tokenMeta ? tokenMeta.getAttribute('content') : '';
+
+      // Call AI workspace generate-quiz API
+      const res = await fetch('/api/ai/generate-quiz/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({
+          topic: topic || (customPrompt ? customPrompt.slice(0, 60) : "Mavzu"),
+          prompt: customPrompt,
+          custom_instructions: customPrompt,
+          text_content: textContent,
+          grade_level: grade,
+          question_count: count,
+          language: lang,
+          subject: document.getElementById('quizSubjectInput').value || 'Umumiy'
+        })
+      });
+
+      const data = await res.json();
+      let generatedItems = [];
+
+      if (res.ok && data.questions && data.questions.length > 0) {
+        generatedItems = data.questions.map((q, idx) => ({
+          id: null,
+          type: "single_choice",
+          prompt: q.prompt,
+          options: (q.options && q.options.length >= 2) ? q.options.map((opt, oi) => ({
+            id: opt.id || `opt_${oi+1}`,
+            text: typeof opt === 'string' ? opt : (opt.text || `Variant ${oi+1}`)
+          })) : [
+            { id: "opt_1", text: "Asosiy tushuncha" },
+            { id: "opt_2", text: "Ikkilamchi omil" },
+            { id: "opt_3", text: "Qo'shimcha belgi" },
+            { id: "opt_4", text: "Taqqoslash natijasi" }
+          ],
+          correct_answer: q.correct_answer || "opt_1",
+          time_limit_seconds: q.time_limit_seconds || 30,
+          points: q.points || 1000,
+          is_locked: false,
+          media_url: q.media_url || null,
+          media_type: q.media_type || null
+        }));
+      } else {
+        // High-Quality Diverse Pedagogical Fallback Generator (Zero-Duplication)
+        const activeTopic = topic || (customPrompt ? customPrompt.slice(0, 40) : "Fan mavzusi");
+        const bloomAspects = [
+          {
+            prompt: `${activeTopic} tushunchasining asosiy ilmiy mohiyati va ta'rifi nima?`,
+            correct: `${activeTopic}ning asosiy qonuniyati va tamoyilini to'liq ifodalovchi tushuncha`,
+            distractors: [
+              `Faqat laboratoriyada o'lchanadigan tasodifiy omil`,
+              `Tashqi ko'rinishdagi o'zgaruvchan parametr`,
+              `Nisbiy va isbotsiz taxminiy model`
+            ]
+          },
+          {
+            prompt: `${activeTopic}ning eng muhim belgisi va uni boshqa hodisalardan ajratib turuvchi xususiyati qaysi?`,
+            correct: `${activeTopic}ga xos bo'lgan barqaror ichki funksional xususiyat`,
+            distractors: [
+              `Barcha jarayonlarda bir xil takrorlanuvchi umumiy holat`,
+              `Faqat vaqtinchalik mavjud bo'lgan tashqi belgi`,
+              `Tajribada o'zgarib turuvchi xalaqit`
+            ]
+          },
+          {
+            prompt: `${activeTopic} jarayonining yuzaga kelishiga asosiy sabab nima?`,
+            correct: `${activeTopic}ning asosiy harakatlantiruvchi kuchi va tabiiy mexanizmi`,
+            distractors: [
+              `Tashqi tasodifiy sabablar yig'indisi`,
+              `Ichki qonuniyatlarga bog'liq bo'lmagan hodisa`,
+              `Faqat gipotetik taxmin`
+            ]
+          },
+          {
+            prompt: `${activeTopic} insoniyat hayoti va zamonaviy ilm-fanda qanday amaliy ahamiyatga ega?`,
+            correct: `Amaliy muammolarni yechish va ilmiy taraqqiyotni ta'minlash`,
+            distractors: [
+              `Faqat arxiv ma'lumotlarini to'plash`,
+              `Amaliyotda hech qanday qo'llanishga ega emas`,
+              `Faqat tor doiradagi nazariy qiziqish`
+            ]
+          },
+          {
+            prompt: `${activeTopic}ga oid qaysi ilmiy xulosa to'g'ri va amalda isbotlangan?`,
+            correct: `${activeTopic} qonuniyatlari amaliy tajriba va ilmiy dalillar bilan tasdiqlangan`,
+            distractors: [
+              `Mavzu bo'yicha hech qanday aniq qonuniyat yo'q`,
+              `Faqat matematik hisob-kitoblar bilan cheklangan`,
+              `Zamonaviy fanda butunlay inkor etilgan`
+            ]
+          }
+        ];
+
+        for (let i = 0; i < count; i++) {
+          const t = bloomAspects[i % bloomAspects.length];
+          const cycleNum = Math.floor(i / bloomAspects.length) + 1;
+          const suffix = (i >= bloomAspects.length) ? ` (qo'shimcha tahlil #${i+1})` : '';
+          const optSuffix = (i >= bloomAspects.length) ? ` (#${cycleNum})` : '';
+          const correctText = t.correct + optSuffix;
+          const pool = [correctText, ...t.distractors.map(d => d + optSuffix)].sort(() => Math.random() - 0.5);
+          const opts = pool.map((text, idx) => ({ id: `opt_${idx+1}`, text: text }));
+          const correctOpt = opts.find(o => o.text === correctText);
+
+          generatedItems.push({
+            id: null,
+            type: "single_choice",
+            prompt: t.prompt + suffix,
+            options: opts,
+            correct_answer: correctOpt ? correctOpt.id : "opt_1",
+            time_limit_seconds: 30,
+            points: 1000,
+            is_locked: false,
+            media_url: null,
+            media_type: null
+          });
+        }
+      }
+
+      // Filter out any duplicates against existing questions
+      const existingPrompts = new Set(questions.map(q => q.prompt.trim().toLowerCase()));
+      const uniqueNewItems = generatedItems.filter(item => !existingPrompts.has(item.prompt.trim().toLowerCase()));
+
+      // If initial list only had the default untouched placeholder question, replace it cleanly
+      if (questions.length === 1 && questions[0].prompt === "O‘zbekiston poytaxti qaysi shahar?") {
+        questions = uniqueNewItems.length > 0 ? uniqueNewItems : generatedItems;
+        activeIndex = 0;
+      } else {
+        const addedCount = uniqueNewItems.length;
+        questions = questions.concat(uniqueNewItems);
+        activeIndex = questions.length - addedCount;
+      }
+
+      loadActiveQuestionIntoForm();
+      renderSidebar();
+
+      aiModal.style.display = 'none';
+      toastMessage.textContent = `🤖 AI yordamida ${generatedItems.length} ta savol generatsiya qilindi!`;
+      toast.style.display = 'flex';
+      setTimeout(() => { toast.style.display = 'none'; }, 4000);
+
+      if (window.eduAudio && typeof window.eduAudio.playVictory === 'function') {
+        window.eduAudio.playVictory();
+      }
+
+    } catch (e) {
+      console.error(e);
+      alert("AI xizmatida xatolik: " + e.message);
+    } finally {
+      submitAIGenerateBtn.disabled = false;
+      document.getElementById('aiBtnSpinner').style.display = 'none';
+    }
+  });
+
+  // Initial Boot
+  loadActiveQuestionIntoForm();
+  renderSidebar();
+
+})();
+</script>
+{% endblock %}

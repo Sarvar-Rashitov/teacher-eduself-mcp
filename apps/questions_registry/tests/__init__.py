@@ -1,0 +1,3 @@
+"""
+Tests for Questions Registry.
+"""

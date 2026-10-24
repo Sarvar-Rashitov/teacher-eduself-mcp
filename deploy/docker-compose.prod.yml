@@ -1,0 +1,238 @@
+# ==============================================================================
+# EduSelf Teacher — Production Docker Compose (Phase 11)
+# Complies with DEPLOYMENT_ARCHITECTURE.md and DOC-SEC-01 (SECURITY.md)
+# ==============================================================================
+
+version: '3.9'
+
+networks:
+  eduself-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  staticfiles_data:
+    driver: local
+  media_data:
+    driver: local
+  certbot_etc:
+    driver: local
+  certbot_www:
+    driver: local
+  backups_data:
+    driver: local
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. Reverse Proxy & SSL Termination (Nginx)
+  # ----------------------------------------------------------------------------
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: eduself-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - certbot_etc:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+      - staticfiles_data:/app/staticfiles:ro
+      - media_data:/app/media:ro
+      - /data/logs/nginx:/var/log/nginx
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+
+  # ----------------------------------------------------------------------------
+  # 2. Main Django & Daphne ASGI Backend (WebSockets + REST + MCP)
+  # ----------------------------------------------------------------------------
+  backend:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.backend
+    image: eduself-backend:latest
+    container_name: eduself-backend
+    restart: always
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings.production
+      - ENVIRONMENT=production
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=${POSTGRES_DB:-eduself_db}
+      - DB_USER=${POSTGRES_USER:-eduself_user}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+      - RUN_MIGRATIONS=true
+      - COLLECT_STATIC=true
+    volumes:
+      - staticfiles_data:/app/staticfiles
+      - media_data:/app/media
+      - /data/logs:/data/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/live/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 25s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4096M
+
+  # ----------------------------------------------------------------------------
+  # 3. Celery Background Tasks Worker
+  # ----------------------------------------------------------------------------
+  celery-worker:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.backend
+    image: eduself-backend:latest
+    container_name: eduself-celery-worker
+    restart: always
+    command: celery -A core.celery worker --loglevel=info --concurrency=4
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings.production
+      - ENVIRONMENT=production
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=${POSTGRES_DB:-eduself_db}
+      - DB_USER=${POSTGRES_USER:-eduself_user}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+      - RUN_MIGRATIONS=false
+      - COLLECT_STATIC=false
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 3072M
+
+  # ----------------------------------------------------------------------------
+  # 4. Celery Beat Periodic Scheduler
+  # ----------------------------------------------------------------------------
+  celery-beat:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.backend
+    image: eduself-backend:latest
+    container_name: eduself-celery-beat
+    restart: always
+    command: celery -A core.celery beat --loglevel=info
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings.production
+      - ENVIRONMENT=production
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_ENGINE=django.db.backends.postgresql
+      - DB_NAME=${POSTGRES_DB:-eduself_db}
+      - DB_USER=${POSTGRES_USER:-eduself_user}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+      - RUN_MIGRATIONS=false
+      - COLLECT_STATIC=false
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ----------------------------------------------------------------------------
+  # 5. Redis In-Memory Cache, Streams & Locks
+  # ----------------------------------------------------------------------------
+  redis:
+    image: redis:7.2-alpine
+    container_name: eduself-redis
+    restart: always
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "2gb", "--maxmemory-policy", "volatile-lru"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2500M
+
+  # ----------------------------------------------------------------------------
+  # 6. PostgreSQL 16 Partitioned Relational Database
+  # ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: eduself-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-eduself_db}
+      POSTGRES_USER: ${POSTGRES_USER:-eduself_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: >
+      postgres -c shared_buffers=1GB
+               -c effective_cache_size=3GB
+               -c maintenance_work_mem=256MB
+               -c checkpoint_completion_target=0.9
+               -c wal_buffers=16MB
+               -c default_statistics_target=100
+               -c work_mem=10MB
+               -c max_connections=200
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - backups_data:/data/backups
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-eduself_user} -d ${POSTGRES_DB:-eduself_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - eduself-net
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4096M

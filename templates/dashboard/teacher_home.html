@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}O'qituvchi Boshqaruv Paneli — EduSelf Teacher{% endblock %}
+
+{% block content %}
+<div class="dashboard-container" style="max-width: 1440px; margin: 32px auto; padding: 0 28px; width: 100%; box-sizing: border-box;">
+
+  <!-- Hero Header -->
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; flex-wrap: wrap; gap: 20px;">
+    <div>
+      <span class="pill-badge" style="background: rgba(255,106,0,0.15); color: var(--primary-orange); border: 1.5px solid var(--primary-orange); padding: 6px 18px; border-radius: 9999px !important; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(255,106,0,0.15);">
+        <span>🎓</span> Xush kelibsiz, {{ user.first_name|default:user.username }}!
+      </span>
+      <h1 class="font-heading" style="font-size: 34px; color: var(--text-main); margin-bottom: 6px; letter-spacing: -0.5px;">
+        Darslar va O‘yinlar Boshqaruvi
+      </h1>
+      <p style="font-size: 16px; color: var(--text-muted); font-weight: 500;">
+        Sinfingiz uchun interaktiv darslar yarating va jonli o‘yinlarni boshqaring.
+      </p>
+    </div>
+
+    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+      <a href="/play/" target="_blank" class="pill-button-green" style="text-decoration: none; height: 48px; padding: 0 24px; font-size: 15px; border-radius: 9999px !important; display: inline-flex; align-items: center; gap: 8px;">
+        <span>🎮</span> Blooket O‘ynash
+      </a>
+      <a href="/editor/new/" class="pill-button-blue" style="text-decoration: none; height: 48px; padding: 0 26px; font-size: 15px; border-radius: 9999px !important; display: inline-flex; align-items: center; gap: 8px;">
+        <span>✨</span> Yangi Viktorina
+      </a>
+    </div>
+  </div>
+
+  <!-- Bento Grid Showcase Cards (Interactive Clickable Actions) -->
+  <div class="bento-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 44px;">
+    
+    <!-- Card 1: Play Earn Win (Oceanic Blue 3D Gradient) -->
+    <div onclick="scrollToQuizzes()" class="bento-card bento-card-blue" title="Pastdagi viktorinalarni boshlash uchun bosing" style="background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 50%, #0369A1 100%) !important; color: #FFFFFF !important; border-radius: 28px !important; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; padding: 26px; box-shadow: 0 14px 32px rgba(14, 165, 233, 0.38); border: 2px solid rgba(255, 255, 255, 0.25); cursor: pointer; transition: transform 0.2s;">
+      <div>
+        <span style="font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.22); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 9999px !important; display: inline-block; color: #FFFFFF;">
+          🎮 PLAY EARN WIN
+        </span>
+        <h3 class="font-heading" style="font-size: 26px; margin-top: 14px; margin-bottom: 8px; color: #FFFFFF !important; text-shadow: 0 2px 4px rgba(0,0,0,0.25);">
+          Jonli Gamifikatsiya
+        </h3>
+        <p style="font-size: 14px; line-height: 1.5; color: #F8FAFC !important; opacity: 0.95;">
+          O‘quvchilar javob berib tangalar yutadi va jonli 3D shohsupada o‘rin talashadi.
+        </p>
+      </div>
+      <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 13px; font-weight: 700; color: #FFFFFF; text-decoration: underline;">O‘yinni boshlash ↓</span>
+        <span style="font-size: 44px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));">🏆</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Challenge Friends (Royal Violet 3D Gradient) -->
+    <div onclick="openGameModesModal()" class="bento-card bento-card-purple" title="O'yin rejimlari ro'yxatini ko'rish uchun bosing" style="background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 50%, #6D28D9 100%) !important; color: #FFFFFF !important; border-radius: 28px !important; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; padding: 26px; box-shadow: 0 14px 32px rgba(139, 92, 246, 0.38); border: 2px solid rgba(255, 255, 255, 0.25); cursor: pointer; transition: transform 0.2s;">
+      <div>
+        <span style="font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.22); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 9999px !important; display: inline-block; color: #FFFFFF;">
+          ⚡ 40+ O‘YIN REJIMLARI
+        </span>
+        <h3 class="font-heading" style="font-size: 26px; margin-top: 14px; margin-bottom: 8px; color: #FFFFFF !important; text-shadow: 0 2px 4px rgba(0,0,0,0.25);">
+          Jamoaviy Musobaqa
+        </h3>
+        <p style="font-size: 14px; line-height: 1.5; color: #F8FAFC !important; opacity: 0.95;">
+          Blooket uslubidagi Gold Quest, Boss Battle va Submarine Squad rejimlari.
+        </p>
+      </div>
+      <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 13px; font-weight: 700; color: #FFFFFF; text-decoration: underline;">Rejimlarni ko‘rish →</span>
+        <span style="font-size: 44px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));">⚡</span>
+      </div>
+    </div>
+
+    <!-- Card 3: AI Assistant & MCP (Radiant Amber/Gold 3D Gradient) -->
+    <div onclick="openMcpModal()" class="bento-card bento-card-gold" title="Claude / ChatGPT ulanish yo'riqnomasi" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%) !important; color: #FFFFFF !important; border-radius: 28px !important; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; padding: 26px; box-shadow: 0 14px 32px rgba(245, 158, 11, 0.38); border: 2px solid rgba(255, 255, 255, 0.25); cursor: pointer; transition: transform 0.2s;">
+      <div>
+        <span style="font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.22); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 9999px !important; display: inline-block; color: #FFFFFF;">
+          🤖 AI & MCP PROTOKOL
+        </span>
+        <h3 class="font-heading" style="font-size: 26px; margin-top: 14px; margin-bottom: 8px; color: #FFFFFF !important; text-shadow: 0 2px 4px rgba(0,0,0,0.25);">
+          Claude & Chatbot Ulanishi
+        </h3>
+        <p style="font-size: 14px; line-height: 1.5; color: #F8FAFC !important; opacity: 0.95;">
+          Claude Desktop yoki ChatGPT orqali to‘g‘ridan-to‘g‘ri testlar generatsiya qiling.
+        </p>
+      </div>
+      <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 13px; font-weight: 700; color: #FFFFFF; text-decoration: underline;">Ulanish siri →</span>
+        <span style="font-size: 44px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));">🚀</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Quizzes Table Section (Telegram Surface Card) -->
+  <div id="quizzesSection" class="bento-card bento-card-surface" style="padding: 32px; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle); box-shadow: var(--shadow-card);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+      <h2 class="font-heading" style="font-size: 24px; color: var(--text-main); display: flex; align-items: center; gap: 10px; margin: 0;">
+        <span>📚</span> Sizning Viktorinalaringiz
+      </h2>
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <input type="text" id="quizSearchInput" placeholder="🔍 Qidirish..." oninput="filterQuizzes(this.value)" style="height: 40px; border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 0 16px; font-size: 13px; font-weight: 600; outline: none; width: 180px;">
+        <span style="font-size: 14px; color: var(--text-muted); background: var(--bg-surface-subtle); padding: 6px 18px; border-radius: 9999px !important; font-weight: 700; border: 1.5px solid var(--border-subtle);">
+          Jami: <strong id="totalQuizzesCount" style="color: var(--primary-orange);">{{ quizzes|length|default:"0" }}</strong> ta test
+        </span>
+      </div>
+    </div>
+
+    {% if quizzes %}
+      <div id="quizzesListContainer" style="display: flex; flex-direction: column; gap: 14px;">
+        {% for quiz in quizzes %}
+          <div class="quiz-item-row" data-title="{{ quiz.title|lower }}" data-subject="{{ quiz.subject|lower }}" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-radius: 22px !important; background: var(--card-row-bg); border: 1.5px solid var(--border-subtle); flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px; flex-wrap: wrap;">
+                <h4 class="font-heading" style="font-size: 19px; color: var(--text-main); margin: 0;">
+                  {{ quiz.title }}
+                </h4>
+                <span class="pill-badge" style="background: rgba(36, 129, 204, 0.15); color: var(--tg-blue); font-size: 13px; padding: 4px 14px; border-radius: 9999px !important; font-weight: 800; border: 1px solid rgba(36, 129, 204, 0.3);">
+                  {{ quiz.subject }} • {{ quiz.grade_level }}-sinf
+                </span>
+                <span class="pill-badge" style="background: {% if quiz.status == 'published' %}rgba(46, 166, 58, 0.15); color: #2EA63A; border: 1px solid rgba(46, 166, 58, 0.3);{% else %}rgba(245, 158, 11, 0.15); color: #D97706; border: 1px solid rgba(245, 158, 11, 0.3);{% endif %} font-size: 13px; padding: 4px 14px; border-radius: 9999px !important; font-weight: 800;">
+                  {{ quiz.get_status_display }}
+                </span>
+              </div>
+              <p style="font-size: 14px; color: var(--text-muted); margin: 0; font-weight: 500;">
+                {{ quiz.questions.count }} ta savol • Versiya: <strong>v{{ quiz.current_version }}</strong> • {{ quiz.created_at|date:"d M Y" }}
+              </p>
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <a href="/editor/{{ quiz.id }}/" class="pill-button-secondary" style="height: 42px; padding: 0 18px; font-size: 13px; border-radius: 9999px !important; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                <span>✏️</span> Tahrirlash
+              </a>
+              <button onclick="startLiveRoom('{{ quiz.id }}', this)" class="pill-button-green" style="height: 42px; padding: 0 20px; font-size: 13px; border-radius: 9999px !important; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                <span>🚀</span> Jonli Xona
+              </button>
+              <button onclick="deleteQuiz('{{ quiz.id }}', '{{ quiz.title|escapejs }}', this)" title="Viktorinani o'chirish" style="height: 42px; width: 42px; border-radius: 50% !important; background: rgba(239,68,68,0.12); color: #EF4444; border: 1.5px solid #F87171; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                🗑️
+              </button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div style="text-align: center; padding: 56px 16px;">
+        <div style="font-size: 56px; margin-bottom: 16px;">📝</div>
+        <h3 class="font-heading" style="font-size: 22px; color: var(--text-main); margin-bottom: 8px;">
+          Hozircha hech qanday viktorina yaratilmagan
+        </h3>
+        <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 24px; max-width: 480px; margin-left: auto; margin-right: auto;">
+          Darsni boshlash uchun birinchi viktorinangizni yarating yoki AI yordamida avtomatik generatsiya qiling.
+        </p>
+        <a href="/editor/new/" class="pill-button-primary" style="text-decoration: none; height: 50px; padding: 0 32px; font-size: 15px; border-radius: 9999px !important;">
+          <span>✨</span> Yangi Viktorina Yaratish
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
+<!-- 1. Game Modes Modal (Blooket-Style Game Selector) -->
+<div id="gameModesModal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(6px); z-index: 100; align-items: center; justify-content: center; padding: 20px;">
+  <div class="bento-card bento-card-surface" style="width: 600px; max-width: 95vw; padding: 32px; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle); box-shadow: var(--shadow-modal);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 class="font-heading" style="font-size: 22px; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px;">
+        <span>🎮</span> O‘yin Rejimini Tanlang
+      </h3>
+      <button onclick="document.getElementById('gameModesModal').style.display='none'" style="background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer;">✕</button>
+    </div>
+    
+    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 22px;">
+      EduPlay 3D o'yin rejimlari o'quvchilarda jamoaviy ishlash va qiziqishni 3 barobarga oshiradi:
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;">
+      
+      <!-- Mode 1: Classic -->
+      <div style="padding: 16px; border-radius: 20px; background: var(--bg-surface-subtle); border: 2px solid var(--border-subtle); cursor: pointer;" onclick="selectMode('classic')">
+        <div style="font-size: 28px; margin-bottom: 6px;">🏆</div>
+        <h4 style="font-size: 16px; color: var(--text-main); margin-bottom: 4px;">Classic Shohsupa</h4>
+        <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Har bir o‘quvchi o‘z tezligida javob beradi va 3D shohsupada o‘rin talashadi.</p>
+      </div>
+
+      <!-- Mode 2: Gold Quest -->
+      <div style="padding: 16px; border-radius: 20px; background: rgba(245,158,11,0.1); border: 2px solid #F59E0B; cursor: pointer;" onclick="selectMode('gold_quest')">
+        <div style="font-size: 28px; margin-bottom: 6px;">💰</div>
+        <h4 style="font-size: 16px; color: #D97706; margin-bottom: 4px;">Gold Quest</h4>
+        <p style="font-size: 12px; color: var(--text-muted); margin: 0;">To‘g‘ri javob uchun sirli sandiq ochiladi va raqiblardan tangalar o‘g‘irlanadi!</p>
+      </div>
+
+      <!-- Mode 3: Boss Battle -->
+      <div style="padding: 16px; border-radius: 20px; background: rgba(239,68,68,0.1); border: 2px solid #EF4444; cursor: pointer;" onclick="selectMode('boss_battle')">
+        <div style="font-size: 28px; margin-bottom: 6px;">👾</div>
+        <h4 style="font-size: 16px; color: #DC2626; margin-bottom: 4px;">Katta Jang (Boss)</h4>
+        <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Butun sinf birlashib ulkan virus yoki ajdarga qarshi birgalikda zarba beradi.</p>
+      </div>
+
+      <!-- Mode 4: Submarine Squad -->
+      <div style="padding: 16px; border-radius: 20px; background: rgba(36,129,204,0.1); border: 2px solid var(--tg-blue); cursor: pointer;" onclick="selectMode('submarine')">
+        <div style="font-size: 28px; margin-bottom: 6px;">🌊</div>
+        <h4 style="font-size: 16px; color: var(--tg-blue); margin-bottom: 4px;">Suvosti Qayig‘i</h4>
+        <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Har bir xatosiz javob kemani chuqurlikka sho‘ng‘itadi va yangi xazinalarni ochadi.</p>
+      </div>
+
+    </div>
+
+    <div style="display: flex; justify-content: flex-end;">
+      <button onclick="document.getElementById('gameModesModal').style.display='none'; scrollToQuizzes();" class="pill-button-primary" style="height: 44px; padding: 0 24px; font-size: 14px; border-radius: 9999px !important;">
+        Shu rejimda viktorinani boshlash →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Claude & MCP Modal (Integration Instructions) -->
+<div id="mcpModal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(6px); z-index: 100; align-items: center; justify-content: center; padding: 20px;">
+  <div class="bento-card bento-card-surface" style="width: 580px; max-width: 95vw; padding: 32px; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle); box-shadow: var(--shadow-modal);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 class="font-heading" style="font-size: 22px; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px;">
+        <span>🤖</span> Claude Desktop & MCP Ulanishi
+      </h3>
+      <button onclick="document.getElementById('mcpModal').style.display='none'" style="background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer;">✕</button>
+    </div>
+
+    <div style="background: rgba(46,166,58,0.12); color: #2EA63A; padding: 8px 16px; border-radius: 9999px; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px;">
+      <span>🟢</span> MCP Server Faol: http://127.0.0.1:8000/mcp/sse
+    </div>
+
+    <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 14px;">
+      Claude Desktop ilovangizdagi <code>claude_desktop_config.json</code> fayliga quyidagini qo‘shing:
+    </p>
+
+    <!-- Code Block with Copy -->
+    <div style="background: #0E1621; color: #F8FAFC; padding: 14px 18px; border-radius: 16px; font-family: monospace; font-size: 13px; margin-bottom: 18px; position: relative; border: 1px solid #242F3D;">
+      <pre style="margin: 0; overflow-x: auto;">{
+  "mcpServers": {
+    "eduself-teacher": {
+      "command": "python",
+      "args": ["-m", "mcp.server.sse", "http://127.0.0.1:8000/mcp/sse"]
+    }
+  }
+}</pre>
+      <button id="copyMcpBtn" onclick="copyMcpConfig()" style="position: absolute; top: 10px; right: 10px; background: #242F3D; color: #FFFFFF; border: 1px solid #334458; border-radius: 9999px; padding: 4px 12px; font-size: 11px; font-weight: 700; cursor: pointer;">
+        📋 Nusxa Olish
+      </button>
+    </div>
+
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">
+      <strong>Namuna Prompt:</strong> <em>"EduSelf'da 8-sinf fizika fanidan 'Optika qonunlari' mavzusida 5 ta savolli yangi viktorina yarat va jonli o'yinga tayyorla."</em>
+    </p>
+
+    <div style="display: flex; justify-content: flex-end;">
+      <button onclick="document.getElementById('mcpModal').style.display='none'" class="pill-button-secondary" style="height: 44px; padding: 0 24px; font-size: 14px; border-radius: 9999px !important;">
+        Tushunarli
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive Scripts for Dashboard Buttons -->
+<script>
+  let selectedGameMode = 'classic';
+
+  function scrollToQuizzes() {
+    const el = document.getElementById('quizzesSection');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      el.style.transition = 'box-shadow 0.4s';
+      el.style.boxShadow = '0 0 0 3px var(--tg-blue)';
+      setTimeout(() => {
+        el.style.boxShadow = 'var(--shadow-card)';
+      }, 1500);
+      if (window.eduAudio && typeof window.eduAudio.playTick === 'function') {
+        window.eduAudio.playTick();
+      }
+    }
+  }
+
+  function openGameModesModal() {
+    document.getElementById('gameModesModal').style.display = 'flex';
+    if (window.eduAudio && typeof window.eduAudio.playCoin === 'function') {
+      window.eduAudio.playCoin();
+    }
+  }
+
+  function selectMode(mode) {
+    selectedGameMode = mode;
+    document.getElementById('gameModesModal').style.display = 'none';
+    scrollToQuizzes();
+  }
+
+  function openMcpModal() {
+    document.getElementById('mcpModal').style.display = 'flex';
+    if (window.eduAudio && typeof window.eduAudio.playCoin === 'function') {
+      window.eduAudio.playCoin();
+    }
+  }
+
+  function copyMcpConfig() {
+    const jsonStr = `{\n  "mcpServers": {\n    "eduself-teacher": {\n      "command": "python",\n      "args": ["-m", "mcp.server.sse", "http://127.0.0.1:8000/mcp/sse"]\n    }\n  }\n}`;
+    navigator.clipboard.writeText(jsonStr).then(() => {
+      const btn = document.getElementById('copyMcpBtn');
+      btn.textContent = '✅ Nusxalandi!';
+      setTimeout(() => { btn.textContent = '📋 Nusxa Olish'; }, 2500);
+      if (window.eduAudio && typeof window.eduAudio.playCoin === 'function') {
+        window.eduAudio.playCoin();
+      }
+    });
+  }
+
+  async function startLiveRoom(quizId, btn) {
+    if (window.eduAudio && typeof window.eduAudio.playTick === 'function') {
+      window.eduAudio.playTick();
+    }
+
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳</span> Ochilmoqda...';
+    }
+
+    try {
+      const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+      const csrfToken = tokenMeta ? tokenMeta.getAttribute('content') : '';
+
+      const res = await fetch('/api/sessions/create/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ quiz_id: quizId, game_mode: selectedGameMode })
+      });
+      const data = await res.json();
+      if (res.ok && data.room_code) {
+        if (window.eduAudio && typeof window.eduAudio.playVictory === 'function') {
+          window.eduAudio.playVictory();
+        }
+        window.location.href = `/live/${data.room_code}/`;
+      } else {
+        alert(data.error || 'Jonli xona ochishda xatolik yuz berdi.');
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<span>🚀</span> Jonli Xona Ochish';
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Tarmoq xatosi yuz berdi. Qayta urinib ko\'ring.');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>🚀</span> Jonli Xona Ochish';
+      }
+    }
+  }
+  async function deleteQuiz(quizId, quizTitle, btn) {
+    if (!confirm(`Haqiqatan ham "${quizTitle}" viktorinasini o‘chirmoqchimisiz?`)) {
+      return;
+    }
+    const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = tokenMeta ? tokenMeta.getAttribute('content') : '';
+
+    if (btn) btn.disabled = true;
+
+    try {
+      const res = await fetch(`/api/quizzes/${quizId}/`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRFToken': csrfToken,
+        }
+      });
+
+      if (res.ok || res.status === 204) {
+        const row = btn.closest('.quiz-item-row');
+        if (row) {
+          row.style.transition = 'opacity 0.25s, transform 0.25s';
+          row.style.opacity = '0';
+          row.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            row.remove();
+            const remaining = document.querySelectorAll('.quiz-item-row').length;
+            const badge = document.getElementById('totalQuizzesCount');
+            if (badge) badge.textContent = remaining;
+          }, 250);
+        }
+        if (window.eduAudio && typeof window.eduAudio.playCoin === 'function') {
+          window.eduAudio.playCoin();
+        }
+      } else {
+        alert("Viktorinani o‘chirishda xatolik yuz berdi.");
+        if (btn) btn.disabled = false;
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Tarmoq xatosi yuz berdi.");
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  function filterQuizzes(query) {
+    const q = (query || '').trim().toLowerCase();
+    const rows = document.querySelectorAll('.quiz-item-row');
+    let visibleCount = 0;
+    rows.forEach(row => {
+      const title = row.dataset.title || '';
+      const subject = row.dataset.subject || '';
+      if (!q || title.includes(q) || subject.includes(q)) {
+        row.style.display = 'flex';
+        visibleCount++;
+      } else {
+        row.style.display = 'none';
+      }
+    });
+    const badge = document.getElementById('totalQuizzesCount');
+    if (badge) badge.textContent = visibleCount;
+  }
+</script>
+{% endblock %}

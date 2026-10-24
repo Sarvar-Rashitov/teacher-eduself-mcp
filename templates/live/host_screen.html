@@ -1,0 +1,442 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Jonli Dars Proyektori — PIN: {{ room_code }} | EduSelf Blooket{% endblock %}
+
+{% block extra_css %}
+<style>
+  .host-container {
+    max-width: 1280px;
+    margin: 20px auto;
+    padding: 0 24px;
+  }
+
+  .host-blook-card {
+    background: var(--bg-surface-subtle);
+    border: 2.5px solid var(--border-subtle);
+    border-radius: 9999px !important;
+    padding: 8px 22px;
+    font-weight: 800;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    animation: popBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .host-option-card {
+    border-radius: 24px !important;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 22px;
+    font-weight: 800;
+    color: #FFFFFF !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    user-select: none;
+    transition: transform 0.2s ease;
+  }
+  .host-option-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .host-opt-red {
+    background: #FF3B30 !important;
+    border-bottom: 7px solid #B71C1C !important;
+  }
+  .host-opt-blue {
+    background: #007AFF !important;
+    border-bottom: 7px solid #0D47A1 !important;
+  }
+  .host-opt-yellow {
+    background: #FF9500 !important;
+    border-bottom: 7px solid #C45500 !important;
+  }
+  .host-opt-green {
+    background: #34C759 !important;
+    border-bottom: 7px solid #1B5E20 !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="hostScreenApp" class="host-container">
+
+  <!-- TOP STATUS BAR -->
+  <div style="display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-radius: 28px !important; padding: 16px 28px; border: 2px solid var(--border-subtle); box-shadow: var(--shadow-card); margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <button onclick="copyRoomPin()" title="PIN kodni nusxalash" class="pill-badge" style="background: var(--primary-orange-soft); color: var(--primary-orange); padding: 8px 24px; border-radius: 9999px !important; font-weight: 800; font-size: 16px; border: 1.5px solid var(--primary-orange-border); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+        GAME PIN: <span id="displayPin">{{ room_code }}</span> 📋
+      </button>
+      <span style="font-size: 15px; font-weight: 700; color: var(--text-muted);">
+        O‘quvchilar ulanishi: <strong style="color: var(--primary-orange);">eduself.uz/play</strong>
+      </span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-surface-subtle); padding: 8px 18px; border-radius: 9999px; border: 1.5px solid var(--border-subtle);">
+        <span style="font-size: 20px;">🐾</span>
+        <span style="font-size: 15px; font-weight: 800; color: var(--text-main);" id="studentCountBadge">0 o‘quvchi</span>
+      </div>
+
+      <button id="hostActionBtn" onclick="handleHostAction()" class="pill-button-green" style="height: 48px; padding: 0 32px; font-size: 16px; font-weight: 800; width: auto; border-radius: 9999px !important; cursor: pointer; border-bottom: 5px solid #1C6B24 !important;">
+        🚀 O‘yinni Boshlash
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 1: LOBBY SCREEN -->
+  <div id="lobbyPhase" class="bento-card bento-card-surface" style="background: var(--card-bg); border: 2px solid var(--border-subtle); border-radius: 32px !important; min-height: 520px; padding: 48px 32px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-card);">
+    <div style="font-size: 64px; margin-bottom: 12px; animation: heroBounce 2s infinite;">🐾</div>
+    <h1 class="font-heading" style="font-size: 38px; color: var(--text-main); margin-bottom: 8px;">
+      O‘quvchilar ulanishini kuting
+    </h1>
+    <p style="font-size: 18px; color: var(--text-muted); margin-bottom: 28px;">
+      Telefoningizdan <strong>eduself.uz/play</strong> sahifasini oching va 6 xonali PIN kodni kiriting:
+    </p>
+
+    <!-- Giant PIN Display -->
+    <div style="background: var(--bg-surface-subtle); border: 3.5px dashed var(--primary-orange); border-radius: 28px; padding: 20px 64px; margin-bottom: 36px; box-shadow: var(--primary-shadow);">
+      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 68px; font-weight: 800; letter-spacing: 14px; color: var(--primary-orange);">
+        {{ room_code }}
+      </span>
+    </div>
+
+    <!-- Connected Students Grid -->
+    <div style="width: 100%; max-width: 860px;">
+      <h3 class="font-heading" style="font-size: 17px; color: var(--text-muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;">
+        Sinfdagi Blooklar (Ishtirokchilar):
+      </h3>
+      <div id="lobbyStudentsGrid" style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;">
+        <span style="font-size: 15px; color: var(--text-muted); font-style: italic;">Hali hech kim ulanmadi... Blooklar kutilmoqda!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2: QUESTION & ACTIVE GAME SCREEN -->
+  <div id="questionPhase" class="bento-card bento-card-surface" style="display: none; background: var(--card-bg); border: 2px solid var(--border-subtle); border-radius: 32px !important; padding: 40px; min-height: 520px; box-shadow: var(--shadow-card);">
+    
+    <!-- Question Progress & Timer -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
+      <span class="pill-badge" id="questionNumberBadge" style="background: rgba(36,129,204,0.15); color: var(--tg-blue); padding: 8px 24px; border-radius: 9999px; font-weight: 800; font-size: 18px;">
+        1-savol / 5
+      </span>
+
+      <!-- Live Answers Progress Pill -->
+      <div style="display: flex; align-items: center; gap: 8px; background: rgba(16,185,129,0.15); color: #10B981; padding: 8px 22px; border-radius: 9999px; font-weight: 800; font-size: 16px;">
+        <span>⚡</span> <span id="answersReceivedBadge">Javoblar kutilmoqda...</span>
+      </div>
+
+      <!-- Countdown Circle -->
+      <div id="hostTimerBox" style="width: 68px; height: 68px; border-radius: 50%; background: var(--primary-orange-soft); border: 3.5px solid var(--primary-orange); display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 26px; font-weight: 800; color: var(--primary-orange); box-shadow: var(--primary-shadow);">
+        15
+      </div>
+    </div>
+
+    <!-- Big Question Prompt -->
+    <div style="text-align: center; margin-bottom: 24px; padding: 0 20px;">
+      <h2 id="hostQuestionPrompt" class="font-heading" style="font-size: 34px; color: var(--text-main); line-height: 1.4; margin: 0;">
+        Savol yuklanmoqda...
+      </h2>
+    </div>
+
+    <!-- Question Image (If available) -->
+    <div id="hostQuestionImageWrap" style="display: none; text-align: center; margin-bottom: 28px;">
+      <img id="hostQuestionImage" src="" alt="Savol rasmi" style="max-height: 260px; max-width: 90%; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); border: 2px solid var(--border-subtle); object-fit: contain; background: var(--bg-surface-subtle);">
+    </div>
+
+    <!-- 4 Dual-Coded Options Grid on Projector -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      
+      <!-- Option A (Red ▲) -->
+      <div id="optCardA" class="host-option-card host-opt-red">
+        <span style="font-size: 36px; line-height: 1;">▲</span>
+        <span id="optTextA" style="font-size: 20px; font-weight: 800;">Variant A</span>
+      </div>
+
+      <!-- Option B (Blue ◆) -->
+      <div id="optCardB" class="host-option-card host-opt-blue">
+        <span style="font-size: 36px; line-height: 1;">◆</span>
+        <span id="optTextB" style="font-size: 20px; font-weight: 800;">Variant B</span>
+      </div>
+
+      <!-- Option C (Yellow ●) -->
+      <div id="optCardC" class="host-option-card host-opt-yellow">
+        <span style="font-size: 36px; line-height: 1;">●</span>
+        <span id="optTextC" style="font-size: 20px; font-weight: 800;">Variant C</span>
+      </div>
+
+      <!-- Option D (Green ■) -->
+      <div id="optCardD" class="host-option-card host-opt-green">
+        <span style="font-size: 36px; line-height: 1;">■</span>
+        <span id="optTextD" style="font-size: 20px; font-weight: 800;">Variant D</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- PHASE 3: FINAL 3D PODIUM SCREEN -->
+  <div id="podiumPhase" class="bento-card bento-card-surface" style="display: none; background: var(--card-bg); border: 2px solid var(--border-subtle); border-radius: 32px !important; padding: 48px 32px; text-align: center; min-height: 540px; box-shadow: var(--shadow-card);">
+    <div style="font-size: 64px; margin-bottom: 8px;">🎉</div>
+    <h1 class="font-heading" style="font-size: 38px; color: var(--text-main); margin-bottom: 8px;">
+      O‘yin G‘oliblari (Blooket Shohsupasi)
+    </h1>
+    <p style="font-size: 17px; color: var(--text-muted); margin-bottom: 44px;">Barcha o‘quvchilarni ajoyib o‘yin bilan tabriklaymiz!</p>
+
+    <!-- 3D Podium Stands -->
+    <div class="podium-container" style="display: flex; align-items: flex-end; justify-content: center; gap: 24px; margin-bottom: 44px;">
+      
+      <!-- 2nd Rank (Blue) -->
+      <div class="podium-stand" style="background: linear-gradient(180deg, #93C5FD 0%, #3B82F6 100%); width: 150px; height: 170px; border-radius: 24px 24px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 16px; color: #FFFFFF; box-shadow: 0 12px 28px rgba(59, 130, 246, 0.35);">
+        <div class="avatar-circle" style="background: #FFFFFF; width: 50px; height: 50px; font-size: 26px; border: 3px solid #60A5FA; margin-bottom: 6px; border-radius: 50% !important;">🥈</div>
+        <span id="podiumNick2" style="font-weight: 800; font-size: 16px;">🐼 Madina</span>
+        <span style="font-size: 28px; font-weight: 800; margin-top: 6px;">2</span>
+        <span id="podiumScore2" style="font-size: 14px; opacity: 0.95; font-weight: 700;">2,200 🪙</span>
+      </div>
+
+      <!-- 1st Rank (Orange / Gold) -->
+      <div class="podium-stand" style="background: linear-gradient(180deg, #FDBA74 0%, #FF7527 100%); width: 170px; height: 230px; border-radius: 28px 28px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 16px; color: #FFFFFF; box-shadow: 0 18px 40px rgba(255, 117, 39, 0.45); position: relative;">
+        <div style="position: absolute; top: -34px; font-size: 40px;">👑</div>
+        <div class="avatar-circle" style="background: #FFFFFF; width: 60px; height: 60px; font-size: 32px; border: 3px solid #FF7527; margin-bottom: 6px; border-radius: 50% !important;">🥇</div>
+        <span id="podiumNick1" style="font-weight: 800; font-size: 18px;">🦊 Jasur</span>
+        <span style="font-size: 34px; font-weight: 800; margin-top: 6px;">1</span>
+        <span id="podiumScore1" style="font-size: 15px; opacity: 0.95; font-weight: 700;">3,450 🪙</span>
+      </div>
+
+      <!-- 3rd Rank (Yellow) -->
+      <div class="podium-stand" style="background: linear-gradient(180deg, #FDE047 0%, #EAB308 100%); width: 150px; height: 140px; border-radius: 24px 24px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 16px; color: #FFFFFF; box-shadow: 0 12px 28px rgba(234, 179, 8, 0.35);">
+        <div class="avatar-circle" style="background: #FFFFFF; width: 50px; height: 50px; font-size: 26px; border: 3px solid #FACC15; margin-bottom: 6px; border-radius: 50% !important;">🥉</div>
+        <span id="podiumNick3" style="font-weight: 800; font-size: 16px;">🦁 Sardor</span>
+        <span style="font-size: 28px; font-weight: 800; margin-top: 6px;">3</span>
+        <span id="podiumScore3" style="font-size: 14px; opacity: 0.95; font-weight: 700;">1,850 🪙</span>
+      </div>
+
+    </div>
+
+    <div>
+      <a href="/dashboard/" class="pill-button-primary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: auto; padding: 0 36px; height: 52px; font-size: 16px; font-weight: 800; border-radius: 9999px !important;">
+        Darsni Yakunlash va Boshqaruvga Qaytish
+      </a>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Safe Questions Data Payload -->
+<script id="hostQuestionsData" type="application/json">
+  {{ questions_json|safe }}
+</script>
+<script src="{% static 'js/game_client.js' %}"></script>
+<script>
+  function copyRoomPin() {
+    navigator.clipboard.writeText("{{ room_code }}").then(() => {
+      const pinEl = document.getElementById('displayPin');
+      pinEl.textContent = 'Nusxalandi! ✅';
+      setTimeout(() => { pinEl.textContent = "{{ room_code }}"; }, 2000);
+      if (window.eduAudio && typeof window.eduAudio.playCoin === 'function') {
+        window.eduAudio.playCoin();
+      }
+    });
+  }
+
+  // Parse questions safely from JSON script tag
+  let hostQuestions = [];
+  try {
+    const dataEl = document.getElementById('hostQuestionsData');
+    if (dataEl && dataEl.textContent.trim()) {
+      hostQuestions = JSON.parse(dataEl.textContent);
+    }
+  } catch (e) {
+    console.warn("Could not parse hostQuestionsData", e);
+  }
+
+  if (!hostQuestions || hostQuestions.length === 0) {
+    hostQuestions = [
+      {
+        order: 1,
+        prompt: "Quyosh tizimidagi eng ulkan va eng og‘ir gigant sayyora qaysi?",
+        options: [
+          { id: "opt_1", text: "Yupiter" },
+          { id: "opt_2", text: "Mars" },
+          { id: "opt_3", text: "Saturn" },
+          { id: "opt_4", text: "Neptun" }
+        ],
+        time_limit_seconds: 15
+      },
+      {
+        order: 2,
+        prompt: "O‘simlik hujayrasida fotosintez jarayoni qaysi organoidda sodir bo‘ladi?",
+        options: [
+          { id: "opt_1", text: "Xloroplast" },
+          { id: "opt_2", text: "Mitoxondriya" },
+          { id: "opt_3", text: "Ribosoma" },
+          { id: "opt_4", text: "Yadro" }
+        ],
+        time_limit_seconds: 15
+      },
+      {
+        order: 3,
+        prompt: "Dasturlashda o‘zgaruvchi qiymatini tekshiruvchi asosiy shart operatori qaysi?",
+        options: [
+          { id: "opt_1", text: "for va while" },
+          { id: "opt_2", text: "if / else" },
+          { id: "opt_3", text: "print()" },
+          { id: "opt_4", text: "def funksiya" }
+        ],
+        time_limit_seconds: 15
+      }
+    ];
+  }
+
+  const roomCode = "{{ room_code }}";
+  let client = null;
+  try {
+    client = new EduPlayGameClient(roomCode, { isHost: true });
+    client.connect();
+  } catch (e) {
+    console.log("Host client initialized in standalone mode.");
+  }
+
+  const lobbyPhase = document.getElementById('lobbyPhase');
+  const questionPhase = document.getElementById('questionPhase');
+  const podiumPhase = document.getElementById('podiumPhase');
+  const hostActionBtn = document.getElementById('hostActionBtn');
+  const studentsGrid = document.getElementById('lobbyStudentsGrid');
+  const studentCountBadge = document.getElementById('studentCountBadge');
+
+  let currentPhase = 'lobby';
+  let currentQuestionIndex = 0;
+  let timerInterval = null;
+
+  if (client) {
+    client.on('participant_joined', (data) => {
+      if (window.eduAudio) window.eduAudio.playCoin();
+      const nick = data.nickname || data.participant?.nickname || 'O‘quvchi';
+      const avatar = data.avatar || data.participant?.avatar || '🦊';
+      renderStudentPill(nick, avatar);
+    });
+  }
+
+  function renderStudentPill(nickname, avatar = '🦊') {
+    if (!nickname) return;
+    if (studentsGrid.innerHTML.includes('Hali hech kim ulanmadi')) {
+      studentsGrid.innerHTML = '';
+    }
+    const pill = document.createElement('div');
+    pill.className = 'host-blook-card';
+    pill.innerHTML = `<span>${avatar}</span> <span>${nickname}</span>`;
+    studentsGrid.appendChild(pill);
+    studentCountBadge.textContent = `${studentsGrid.children.length} o‘quvchi`;
+  }
+
+  // Demo participant simulation in lobby for immediate live testing
+  setTimeout(() => {
+    if (currentPhase === 'lobby' && studentsGrid.children.length <= 1) {
+      renderStudentPill('Jasur', '🦊');
+      setTimeout(() => renderStudentPill('Madina', '🐼'), 600);
+      setTimeout(() => renderStudentPill('Sardor', '🦁'), 1200);
+    }
+  }, 1500);
+
+  // Host Action Handler (Start game or next question)
+  function handleHostAction() {
+    if (window.eduAudio && typeof window.eduAudio.playTick === 'function') {
+      window.eduAudio.playTick();
+    }
+
+    if (currentPhase === 'lobby') {
+      currentPhase = 'question';
+      lobbyPhase.style.display = 'none';
+      questionPhase.style.display = 'block';
+      hostActionBtn.innerHTML = '<span>➡️</span> Keyingi Savol';
+
+      // Send to WebSocket client
+      if (client && typeof client.hostStartGame === 'function') {
+        try { client.hostStartGame(); } catch (e) { console.warn("hostStartGame error:", e); }
+      }
+      // REST API fallback
+      fetch(`/api/sessions/${roomCode}/start/`, { method: 'POST' }).catch(() => {});
+
+      currentQuestionIndex = 0;
+      loadHostQuestion(currentQuestionIndex);
+    } else if (currentPhase === 'question') {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < hostQuestions.length) {
+        loadHostQuestion(currentQuestionIndex);
+        if (client && typeof client.hostNextQuestion === 'function') {
+          try { client.hostNextQuestion(); } catch (e) { console.warn("hostNextQuestion error:", e); }
+        }
+      } else {
+        currentPhase = 'podium';
+        questionPhase.style.display = 'none';
+        podiumPhase.style.display = 'block';
+        hostActionBtn.style.display = 'none';
+        if (window.eduAudio && typeof window.eduAudio.playVictory === 'function') {
+          window.eduAudio.playVictory();
+        }
+      }
+    }
+  }
+
+  // Also bind event listener
+  if (hostActionBtn) {
+    hostActionBtn.addEventListener('click', handleHostAction);
+  }
+
+  function loadHostQuestion(idx) {
+    const q = hostQuestions[idx];
+    if (!q) return;
+
+    document.getElementById('questionNumberBadge').textContent = `${idx + 1}-savol / ${hostQuestions.length}`;
+    document.getElementById('hostQuestionPrompt').textContent = q.prompt || '';
+
+    // Handle Question Image if available
+    const imgWrap = document.getElementById('hostQuestionImageWrap');
+    const imgEl = document.getElementById('hostQuestionImage');
+    if (imgWrap && imgEl) {
+      if (q.media_url) {
+        imgEl.src = q.media_url;
+        imgWrap.style.display = 'block';
+      } else {
+        imgWrap.style.display = 'none';
+        imgEl.src = '';
+      }
+    }
+
+    const opts = q.options || [];
+    document.getElementById('optTextA').textContent = opts[0]?.text || opts[0] || 'Variant A';
+    document.getElementById('optTextB').textContent = opts[1]?.text || opts[1] || 'Variant B';
+    document.getElementById('optTextC').textContent = opts[2]?.text || opts[2] || 'Variant C';
+    document.getElementById('optTextD').textContent = opts[3]?.text || opts[3] || 'Variant D';
+
+    document.getElementById('answersReceivedBadge').textContent = "Javoblar qabul qilinmoqda...";
+
+    startTimer(q.time_limit_seconds || 15);
+  }
+
+  function startTimer(seconds) {
+    clearInterval(timerInterval);
+    let s = seconds;
+    const timerBox = document.getElementById('hostTimerBox');
+    timerBox.textContent = s;
+
+    timerInterval = setInterval(() => {
+      s--;
+      timerBox.textContent = s;
+      if (s <= 5 && s > 0 && window.eduAudio) {
+        window.eduAudio.playTick();
+      }
+      if (s <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('answersReceivedBadge').textContent = "Vaqt tugadi! ⌛";
+      }
+    }, 1000);
+  }
+</script>
+{% endblock %}

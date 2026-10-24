@@ -1,0 +1,8 @@
+from django.apps import AppConfig
+
+
+class AiGatewayConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "apps.ai_gateway"
+    label = "ai_gateway"
+    verbose_name = "EduSelf AI Gateway"

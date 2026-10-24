@@ -1,0 +1,1017 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Blooket O‘yinchi Maydoni — EduSelf EduPlay 3D{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ==========================================================================
+     BLOOKET AUTHENTIC GAMIFICATION STYLES
+     3D Push-down tactile buttons, bouncy blooks, and treasure chests
+     ========================================================================== */
+
+  .blooket-container {
+    max-width: 680px;
+    margin: 16px auto;
+    padding: 0 16px;
+  }
+
+  /* Blook Avatar Selector */
+  .blooks-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 520px) {
+    .blooks-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+  }
+
+  .blook-card {
+    background: var(--bg-surface-subtle);
+    border: 3px solid var(--border-subtle);
+    border-radius: 20px !important;
+    padding: 12px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+    box-shadow: 0 4px 0 var(--border-subtle);
+  }
+  .blook-card:hover {
+    transform: translateY(-4px) scale(1.05);
+    border-color: var(--primary-orange);
+    box-shadow: 0 8px 0 var(--primary-orange);
+  }
+  .blook-card.selected {
+    background: var(--primary-orange-soft);
+    border-color: var(--primary-orange);
+    transform: translateY(-2px) scale(1.08);
+    box-shadow: 0 6px 0 var(--primary-orange), 0 0 16px rgba(255, 106, 0, 0.35);
+  }
+  .blook-emoji {
+    font-size: 38px;
+    display: block;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  }
+  .blook-name {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-main);
+  }
+
+  /* 3D Tactile Blooket Answer Cards */
+  .blooket-answers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 520px) {
+    .blooket-answers-grid {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+  }
+
+  .blooket-btn {
+    border: none;
+    border-radius: 24px !important;
+    min-height: 115px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #FFFFFF !important;
+    text-align: center;
+    user-select: none;
+    position: relative;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.15s ease;
+  }
+
+  .blooket-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    filter: brightness(1.06);
+  }
+  .blooket-btn:active:not(:disabled) {
+    transform: translateY(5px) !important;
+  }
+
+  /* 4 Authentic Blooket Color Schemes with Chunky 3D Bevels */
+  .btn-blooket-red {
+    background: #FF3B30 !important;
+    border-bottom: 8px solid #B71C1C !important;
+    box-shadow: 0 10px 24px rgba(255, 59, 48, 0.35);
+  }
+  .btn-blooket-red:active:not(:disabled) {
+    border-bottom-width: 3px !important;
+    box-shadow: 0 4px 10px rgba(255, 59, 48, 0.35);
+  }
+
+  .btn-blooket-blue {
+    background: #007AFF !important;
+    border-bottom: 8px solid #0D47A1 !important;
+    box-shadow: 0 10px 24px rgba(0, 122, 255, 0.35);
+  }
+  .btn-blooket-blue:active:not(:disabled) {
+    border-bottom-width: 3px !important;
+    box-shadow: 0 4px 10px rgba(0, 122, 255, 0.35);
+  }
+
+  .btn-blooket-yellow {
+    background: #FF9500 !important;
+    border-bottom: 8px solid #C45500 !important;
+    box-shadow: 0 10px 24px rgba(255, 149, 0, 0.35);
+  }
+  .btn-blooket-yellow:active:not(:disabled) {
+    border-bottom-width: 3px !important;
+    box-shadow: 0 4px 10px rgba(255, 149, 0, 0.35);
+  }
+
+  .btn-blooket-green {
+    background: #34C759 !important;
+    border-bottom: 8px solid #1B5E20 !important;
+    box-shadow: 0 10px 24px rgba(52, 199, 89, 0.35);
+  }
+  .btn-blooket-green:active:not(:disabled) {
+    border-bottom-width: 3px !important;
+    box-shadow: 0 4px 10px rgba(52, 199, 89, 0.35);
+  }
+
+  .btn-shape-icon {
+    font-size: 32px;
+    line-height: 1;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+  }
+  .btn-text {
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+  .btn-hotkey {
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 9999px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #FFFFFF;
+  }
+
+  /* Timer Bar */
+  .timer-track {
+    width: 100%;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .timer-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #34C759, #FF9500);
+    border-radius: 9999px;
+    transition: width 1s linear, background-color 0.3s ease;
+  }
+
+  /* Blooket Mystery Treasure Chests */
+  .chests-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .chest-card {
+    background: var(--bg-surface-subtle);
+    border: 3px solid #F59E0B;
+    border-bottom: 8px solid #B45309;
+    border-radius: 24px !important;
+    padding: 20px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+    box-shadow: 0 10px 24px rgba(245, 158, 11, 0.25);
+  }
+  .chest-card:hover {
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 16px 32px rgba(245, 158, 11, 0.4);
+  }
+  .chest-card:active {
+    transform: translateY(4px);
+    border-bottom-width: 3px;
+  }
+  .chest-icon {
+    font-size: 54px;
+    display: block;
+    margin-bottom: 8px;
+    animation: chestWobble 2.5s infinite ease-in-out;
+  }
+  @keyframes chestWobble {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(-8deg); }
+    40% { transform: rotate(8deg); }
+    60% { transform: rotate(-5deg); }
+    80% { transform: rotate(5deg); }
+  }
+
+  .chest-opened {
+    background: #FFFBEB !important;
+    border-color: #F59E0B !important;
+    animation: chestPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes chestPop {
+    0% { transform: scale(0.85); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+
+  /* Animations */
+  @keyframes popBounce {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+  .animate-pop {
+    animation: popBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes screenShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+  }
+  .animate-shake {
+    animation: screenShake 0.4s ease-in-out;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="studentGameApp" class="blooket-container">
+
+  <!-- =========================================================================
+       PHASE 1: BLOOKET JOIN & AVATAR PICKER SCREEN
+       ========================================================================= -->
+  <div id="studentJoinCard" class="bento-card bento-card-surface animate-pop" style="background: var(--card-bg); border: 2px solid var(--border-subtle); border-radius: 32px !important; padding: 36px 28px; text-align: center; box-shadow: var(--shadow-card);">
+    
+    <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 8px;">
+      <span style="font-size: 38px; animation: heroBounce 2s infinite;">🐾</span>
+      <h2 class="font-heading" style="font-size: 28px; color: var(--text-main); margin: 0;">Blooket EduPlay</h2>
+    </div>
+    <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 24px;">O‘zingizga yoqqan <strong>Blook</strong> qahramonini tanlang va o‘yinga kiring!</p>
+
+    <!-- Blooks Avatar Grid -->
+    <div style="text-align: left; margin-bottom: 8px;">
+      <label style="font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Qahramoningizni tanlang:</label>
+    </div>
+    
+    <div class="blooks-grid" id="blooksGrid">
+      <div class="blook-card selected" data-blook="🦊" data-name="Tulki">
+        <span class="blook-emoji">🦊</span>
+        <span class="blook-name">Aqlvoy</span>
+      </div>
+      <div class="blook-card" data-blook="🐼" data-name="Panda">
+        <span class="blook-emoji">🐼</span>
+        <span class="blook-name">Zukko</span>
+      </div>
+      <div class="blook-card" data-blook="🦁" data-name="Sher">
+        <span class="blook-emoji">🦁</span>
+        <span class="blook-name">Jasur</span>
+      </div>
+      <div class="blook-card" data-blook="🐯" data-name="Yo‘lbars">
+        <span class="blook-emoji">🐯</span>
+        <span class="blook-name">Epchil</span>
+      </div>
+      <div class="blook-card" data-blook="🦄" data-name="Birshox">
+        <span class="blook-emoji">🦄</span>
+        <span class="blook-name">Sehrli</span>
+      </div>
+      <div class="blook-card" data-blook="🐲" data-name="Ajdar">
+        <span class="blook-emoji">🐲</span>
+        <span class="blook-name">Olovli</span>
+      </div>
+      <div class="blook-card" data-blook="🐸" data-name="Qurbaqa">
+        <span class="blook-emoji">🐸</span>
+        <span class="blook-name">Sho‘x</span>
+      </div>
+      <div class="blook-card" data-blook="🐧" data-name="Pingvin">
+        <span class="blook-emoji">🐧</span>
+        <span class="blook-name">Quvnoq</span>
+      </div>
+      <div class="blook-card" data-blook="🤖" data-name="Robot">
+        <span class="blook-emoji">🤖</span>
+        <span class="blook-name">Kiber</span>
+      </div>
+      <div class="blook-card" data-blook="🦉" data-name="Boyo‘g‘li">
+        <span class="blook-emoji">🦉</span>
+        <span class="blook-name">Dono</span>
+      </div>
+      <div class="blook-card" data-blook="🚀" data-name="Koinotchi">
+        <span class="blook-emoji">🚀</span>
+        <span class="blook-name">Fazo</span>
+      </div>
+      <div class="blook-card" data-blook="🐻" data-name="Ayiq">
+        <span class="blook-emoji">🐻</span>
+        <span class="blook-name">Botir</span>
+      </div>
+    </div>
+
+    <!-- Inputs -->
+    <div style="margin-bottom: 14px;">
+      <input type="text" id="inputRoomPin" maxlength="10" placeholder="6 xonali PIN (masalan: 489201)" value="{{ room_code|default:'' }}" style="width: 100%; height: 54px; border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 2.5px solid var(--border-subtle); text-align: center; font-size: 22px; font-weight: 800; letter-spacing: 4px; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; transition: border-color 0.2s;">
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <input type="text" id="inputNickname" maxlength="20" placeholder="Ismingiz yoki taxallusingiz" style="width: 100%; height: 52px; border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 2.5px solid var(--border-subtle); text-align: center; font-size: 16px; font-weight: 700; font-family: inherit; outline: none; transition: border-color 0.2s;">
+    </div>
+
+    <button id="btnJoinGame" class="pill-button-green" style="height: 56px; font-size: 18px; font-weight: 800; border-radius: 9999px !important; cursor: pointer; width: 100%; border-bottom: 6px solid #1C6B24 !important; box-shadow: 0 8px 24px rgba(46, 166, 58, 0.4); display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <span>O‘yinga Kirish!</span> <span>🚀</span>
+    </button>
+  </div>
+
+  <!-- =========================================================================
+       PHASE 2: ACTIVE BLOOKET GAMEPLAY SCREEN
+       ========================================================================= -->
+  <div id="studentGameplayCard" style="display: none;" class="animate-pop">
+    
+    <!-- Blooket Top Game Bar (Streak, Timer, Coins) -->
+    <div style="display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border: 2px solid var(--border-subtle); border-radius: 9999px !important; padding: 10px 20px; margin-bottom: 14px; box-shadow: var(--shadow-card);">
+      
+      <!-- Player Avatar & Streak -->
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span id="playerAvatarDisplay" style="font-size: 26px;">🦊</span>
+        <span id="playerNameDisplay" style="font-weight: 800; font-size: 14px; color: var(--text-main);">O‘quvchi</span>
+        <span class="pill-badge" id="playerStreakBadge" style="background: rgba(239, 68, 68, 0.15); color: #EF4444; font-weight: 800; font-size: 13px; padding: 4px 10px; border-radius: 9999px;">
+          🔥 <span id="playerStreakNum">0</span>x
+        </span>
+      </div>
+
+      <!-- Timer Count -->
+      <div id="gameTimerBadge" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800; color: var(--primary-orange); display: flex; align-items: center; gap: 4px;">
+        <span>⏱️</span> <span id="playerTimerSeconds">15</span>s
+      </div>
+
+      <!-- Player Gold / Coins -->
+      <div style="display: flex; align-items: center; gap: 6px; background: rgba(245, 158, 11, 0.15); border: 1.5px solid rgba(245, 158, 11, 0.35); padding: 5px 14px; border-radius: 9999px;">
+        <span style="font-size: 18px;">🪙</span>
+        <span id="playerCoins" style="font-weight: 800; color: #D97706; font-size: 16px;">0</span>
+      </div>
+    </div>
+
+    <!-- Animated Countdown Track -->
+    <div class="timer-track">
+      <div id="timerBarFill" class="timer-fill"></div>
+    </div>
+
+    <!-- Question Prompt Card -->
+    <div class="bento-card bento-card-surface" style="background: var(--card-bg); border: 2px solid var(--border-subtle); border-radius: 28px !important; padding: 28px 22px; text-align: center; margin-bottom: 18px; box-shadow: var(--shadow-card);">
+      <span class="pill-badge" id="playerQIndex" style="background: rgba(36,129,204,0.15); color: var(--tg-blue); padding: 5px 16px; border-radius: 9999px; font-size: 13px; font-weight: 800; display: inline-block; margin-bottom: 12px;">
+        1-savol / 5
+      </span>
+      <h3 id="playerQPrompt" class="font-heading" style="font-size: 22px; color: var(--text-main); line-height: 1.4; margin: 0;">
+        Savol yuklanmoqda...
+      </h3>
+      <div id="playerQImageWrap" style="display: none; text-align: center; margin-top: 14px;">
+        <img id="playerQImage" src="" alt="Savol rasmi" style="max-height: 180px; max-width: 100%; border-radius: 16px; object-fit: contain; box-shadow: 0 4px 14px rgba(0,0,0,0.15); border: 1.5px solid var(--border-subtle);">
+      </div>
+    </div>
+
+    <!-- 4 TACTILE DUAL-CODED BLOOKET BUTTONS (Red Triangle, Blue Diamond, Yellow Circle, Green Square) -->
+    <div id="optionsContainer" class="blooket-answers-grid">
+      
+      <!-- Option A: Red Triangle -->
+      <button class="blooket-btn btn-blooket-red answer-option-btn" data-choice="opt_1" data-index="0" id="btnOptA">
+        <span class="btn-hotkey">1 (A)</span>
+        <span class="btn-shape-icon">▲</span>
+        <span class="btn-text" id="optTextA">Variant A</span>
+      </button>
+
+      <!-- Option B: Blue Diamond -->
+      <button class="blooket-btn btn-blooket-blue answer-option-btn" data-choice="opt_2" data-index="1" id="btnOptB">
+        <span class="btn-hotkey">2 (B)</span>
+        <span class="btn-shape-icon">◆</span>
+        <span class="btn-text" id="optTextB">Variant B</span>
+      </button>
+
+      <!-- Option C: Yellow Circle -->
+      <button class="blooket-btn btn-blooket-yellow answer-option-btn" data-choice="opt_3" data-index="2" id="btnOptC">
+        <span class="btn-hotkey">3 (C)</span>
+        <span class="btn-shape-icon">●</span>
+        <span class="btn-text" id="optTextC">Variant C</span>
+      </button>
+
+      <!-- Option D: Green Square -->
+      <button class="blooket-btn btn-blooket-green answer-option-btn" data-choice="opt_4" data-index="3" id="btnOptD">
+        <span class="btn-hotkey">4 (D)</span>
+        <span class="btn-shape-icon">■</span>
+        <span class="btn-text" id="optTextD">Variant D</span>
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- =========================================================================
+       PHASE 3: BLOOKET "GOLD QUEST" MYSTERY CHESTS (CORRECT ANSWER REWARD)
+       ========================================================================= -->
+  <div id="chestRewardCard" style="display: none;" class="bento-card bento-card-surface animate-pop">
+    <div style="background: var(--card-bg); border: 2.5px solid #F59E0B; border-radius: 32px !important; padding: 32px 24px; text-align: center; box-shadow: 0 12px 32px rgba(245, 158, 11, 0.25);">
+      
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.15); color: #10B981; padding: 6px 20px; border-radius: 9999px; font-weight: 800; font-size: 15px; margin-bottom: 12px;">
+        <span>🎉</span> <span>To‘g‘ri Javob!</span>
+      </div>
+
+      <h2 class="font-heading" style="font-size: 26px; color: var(--text-main); margin-bottom: 6px;">
+        Oltin Sandiqni Tanlang! 🎁
+      </h2>
+      <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 20px;">
+        Sandiqlardan birini bosing va o‘z mukofotingizni oching:
+      </p>
+
+      <!-- 3 Mystery Treasure Chests -->
+      <div class="chests-container" id="chestsContainer">
+        <div class="chest-card" data-chest="1">
+          <span class="chest-icon">🎁</span>
+          <span style="font-weight: 800; font-size: 14px; color: var(--text-main);">1-Sandiq</span>
+        </div>
+        <div class="chest-card" data-chest="2">
+          <span class="chest-icon">🎁</span>
+          <span style="font-weight: 800; font-size: 14px; color: var(--text-main);">2-Sandiq</span>
+        </div>
+        <div class="chest-card" data-chest="3">
+          <span class="chest-icon">🎁</span>
+          <span style="font-weight: 800; font-size: 14px; color: var(--text-main);">3-Sandiq</span>
+        </div>
+      </div>
+
+      <!-- Chest Reveal Message (After click) -->
+      <div id="chestRewardBanner" style="display: none; background: #FFFBEB; border: 2px dashed #F59E0B; border-radius: 20px !important; padding: 16px; margin-bottom: 20px; animation: popBounce 0.3s ease;">
+        <div id="rewardEmoji" style="font-size: 36px; margin-bottom: 4px;">🪙</div>
+        <h3 id="rewardTitle" style="font-size: 20px; font-weight: 800; color: #B45309; margin: 0;">+1,000 Oltin!</h3>
+        <p id="rewardDesc" style="font-size: 13px; color: #92400E; margin: 4px 0 0 0;">Hisobingizga qo‘shildi va streak oshdi!</p>
+      </div>
+
+      <button id="btnNextQuestion" class="pill-button-primary" style="display: none; height: 50px; font-size: 16px; width: 100%; border-radius: 9999px !important; cursor: pointer;">
+        Keyingi Savolga O‘tish ➡️
+      </button>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PHASE 4: WRONG ANSWER FEEDBACK SCREEN
+       ========================================================================= -->
+  <div id="wrongFeedbackCard" style="display: none;" class="bento-card bento-card-surface animate-pop">
+    <div style="background: var(--card-bg); border: 2.5px solid #EF4444; border-radius: 32px !important; padding: 36px 24px; text-align: center; box-shadow: 0 12px 32px rgba(239, 68, 68, 0.2);">
+      
+      <div style="font-size: 54px; margin-bottom: 8px;">💭</div>
+      <h2 class="font-heading" style="font-size: 26px; color: #EF4444; margin-bottom: 6px;">
+        Afsus, Noto‘g‘ri! ❌
+      </h2>
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
+        Xato qilish o‘rganishning bir qismidir! To‘g‘ri javobni eslab qoling:
+      </p>
+
+      <div style="background: rgba(16, 185, 129, 0.12); border: 2px solid #10B981; border-radius: 20px !important; padding: 14px 20px; margin-bottom: 24px; display: inline-block;">
+        <span style="font-size: 13px; font-weight: 700; color: #047857; display: block; margin-bottom: 2px;">TO‘G‘RI JAVOB:</span>
+        <strong id="correctAnswerDisplay" style="font-size: 18px; color: #065F46;">Xloroplast</strong>
+      </div>
+
+      <br>
+      <button id="btnContinueAfterWrong" class="pill-button-primary" style="height: 50px; font-size: 16px; width: 100%; border-radius: 9999px !important; cursor: pointer;">
+        Davom Etish ➡️
+      </button>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PHASE 5: FINAL GAME OVER & VICTORY SCREEN
+       ========================================================================= -->
+  <div id="gameOverCard" style="display: none;" class="bento-card bento-card-surface animate-pop">
+    <div style="background: var(--card-bg); border: 2.5px solid var(--border-subtle); border-radius: 32px !important; padding: 40px 24px; text-align: center; box-shadow: var(--shadow-card);">
+      
+      <div style="position: relative; display: inline-block; margin-bottom: 12px;">
+        <span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 32px;">👑</span>
+        <span id="finalBlookDisplay" style="font-size: 72px; display: block; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));">🦊</span>
+      </div>
+
+      <h1 class="font-heading" style="font-size: 30px; color: var(--text-main); margin-bottom: 6px;">
+        O‘yin Yakunlandi! 🎉
+      </h1>
+      <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 28px;">
+        Ajoyib ishtirok! Sizning Blooket natijangiz:
+      </p>
+
+      <!-- Stats Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 32px;">
+        <div style="background: var(--bg-surface-subtle); border: 1.5px solid var(--border-subtle); border-radius: 20px !important; padding: 14px 8px;">
+          <span style="font-size: 22px; display: block; margin-bottom: 2px;">🪙</span>
+          <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block;">JAMI OLTIN</span>
+          <strong id="finalGoldStat" style="font-size: 18px; color: #D97706;">0</strong>
+        </div>
+
+        <div style="background: var(--bg-surface-subtle); border: 1.5px solid var(--border-subtle); border-radius: 20px !important; padding: 14px 8px;">
+          <span style="font-size: 22px; display: block; margin-bottom: 2px;">🎯</span>
+          <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block;">ANIQLIK</span>
+          <strong id="finalAccuracyStat" style="font-size: 18px; color: #10B981;">100%</strong>
+        </div>
+
+        <div style="background: var(--bg-surface-subtle); border: 1.5px solid var(--border-subtle); border-radius: 20px !important; padding: 14px 8px;">
+          <span style="font-size: 22px; display: block; margin-bottom: 2px;">🔥</span>
+          <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block;">MAX STREAK</span>
+          <strong id="finalStreakStat" style="font-size: 18px; color: #EF4444;">0</strong>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px;">
+        <button id="btnReplay" class="pill-button-secondary" style="flex: 1; height: 50px; font-size: 15px; border-radius: 9999px !important; cursor: pointer;">
+          🔄 Qayta O‘ynash
+        </button>
+        <a href="/dashboard/" class="pill-button-primary" style="flex: 1; height: 50px; font-size: 15px; border-radius: 9999px !important; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+          🏠 Dashboard
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Safe Questions Data Payload -->
+<script id="studentQuestionsData" type="application/json">
+  {{ questions_json|safe }}
+</script>
+<script src="{% static 'js/game_client.js' %}"></script>
+<script>
+  // =========================================================================
+  // BLOOKET INTERACTIVE GAME LOGIC & STATE
+  // =========================================================================
+
+  // Embedded Questions from Django View or Built-in Pedagogical Fallback
+  let questionsData = [];
+  try {
+    const dataEl = document.getElementById('studentQuestionsData');
+    if (dataEl && dataEl.textContent.trim()) {
+      questionsData = JSON.parse(dataEl.textContent);
+    }
+  } catch (e) {
+    console.warn("Could not parse studentQuestionsData, using fallback bank.", e);
+  }
+
+  // If questionsData is empty, provide rich interactive sample questions
+  if (!questionsData || questionsData.length === 0) {
+    questionsData = [
+      {
+        order: 1,
+        prompt: "Quyosh tizimidagi eng ulkan va eng og‘ir gigant sayyora qaysi?",
+        options: [
+          { id: "opt_1", text: "Yupiter" },
+          { id: "opt_2", text: "Mars" },
+          { id: "opt_3", text: "Saturn" },
+          { id: "opt_4", text: "Neptun" }
+        ],
+        correct_answer: "opt_1",
+        time_limit_seconds: 15
+      },
+      {
+        order: 2,
+        prompt: "O‘simlik hujayrasida fotosintez jarayoni qaysi organoidda sodir bo‘ladi?",
+        options: [
+          { id: "opt_1", text: "Xloroplast" },
+          { id: "opt_2", text: "Mitoxondriya" },
+          { id: "opt_3", text: "Ribosoma" },
+          { id: "opt_4", text: "Yadro" }
+        ],
+        correct_answer: "opt_1",
+        time_limit_seconds: 15
+      },
+      {
+        order: 3,
+        prompt: "Dasturlashda o‘zgaruvchi qiymatini tekshiruvchi asosiy shart operatori qaysi?",
+        options: [
+          { id: "opt_1", text: "for va while" },
+          { id: "opt_2", text: "if / else" },
+          { id: "opt_3", text: "print()" },
+          { id: "opt_4", text: "def funksiya" }
+        ],
+        correct_answer: "opt_2",
+        time_limit_seconds: 15
+      },
+      {
+        order: 4,
+        prompt: "Yer sayyorasining yagona tabiiy yo‘ldoshi qaysi osmon jismi hisoblanadi?",
+        options: [
+          { id: "opt_1", text: "Titan" },
+          { id: "opt_2", text: "Fobos" },
+          { id: "opt_3", text: "Oy (Moon)" },
+          { id: "opt_4", text: "Yevropa" }
+        ],
+        correct_answer: "opt_3",
+        time_limit_seconds: 15
+      },
+      {
+        order: 5,
+        prompt: "Amir Temur davlatining poytaxti qaysi qadimiy va go‘zal shahar bo‘lgan?",
+        options: [
+          { id: "opt_1", text: "Buxoro" },
+          { id: "opt_2", text: "Xiva" },
+          { id: "opt_3", text: "Samarqand" },
+          { id: "opt_4", text: "Qo‘qon" }
+        ],
+        correct_answer: "opt_3",
+        time_limit_seconds: 15
+      }
+    ];
+  }
+
+  // UI Element References
+  const joinCard = document.getElementById('studentJoinCard');
+  const gameplayCard = document.getElementById('studentGameplayCard');
+  const chestCard = document.getElementById('chestRewardCard');
+  const wrongCard = document.getElementById('wrongFeedbackCard');
+  const gameOverCard = document.getElementById('gameOverCard');
+
+  const btnJoin = document.getElementById('btnJoinGame');
+  const pinInput = document.getElementById('inputRoomPin');
+  const nickInput = document.getElementById('inputNickname');
+  const blookCards = document.querySelectorAll('.blook-card');
+
+  const playerAvatarDisplay = document.getElementById('playerAvatarDisplay');
+  const playerNameDisplay = document.getElementById('playerNameDisplay');
+  const playerStreakNum = document.getElementById('playerStreakNum');
+  const playerCoinsEl = document.getElementById('playerCoins');
+  const timerSecondsEl = document.getElementById('playerTimerSeconds');
+  const timerBarFill = document.getElementById('timerBarFill');
+
+  const playerQIndex = document.getElementById('playerQIndex');
+  const playerQPrompt = document.getElementById('playerQPrompt');
+  const optButtons = document.querySelectorAll('.answer-option-btn');
+
+  const optTextA = document.getElementById('optTextA');
+  const optTextB = document.getElementById('optTextB');
+  const optTextC = document.getElementById('optTextC');
+  const optTextD = document.getElementById('optTextD');
+
+  const btnNextQuestion = document.getElementById('btnNextQuestion');
+  const btnContinueAfterWrong = document.getElementById('btnContinueAfterWrong');
+  const btnReplay = document.getElementById('btnReplay');
+  const chestCards = document.querySelectorAll('.chest-card');
+
+  // Player State
+  let selectedBlook = '🦊';
+  let nickname = '';
+  let pin = '';
+  let currentQuestionIndex = 0;
+  let playerGold = 0;
+  let currentStreak = 0;
+  let maxStreak = 0;
+  let correctCount = 0;
+  let isAnswered = false;
+  let currentTimer = 15;
+  let maxTimer = 15;
+  let timerInterval = null;
+  let gameClient = null;
+
+  // 1. Blook Character Selection
+  blookCards.forEach(card => {
+    card.addEventListener('click', () => {
+      blookCards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedBlook = card.dataset.blook;
+      if (window.eduAudio) window.eduAudio.playCoin();
+    });
+  });
+
+  // 1B. Enter key on inputs submits
+  [pinInput, nickInput].forEach(inp => {
+    inp.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        btnJoin.click();
+      }
+    });
+  });
+
+  // 2. Join Button Handler
+  btnJoin.addEventListener('click', () => {
+    pin = pinInput.value.trim() || '489201';
+    nickname = nickInput.value.trim() || 'O‘quvchi';
+
+    if (window.eduAudio) window.eduAudio.playCoin();
+
+    // Set player displays
+    playerAvatarDisplay.textContent = selectedBlook;
+    playerNameDisplay.textContent = nickname;
+
+    // Connect to WebSocket client if available
+    try {
+      gameClient = new EduPlayGameClient(pin, { nickname: nickname, avatar: selectedBlook });
+      gameClient.connect();
+    } catch (e) {
+      console.log("Offline / standalone mode active.");
+    }
+
+    // Switch to gameplay view
+    joinCard.style.display = 'none';
+    gameplayCard.style.display = 'block';
+
+    currentQuestionIndex = 0;
+    playerGold = 0;
+    currentStreak = 0;
+    maxStreak = 0;
+    correctCount = 0;
+    renderQuestion(currentQuestionIndex);
+  });
+
+  // 3. Render Question
+  function renderQuestion(idx) {
+    if (idx >= questionsData.length) {
+      finishGame();
+      return;
+    }
+
+    isAnswered = false;
+    const q = questionsData[idx];
+
+    // Reset view visibility
+    gameplayCard.style.display = 'block';
+    chestCard.style.display = 'none';
+    wrongCard.style.display = 'none';
+    document.getElementById('chestRewardBanner').style.display = 'none';
+    btnNextQuestion.style.display = 'none';
+
+    // Reset chest cards state
+    chestCards.forEach(c => {
+      c.classList.remove('chest-opened');
+      c.style.pointerEvents = 'auto';
+      c.querySelector('.chest-icon').textContent = '🎁';
+    });
+
+    // Reset buttons state
+    optButtons.forEach(btn => {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.transform = 'none';
+    });
+
+    // Populate question text
+    playerQIndex.textContent = `${idx + 1}-savol / ${questionsData.length}`;
+    playerQPrompt.textContent = q.prompt;
+
+    // Handle Question Image
+    const imgWrap = document.getElementById('playerQImageWrap');
+    const imgEl = document.getElementById('playerQImage');
+    if (imgWrap && imgEl) {
+      if (q.media_url) {
+        imgEl.src = q.media_url;
+        imgWrap.style.display = 'block';
+      } else {
+        imgWrap.style.display = 'none';
+        imgEl.src = '';
+      }
+    }
+
+    // Populate 4 Options
+    const opts = q.options || [];
+    const textElements = [optTextA, optTextB, optTextC, optTextD];
+
+    opts.forEach((opt, oi) => {
+      if (textElements[oi]) {
+        const text = typeof opt === 'string' ? opt : (opt.text || `Variant ${oi + 1}`);
+        textElements[oi].textContent = text;
+        optButtons[oi].dataset.choice = opt.id || `opt_${oi + 1}`;
+        optButtons[oi].style.display = 'flex';
+      }
+    });
+
+    // Hide remaining options if fewer than 4
+    for (let i = opts.length; i < 4; i++) {
+      if (optButtons[i]) optButtons[i].style.display = 'none';
+    }
+
+    // Start Timer
+    maxTimer = q.time_limit_seconds || 15;
+    startTimer(maxTimer);
+  }
+
+  // 4. Countdown Timer Engine
+  function startTimer(seconds) {
+    clearInterval(timerInterval);
+    currentTimer = seconds;
+    updateTimerUI();
+
+    timerInterval = setInterval(() => {
+      currentTimer--;
+      updateTimerUI();
+
+      if (currentTimer <= 5 && currentTimer > 0 && window.eduAudio) {
+        window.eduAudio.playTick();
+      }
+
+      if (currentTimer <= 0) {
+        clearInterval(timerInterval);
+        handleTimeout();
+      }
+    }, 1000);
+  }
+
+  function updateTimerUI() {
+    timerSecondsEl.textContent = currentTimer;
+    const pct = Math.max(0, (currentTimer / maxTimer) * 100);
+    timerBarFill.style.width = `${pct}%`;
+
+    if (pct > 50) {
+      timerBarFill.style.background = 'linear-gradient(90deg, #34C759, #30D158)';
+    } else if (pct > 25) {
+      timerBarFill.style.background = 'linear-gradient(90deg, #FF9500, #FF9F0A)';
+    } else {
+      timerBarFill.style.background = 'linear-gradient(90deg, #FF3B30, #FF453A)';
+    }
+  }
+
+  function handleTimeout() {
+    if (isAnswered) return;
+    handleAnswerSubmit(null);
+  }
+
+  // 5. Answer Selection Handler
+  optButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (isAnswered) return;
+      handleAnswerSubmit(btn.dataset.choice);
+    });
+  });
+
+  // Keyboard shortcut keys (1, 2, 3, 4)
+  document.addEventListener('keydown', (e) => {
+    if (isAnswered || gameplayCard.style.display === 'none') return;
+    if (e.key === '1' && optButtons[0]) optButtons[0].click();
+    if (e.key === '2' && optButtons[1]) optButtons[1].click();
+    if (e.key === '3' && optButtons[2]) optButtons[2].click();
+    if (e.key === '4' && optButtons[3]) optButtons[3].click();
+  });
+
+  function handleAnswerSubmit(choice) {
+    isAnswered = true;
+    clearInterval(timerInterval);
+
+    // Disable buttons
+    optButtons.forEach(b => {
+      b.disabled = true;
+      if (b.dataset.choice !== choice) {
+        b.style.opacity = '0.4';
+      } else {
+        b.style.transform = 'scale(0.96)';
+      }
+    });
+
+    const currentQ = questionsData[currentQuestionIndex];
+    let isCorrect = false;
+
+    if (choice) {
+      if (typeof currentQ.correct_answer === 'string') {
+        isCorrect = (choice === currentQ.correct_answer || choice.toLowerCase() === currentQ.correct_answer.toLowerCase());
+      } else if (Array.isArray(currentQ.correct_answer)) {
+        isCorrect = currentQ.correct_answer.includes(choice);
+      }
+    }
+
+    // Submit to WebSocket if connected
+    if (gameClient) {
+      gameClient.submitAnswer(`sub_${Date.now()}`, choice, (maxTimer - currentTimer) * 1000);
+    }
+
+    setTimeout(() => {
+      if (isCorrect) {
+        handleCorrectAnswer();
+      } else {
+        handleWrongAnswer(currentQ);
+      }
+    }, 450);
+  }
+
+  // 6. Correct Answer -> Blooket Mystery Chests Screen
+  function handleCorrectAnswer() {
+    if (window.eduAudio) window.eduAudio.playCorrect();
+
+    currentStreak++;
+    if (currentStreak > maxStreak) maxStreak = currentStreak;
+    correctCount++;
+
+    playerStreakNum.textContent = currentStreak;
+
+    // Show Chest Screen
+    gameplayCard.style.display = 'none';
+    chestCard.style.display = 'block';
+  }
+
+  // 7. Chest Click Handler (Blooket Gold Quest Mechanic)
+  chestCards.forEach(chest => {
+    chest.addEventListener('click', () => {
+      chestCards.forEach(c => c.style.pointerEvents = 'none');
+      chest.classList.add('chest-opened');
+
+      // Random Rewards Pool (Blooket Style)
+      const rewards = [
+        { emoji: "💰", title: "+800 Oltin!", desc: "Ajoyib topilma!", amount: 800 },
+        { emoji: "👑", title: "+1,500 Xazina!", desc: "Katta xazina sandig'i!", amount: 1500 },
+        { emoji: "⚡", title: "2x Ko‘paytirgich! (+1,200)", desc: "Ikki barobar bonus!", amount: 1200 },
+        { emoji: "💎", title: "+1,000 Brilliant!", desc: "Qimmatbaho javohir!", amount: 1000 },
+        { emoji: "🪙", title: "+650 Oltin!", desc: "Hisobingiz to'ldi!", amount: 650 }
+      ];
+
+      const reward = rewards[Math.floor(Math.random() * rewards.length)];
+      chest.querySelector('.chest-icon').textContent = reward.emoji;
+
+      // Play coin chimes
+      if (window.eduAudio) {
+        window.eduAudio.playCoin();
+        setTimeout(() => window.eduAudio.playCoin(), 120);
+      }
+
+      // Roll up player gold
+      playerGold += reward.amount;
+      playerCoinsEl.textContent = playerGold.toLocaleString();
+
+      // Show reward banner
+      document.getElementById('rewardEmoji').textContent = reward.emoji;
+      document.getElementById('rewardTitle').textContent = reward.title;
+      document.getElementById('rewardDesc').textContent = reward.desc;
+      document.getElementById('chestRewardBanner').style.display = 'block';
+
+      btnNextQuestion.style.display = 'block';
+    });
+  });
+
+  btnNextQuestion.addEventListener('click', () => {
+    currentQuestionIndex++;
+    renderQuestion(currentQuestionIndex);
+  });
+
+  // 8. Wrong Answer Handler
+  function handleWrongAnswer(currentQ) {
+    if (window.eduAudio) window.eduAudio.playWrong();
+
+    currentStreak = 0;
+    playerStreakNum.textContent = '0';
+
+    // Find correct text
+    let correctText = "To'g'ri javob";
+    const opts = currentQ.options || [];
+    opts.forEach(opt => {
+      if (opt.id === currentQ.correct_answer) {
+        correctText = opt.text || opt;
+      }
+    });
+
+    document.getElementById('correctAnswerDisplay').textContent = correctText;
+
+    gameplayCard.style.display = 'none';
+    wrongCard.style.display = 'block';
+  }
+
+  btnContinueAfterWrong.addEventListener('click', () => {
+    currentQuestionIndex++;
+    renderQuestion(currentQuestionIndex);
+  });
+
+  // 9. Finish Game & Victory Screen
+  function finishGame() {
+    gameplayCard.style.display = 'none';
+    chestCard.style.display = 'none';
+    wrongCard.style.display = 'none';
+    gameOverCard.style.display = 'block';
+
+    if (window.eduAudio) window.eduAudio.playVictory();
+
+    document.getElementById('finalBlookDisplay').textContent = selectedBlook;
+    document.getElementById('finalGoldStat').textContent = playerGold.toLocaleString();
+    const acc = Math.round((correctCount / questionsData.length) * 100);
+    document.getElementById('finalAccuracyStat').textContent = `${acc}%`;
+    document.getElementById('finalStreakStat').textContent = `${maxStreak} ta`;
+  }
+
+  // Replay
+  btnReplay.addEventListener('click', () => {
+    gameOverCard.style.display = 'none';
+    joinCard.style.display = 'block';
+  });
+</script>
+{% endblock %}

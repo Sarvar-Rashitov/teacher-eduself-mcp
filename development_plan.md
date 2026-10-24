@@ -606,8 +606,8 @@ python -m apps.mcp_server.transports.stdio --help
 *Kutilayotgan natija:* MCP tools ro‘yxati to‘liq chaqirilishi va testlardan xatosiz o‘tishi.
 
 ### 6. Self-Audit Checklist
-- [ ] MCP orqali boshqa o‘qituvchining testini ko‘rish yoki o‘zgartirish bloklanganmi?
-- [ ] SSE transporti uzoq vaqt uzilmasdan ishlay oladimi?
+- [x] MCP orqali boshqa o‘qituvchining testini ko‘rish yoki o‘zgartirish bloklanganmi?
+- [x] SSE transporti uzoq vaqt uzilmasdan ishlay oladimi?
 
 ---
 
@@ -676,8 +676,8 @@ python manage.py check
 *Kutilayotgan natija:* Statik fayllar xatosiz to‘planishi, shablonlarda sintaktik xatoliklar bo‘lmasligi.
 
 ### 6. Self-Audit Checklist
-- [ ] Rang ko‘rligi bor o‘quvchilar uchun shakllar (uchburchak, romb, doira, kvadrat) mavjudmi?
-- [ ] Audio effektlar tashqi MP3 yuklamasdan to‘g‘ridan-to‘g‘ri brauzerda ishlayaptimi?
+- [x] Rang ko‘rligi bor o‘quvchilar uchun shakllar (uchburchak, romb, doira, kvadrat) mavjudmi?
+- [x] Audio effektlar tashqi MP3 yuklamasdan to‘g‘ridan-to‘g‘ri brauzerda ishlayaptimi?
 
 ---
 
@@ -733,8 +733,8 @@ pytest apps/sheets_sync/tests/
 *Kutilayotgan natija:* 100% testlar o‘tishi, Redis qulfi bilan bir vaqtda ikkita sinxronizatsiya to‘qnashmasligi.
 
 ### 6. Self-Audit Checklist
-- [ ] Google API limitlari (Rate Limit) hisobga olinganmi va ortiqcha so‘rovlar kesilganmi?
-- [ ] Dars natijalari jadvalga qo‘shilganda o‘quvchilarning baholari to‘liq tushadimi?
+- [x] Google API limitlari (Rate Limit) hisobga olinganmi va ortiqcha so‘rovlar kesilganmi?
+- [x] Dars natijalari jadvalga qo‘shilganda o‘quvchilarning baholari to‘liq tushadimi?
 
 ---
 
@@ -788,8 +788,8 @@ python manage.py check --deploy
 *Kutilayotgan natija:* Security deploy tekshiruvidan muvaffaqiyatli o‘tish va barcha xavfsizlik testlarining yashil bo‘lishi.
 
 ### 6. Self-Audit Checklist
-- [ ] Foydalanuvchi kiritgan HTML teglar xavfsiz tarzda filtrlanadimi?
-- [ ] Login oynasiga ketma-ket 6 marta xato parol terilganda IP vaqtincha bloklanadimi?
+- [x] Foydalanuvchi kiritgan HTML teglar xavfsiz tarzda filtrlanadimi?
+- [x] Login oynasiga ketma-ket 6 marta xato parol terilganda IP vaqtincha bloklanadimi?
 
 ---
 
@@ -844,9 +844,9 @@ docker build -t eduself-backend:test -f deploy/Dockerfile.backend .
 *Kutilayotgan natija:* Docker tasviri muvaffaqiyatli yig‘ilishi, Nginx sintaksisi xatosiz bo‘lishi.
 
 ### 6. Self-Audit Checklist
-- [ ] Ishlab chiqarish konteyneri xavfsizlik nuqtai nazaridan non-root user orqali ishlaydimi?
-- [ ] WebSocket ulanishi Nginx orqali uzilishlarsiz va timeout bermasdan o‘tadimi?
-- [ ] Zaxira nusxalash skripti avtomatlashtirilganmi?
+- [x] Ishlab chiqarish konteyneri xavfsizlik nuqtai nazaridan non-root user orqali ishlaydimi?
+- [x] WebSocket ulanishi Nginx orqali uzilishlarsiz va timeout bermasdan o‘tadimi?
+- [x] Zaxira nusxalash skripti avtomatlashtirilganmi?
 
 ---
 

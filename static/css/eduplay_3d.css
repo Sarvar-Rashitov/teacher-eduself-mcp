@@ -1,0 +1,1562 @@
+/* ==========================================================================
+   EduSelf Teacher — Telegram-Style Day/Night Theme System
+   Authentic Telegram Palette & 100% Round Pill Geometry (No sharp corners)
+   ========================================================================== */
+
+:root,
+html[data-theme="light"] {
+  /* Telegram Light Mode Palette */
+  --bg-warm: #F1F4F7;
+  --bg-surface: #FFFFFF;
+  --bg-surface-subtle: #F7F9FB;
+  --border-subtle: #DFE5EC;
+  --border-hover: #CBD5E1;
+  --header-bg: #FFFFFF;
+  --card-bg: #FFFFFF;
+  --card-row-bg: #F8FAFC;
+
+  /* Telegram Typography */
+  --text-main: #1C242F;
+  --text-muted: #707579;
+  --text-white: #FFFFFF;
+
+  /* Telegram & Gamified Action Accents */
+  --tg-blue: #2481CC;
+  --tg-blue-hover: #1E70B3;
+  --tg-green: #2EA63A;
+  --tg-orange: #FF7B1C;
+
+  --primary-orange: #FF6A00;
+  --primary-orange-hover: #E65A00;
+  --primary-orange-soft: #FFF2EB;
+  --primary-orange-border: #FF8533;
+  --primary-orange-bevel: #B84300;
+  --primary-shadow: 0px 8px 24px rgba(255, 106, 0, 0.35);
+
+  --primary-green: #2EA63A;
+  --primary-green-hover: #23892F;
+  --primary-green-soft: #E8F5E9;
+  --primary-green-border: #4CD964;
+  --primary-green-bevel: #1C6B24;
+  --primary-green-shadow: 0px 8px 24px rgba(46, 166, 58, 0.35);
+
+  --primary-blue: #2481CC;
+  --primary-blue-hover: #1C6CAB;
+  --primary-blue-soft: #EBF4FB;
+  --primary-blue-border: #54A9EB;
+  --primary-blue-bevel: #155384;
+  --primary-blue-shadow: 0px 8px 24px rgba(36, 129, 204, 0.35);
+
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
+  --radius-pill: 9999px;
+
+  --shadow-bento: 0px 14px 34px rgba(28, 36, 47, 0.08);
+  --shadow-card: 0px 8px 24px rgba(28, 36, 47, 0.06);
+  --shadow-modal: 0px 24px 64px rgba(28, 36, 47, 0.22);
+}
+
+/* Telegram Desktop/Web Authentic Dark Mode (Deep Navy-Charcoal) */
+[data-theme="dark"],
+html.dark-theme,
+body.dark-theme,
+[data-theme="dark"] body {
+  --bg-warm: #0E1621;
+  --bg-surface: #17212B;
+  --bg-surface-subtle: #242F3D;
+  --border-subtle: #242F3D;
+  --border-hover: #334458;
+  --header-bg: #17212B;
+  --card-bg: #17212B;
+  --card-row-bg: #242F3D;
+
+  /* Telegram High-Contrast Crisp Typography */
+  --text-main: #FFFFFF;
+  --text-muted: #8E9CA9;
+  --text-white: #FFFFFF;
+
+  --tg-blue: #2AABEE;
+  --tg-blue-hover: #2298D4;
+  --tg-green: #31B545;
+  --tg-orange: #FF8A33;
+
+  --primary-orange-soft: rgba(255, 106, 0, 0.18);
+  --primary-green-soft: rgba(46, 166, 58, 0.18);
+  --primary-blue-soft: rgba(36, 129, 204, 0.18);
+
+  --shadow-bento: 0px 14px 34px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0px 10px 28px rgba(0, 0, 0, 0.4);
+  --shadow-modal: 0px 24px 64px rgba(0, 0, 0, 0.65);
+}
+
+/* Base Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-warm);
+  color: var(--text-main);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+}
+
+/* ==========================================================================
+   Playground Container & Navbar
+   ========================================================================== */
+
+.showcase-header {
+  background: var(--header-bg);
+  border-bottom: 1.5px solid var(--border-subtle);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header-container {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 12px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-badge .logo-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--primary-orange);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  box-shadow: 0 4px 12px rgba(255, 117, 39, 0.3);
+}
+
+.brand-title {
+  font-size: 20px;
+  color: var(--text-main);
+}
+
+.brand-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.audio-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.audio-btn {
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.audio-btn:hover {
+  background: #EFECE4;
+}
+
+.showcase-layout {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 40px;
+}
+
+/* ==========================================================================
+   Mobile Simulator Frame (Right Column matching Reference Image)
+   ========================================================================== */
+
+.simulator-column {
+  position: sticky;
+  top: 96px;
+  height: calc(100vh - 120px);
+}
+
+.mobile-frame {
+  width: 100%;
+  max-width: 380px;
+  background: var(--bg-warm);
+  border: 10px solid #FFFFFF;
+  border-radius: 44px;
+  box-shadow: 0px 24px 60px rgba(30, 30, 36, 0.12), 0 0 0 1px var(--border-subtle);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 780px;
+}
+
+.mobile-notch {
+  padding: 12px 20px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+  z-index: 10;
+}
+
+.mobile-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 18px 24px;
+  position: relative;
+}
+
+/* ==========================================================================
+   Screen 1: Bento Grid Home Screen
+   ========================================================================== */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.bento-card {
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-bento);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bento-card:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.bento-blue {
+  background: linear-gradient(180deg, var(--bento-blue-light) 0%, var(--bento-blue) 100%);
+  color: white;
+  grid-row: span 2;
+  min-height: 230px;
+}
+
+.bento-purple {
+  background: linear-gradient(180deg, var(--bento-purple-light) 0%, var(--bento-purple) 100%);
+  color: white;
+  min-height: 110px;
+}
+
+.bento-gold {
+  background: linear-gradient(180deg, #FDE68A 0%, #F59E0B 100%);
+  color: white;
+  min-height: 140px;
+}
+
+.bento-dark-badge {
+  background: var(--bento-dark);
+  color: white;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.bento-title {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.bento-sub {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.bento-character-img {
+  width: 100%;
+  height: 110px;
+  object-fit: contain;
+  margin-top: auto;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15));
+}
+
+.hero-text-block {
+  text-align: center;
+  padding: 8px 8px 20px;
+}
+
+.hero-text-block h2 {
+  font-size: 23px;
+  line-height: 1.25;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.hero-text-block p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   Buttons System
+   ========================================================================== */
+
+.pill-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 52px;
+  border-radius: var(--radius-pill);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: none;
+  text-decoration: none;
+}
+
+.pill-btn:active {
+  transform: scale(0.96);
+}
+
+.btn-primary-orange {
+  background: var(--primary-orange);
+  color: white;
+  box-shadow: var(--primary-shadow);
+}
+
+.btn-primary-orange:hover {
+  background: var(--primary-orange-hover);
+  box-shadow: 0px 12px 28px rgba(255, 117, 39, 0.45);
+}
+
+.btn-outline-white {
+  background: #FFFFFF;
+  color: var(--text-main);
+  border: 1.5px solid var(--border-subtle);
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.btn-outline-white:hover {
+  background: #F8F7F3;
+}
+
+/* ==========================================================================
+   Screen 2: 3D Leaderboard Podium
+   ========================================================================== */
+
+.leaderboard-top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.nav-circle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.podium-section {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 0 20px;
+}
+
+.podium-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 96px;
+}
+
+.avatar-wrapper {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.avatar-circle {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  overflow: hidden;
+}
+
+.avatar-circle.rank1-avatar {
+  width: 68px;
+  height: 68px;
+  border-color: #FFB800;
+  box-shadow: 0 8px 24px rgba(255, 184, 0, 0.4);
+}
+
+.crown-badge {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 22px;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+  animation: floatCrown 2.5s ease-in-out infinite;
+}
+
+@keyframes floatCrown {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-5px); }
+}
+
+.podium-user-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.podium-block {
+  width: 100%;
+  border-radius: 20px 20px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s;
+}
+
+.podium-block:hover {
+  transform: scale(1.03);
+}
+
+.podium-rank-num {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.podium-coins {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.95;
+  margin-top: 4px;
+}
+
+.podium-orange {
+  height: 140px;
+  background: linear-gradient(180deg, #FF8243 0%, var(--podium-rank1) 100%);
+}
+
+.podium-blue {
+  height: 105px;
+  background: linear-gradient(180deg, #93C5FD 0%, var(--podium-rank2) 100%);
+}
+
+.podium-yellow {
+  height: 85px;
+  background: linear-gradient(180deg, #FDE047 0%, var(--podium-rank3) 100%);
+}
+
+/* Leaderboard Bottom Sheet */
+.leaderboard-sheet {
+  background: #FFFFFF;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 14px 16px;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.06);
+  margin-top: 10px;
+}
+
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: #E5E7EB;
+  border-radius: 2px;
+  margin: 0 auto 12px;
+}
+
+.rank-item-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #F3F4F6;
+  gap: 12px;
+}
+
+.rank-item-row:last-child {
+  border-bottom: none;
+}
+
+.rank-avatar-small {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #F3F4F6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.rank-user-info {
+  flex: 1;
+}
+
+.rank-user-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.rank-user-coins {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.rank-delta-pill {
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.delta-up {
+  background: #ECFDF5;
+  color: #10B981;
+}
+
+.delta-down {
+  background: #FEF2F2;
+  color: #EF4444;
+}
+
+/* ==========================================================================
+   Screen 3: Victory / Perfect Scorer Modal
+   ========================================================================== */
+
+.modal-backdrop-blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(30, 30, 36, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-backdrop-blur.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.victory-card {
+  background: #FFFFFF;
+  border-radius: 36px;
+  width: 100%;
+  padding: 30px 20px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-modal);
+  transform: translateY(100px);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+
+.modal-backdrop-blur.active .victory-card {
+  transform: translateY(0);
+}
+
+.victory-character-float {
+  width: 130px;
+  height: 130px;
+  margin: -85px auto 10px;
+  position: relative;
+}
+
+.character-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, #FDE68A 0%, rgba(253, 230, 138, 0) 70%);
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.character-trophy-img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 16px rgba(0,0,0,0.2));
+  animation: heroBounce 3s ease-in-out infinite;
+}
+
+@keyframes heroBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.victory-title {
+  font-size: 24px;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.victory-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 16px;
+  padding: 0 10px;
+}
+
+.coin-reward-pill {
+  background: linear-gradient(180deg, #FFFBEB 0%, #FEF3C7 100%);
+  border: 1.5px solid #FDE68A;
+  border-radius: var(--radius-pill);
+  padding: 8px 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: #B45309;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+  margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   Left Column: Design System Component Explorer & Sound Board
+   ========================================================================== */
+
+.explorer-section {
+  margin-bottom: 40px;
+}
+
+.section-tag {
+  color: var(--primary-orange);
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.section-heading {
+  font-size: 26px;
+  color: var(--text-main);
+  margin-bottom: 16px;
+}
+
+.component-card-box {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 24px;
+}
+
+.sound-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.sound-card-btn {
+  background: var(--bg-surface-subtle);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: center;
+}
+
+.sound-card-btn:hover {
+  background: #FFFFFF;
+  border-color: var(--primary-orange);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 117, 39, 0.15);
+}
+
+.sound-card-btn:active {
+  transform: scale(0.95);
+}
+
+.sound-icon {
+  font-size: 32px;
+}
+
+.sound-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.sound-hz {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Live Quiz Question Option Buttons (Shapes & Colors) */
+.options-interactive-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.quiz-option-btn {
+  height: 64px;
+  border-radius: var(--radius-md);
+  border: none;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 14px;
+  color: white;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s;
+}
+
+.quiz-option-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.15);
+}
+
+.quiz-option-btn:active {
+  transform: scale(0.96);
+}
+
+.opt-shape {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.opt-red { background: linear-gradient(180deg, #F87171 0%, #EF4444 100%); }
+.opt-blue { background: linear-gradient(180deg, #60A5FA 0%, #3B82F6 100%); }
+.opt-yellow { background: linear-gradient(180deg, #FBBF24 0%, #F59E0B 100%); }
+.opt-green { background: linear-gradient(180deg, #34D399 0%, #10B981 100%); }
+
+/* Screen switcher tab bar inside simulator */
+.sim-tab-bar {
+  display: flex;
+  background: #EFECE4;
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  margin-bottom: 16px;
+  gap: 4px;
+}
+
+.sim-tab-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: transparent;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sim-tab-btn.active {
+  background: #FFFFFF;
+  color: var(--primary-orange);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Micro-Animations & Feedback States */
+.btn-bounce {
+  animation: btnBounce 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes btnBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+
+.correct-glow {
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.8) !important;
+  border: 2px solid #10B981 !important;
+  animation: correctPulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes correctPulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.04); }
+}
+
+.wrong-shake {
+  animation: shakeError 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.6) !important;
+}
+
+@keyframes shakeError {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+  40%, 60% { transform: translate3d(6px, 0, 0); }
+}
+
+.pulse-pop {
+  animation: popScale 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popScale {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.fade-in {
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Quiz Timer & Screen styles */
+.quiz-timer-wrap {
+  margin-bottom: 16px;
+}
+
+.quiz-timer-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.timer-bar-track {
+  width: 100%;
+  height: 8px;
+  background: #E5E7EB;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.timer-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--primary-orange);
+  border-radius: var(--radius-pill);
+  transition: width 1s linear, background-color 0.3s;
+}
+
+.quiz-question-box {
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+  text-align: center;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-card);
+}
+
+.quiz-badge {
+  display: inline-block;
+  background: var(--primary-orange-soft);
+  color: var(--primary-orange);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.quiz-prompt-text {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.35;
+}
+
+/* Token palette visualizer */
+.token-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.token-chip {
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid var(--border-subtle);
+}
+
+.token-swatch {
+  height: 48px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+}
+
+.token-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.token-hex {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+
+
+/* ==========================================================================
+   Tactile 3D Buttons & Bento Gradients (EduPlay 3D Enhanced)
+   ========================================================================== */
+
+/* 1. Primary Orange 3D Button */
+.pill-button-primary,
+.btn-3d-orange {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(180deg, #FF7B1C 0%, #FF5A00 60%, #E64E00 100%) !important;
+  color: #FFFFFF !important;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--primary-orange-border);
+  box-shadow: 0 5px 0 var(--primary-orange-bevel), var(--primary-shadow);
+  padding: 12px 24px;
+  cursor: pointer;
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+.pill-button-primary:hover,
+.btn-3d-orange:hover {
+  background: linear-gradient(180deg, #FF8A33 0%, #FF650F 60%, #EB5200 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 var(--primary-orange-bevel), 0 14px 28px rgba(255, 106, 0, 0.48);
+}
+
+.pill-button-primary:active,
+.btn-3d-orange:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 var(--primary-orange-bevel), 0 4px 12px rgba(255, 106, 0, 0.25);
+}
+
+/* 2. Emerald Green 3D Button (Jonli Xona / Boshlash) */
+.pill-button-green,
+.btn-3d-green {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(180deg, #10B981 0%, #059669 60%, #047857 100%) !important;
+  color: #FFFFFF !important;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--primary-green-border);
+  box-shadow: 0 5px 0 var(--primary-green-bevel), var(--primary-green-shadow);
+  padding: 10px 22px;
+  cursor: pointer;
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+.pill-button-green:hover,
+.btn-3d-green:hover {
+  background: linear-gradient(180deg, #22C55E 0%, #10B981 60%, #059669 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 var(--primary-green-bevel), 0 14px 28px rgba(16, 185, 129, 0.48);
+}
+
+.pill-button-green:active,
+.btn-3d-green:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 var(--primary-green-bevel), 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+/* 3. Azure Blue 3D Button */
+.pill-button-blue,
+.btn-3d-blue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(180deg, #0EA5E9 0%, #0284C7 60%, #0369A1 100%) !important;
+  color: #FFFFFF !important;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--primary-blue-border);
+  box-shadow: 0 5px 0 var(--primary-blue-bevel), var(--primary-blue-shadow);
+  padding: 10px 22px;
+  cursor: pointer;
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+.pill-button-blue:hover,
+.btn-3d-blue:hover {
+  background: linear-gradient(180deg, #38BDF8 0%, #0EA5E9 60%, #0284C7 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 var(--primary-blue-bevel), 0 12px 28px rgba(2, 132, 199, 0.48);
+}
+
+.pill-button-blue:active,
+.btn-3d-blue:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 var(--primary-blue-bevel), 0 4px 12px rgba(2, 132, 199, 0.25);
+}
+
+/* 4. Secondary 3D Button (Tahrirlash / Bekor qilish) */
+.pill-button-secondary,
+.btn-3d-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--border-subtle);
+  box-shadow: 0 4px 0 var(--border-hover), 0 6px 14px rgba(0, 0, 0, 0.05);
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+.pill-button-secondary:hover,
+.btn-3d-secondary:hover {
+  background: var(--bg-surface-subtle) !important;
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 var(--border-hover), 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.pill-button-secondary:active,
+.btn-3d-secondary:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--border-hover), 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface-subtle);
+  border: 2px solid var(--border-subtle);
+  color: var(--text-main);
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--border-subtle);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+.theme-toggle-btn:hover {
+  border-color: var(--primary-orange);
+  color: var(--primary-orange);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--border-subtle);
+}
+
+.theme-toggle-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--border-subtle);
+}
+
+/* Bento Card Gradients (Ultra-Vibrant) */
+.bento-card-blue, .bento-blue {
+  background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 50%, #0369A1 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 14px 32px rgba(14, 165, 233, 0.38) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+.bento-card-purple, .bento-purple {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 50%, #6D28D9 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 14px 32px rgba(139, 92, 246, 0.38) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+.bento-card-gold, .bento-gold {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 14px 32px rgba(245, 158, 11, 0.38) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+.bento-card-blue h3, .bento-card-purple h3, .bento-card-gold h3,
+.bento-blue h3, .bento-purple h3, .bento-gold h3 {
+  color: #FFFFFF !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  font-weight: 800;
+}
+
+.bento-card-blue p, .bento-card-purple p, .bento-card-gold p,
+.bento-blue p, .bento-purple p, .bento-gold p {
+  color: #F8FAFC !important;
+  opacity: 0.95 !important;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Surface backgrounds in Dark/Light */
+.bento-card-surface {
+  background: var(--card-bg) !important;
+  border: 2px solid var(--border-subtle) !important;
+  box-shadow: var(--shadow-card);
+}
+
+.quiz-item-row {
+  background: var(--card-row-bg) !important;
+  border: 1px solid var(--border-subtle) !important;
+  transition: all 0.2s ease;
+}
+
+.quiz-item-row:hover {
+  border-color: var(--primary-orange) !important;
+  box-shadow: 0 4px 14px rgba(255, 106, 0, 0.12);
+}
+
+
+/* ==========================================================================
+   Telegram Night Mode Switch & 100% Round Corners (No Sharp Edges)
+   ========================================================================== */
+
+/* Universal Pill Reset: NO sharp square corners on any button or interactive element */
+button,
+input[type="button"],
+input[type="submit"],
+.btn,
+.pill-button-primary,
+.pill-button-green,
+.pill-button-blue,
+.pill-button-secondary,
+.btn-3d-orange,
+.btn-3d-green,
+.btn-3d-blue,
+.btn-3d-secondary,
+.theme-toggle-btn,
+.audio-btn,
+.pill-badge {
+  border-radius: 9999px !important;
+  outline: none !important;
+}
+
+/* Card and Container Rounding: Smooth, organic modern curves */
+.bento-card,
+.quiz-item-row,
+.editor-card,
+.modal-content,
+.bento-card-surface {
+  border-radius: 28px !important;
+}
+
+/* Telegram Animated Night Mode Switch */
+.tg-theme-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-surface-subtle);
+  border: 1.5px solid var(--border-subtle);
+  padding: 5px 14px 5px 6px;
+  border-radius: 9999px !important;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 3px 0 var(--border-subtle);
+}
+
+.tg-theme-switch:hover {
+  border-color: var(--tg-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--border-hover);
+}
+
+.tg-theme-switch:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--border-subtle);
+}
+
+.tg-switch-track {
+  width: 48px;
+  height: 26px;
+  background: #CBD5E1;
+  border-radius: 9999px;
+  position: relative;
+  transition: background-color 0.25s ease;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .tg-switch-track {
+  background: #2AABEE;
+}
+
+.tg-switch-thumb {
+  width: 20px;
+  height: 20px;
+  background: #FFFFFF;
+  border-radius: 50% !important;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.25s ease;
+}
+
+[data-theme="dark"] .tg-switch-thumb {
+  transform: translateX(22px);
+  background: #17212B;
+}
+
+.tg-switch-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-main);
+  letter-spacing: 0.2px;
+}
+
+/* ==========================================================================
+   Tactile 3D Buttons (100% Round Capsule Pills & Depress Feedback)
+   ========================================================================== */
+
+/* 1. Green 3D Button (Jonli Xona Ochish) */
+.pill-button-green,
+.btn-3d-green {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: linear-gradient(180deg, #34C759 0%, #28A745 60%, #1E7E34 100%) !important;
+  color: #FFFFFF !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 14px !important;
+  border-radius: 9999px !important;
+  border: 2px solid #5CD879 !important;
+  box-shadow: 0 4px 0 #155724, 0 8px 20px rgba(40, 167, 69, 0.35) !important;
+  padding: 10px 22px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.12s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  user-select: none !important;
+}
+
+.pill-button-green:hover,
+.btn-3d-green:hover {
+  background: linear-gradient(180deg, #3FD665 0%, #2EB84D 60%, #208738 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #155724, 0 12px 24px rgba(40, 167, 69, 0.45) !important;
+}
+
+.pill-button-green:active,
+.btn-3d-green:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #155724, 0 3px 8px rgba(40, 167, 69, 0.25) !important;
+}
+
+/* 2. Blue 3D Button (Yangi Viktorina) */
+.pill-button-blue,
+.btn-3d-blue {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: linear-gradient(180deg, #2AABEE 0%, #2481CC 60%, #1A6AA8 100%) !important;
+  color: #FFFFFF !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 14px !important;
+  border-radius: 9999px !important;
+  border: 2px solid #6AC2F4 !important;
+  box-shadow: 0 4px 0 #135284, 0 8px 20px rgba(36, 129, 204, 0.35) !important;
+  padding: 10px 22px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.12s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  user-select: none !important;
+}
+
+.pill-button-blue:hover,
+.btn-3d-blue:hover {
+  background: linear-gradient(180deg, #42BAF5 0%, #2D8CD6 60%, #1D73B5 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #135284, 0 12px 24px rgba(36, 129, 204, 0.45) !important;
+}
+
+.pill-button-blue:active,
+.btn-3d-blue:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #135284, 0 3px 8px rgba(36, 129, 204, 0.25) !important;
+}
+
+/* 3. Orange 3D Button (Asosiy / Saqlash) */
+.pill-button-primary,
+.btn-3d-orange {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: linear-gradient(180deg, #FF7B1C 0%, #FF5A00 60%, #D94800 100%) !important;
+  color: #FFFFFF !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 15px !important;
+  border-radius: 9999px !important;
+  border: 2px solid #FFA159 !important;
+  box-shadow: 0 4px 0 #A83800, 0 8px 20px rgba(255, 90, 0, 0.35) !important;
+  padding: 12px 24px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.12s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  user-select: none !important;
+}
+
+.pill-button-primary:hover,
+.btn-3d-orange:hover {
+  background: linear-gradient(180deg, #FF8D38 0%, #FF6812 60%, #E85104 100%) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 #A83800, 0 12px 24px rgba(255, 90, 0, 0.45) !important;
+}
+
+.pill-button-primary:active,
+.btn-3d-orange:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 #A83800, 0 3px 8px rgba(255, 90, 0, 0.25) !important;
+}
+
+/* 4. Secondary Adaptive 3D Pill Button (Tahrirlash / Orqaga) */
+.pill-button-secondary,
+.btn-3d-secondary {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  border-radius: 9999px !important;
+  border: 2px solid var(--border-subtle) !important;
+  box-shadow: 0 4px 0 var(--border-subtle), 0 6px 14px rgba(0, 0, 0, 0.06) !important;
+  padding: 10px 20px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  transition: all 0.12s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  user-select: none !important;
+}
+
+.pill-button-secondary:hover,
+.btn-3d-secondary:hover {
+  background: var(--bg-surface-subtle) !important;
+  border-color: var(--tg-blue) !important;
+  color: var(--tg-blue) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 0 var(--border-hover), 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+.pill-button-secondary:active,
+.btn-3d-secondary:active {
+  transform: translateY(3px) !important;
+  box-shadow: 0 1px 0 var(--border-subtle), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Bento Card Gradients (Ultra-Vibrant 3D Cards) */
+.bento-card-blue, .bento-blue {
+  background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 50%, #0369A1 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 14px 32px rgba(14, 165, 233, 0.38) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 28px !important;
+}
+
+.bento-card-purple, .bento-purple {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 50%, #6D28D9 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 14px 32px rgba(139, 92, 246, 0.38) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 28px !important;
+}
+
+.bento-card-gold, .bento-gold {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 14px 32px rgba(245, 158, 11, 0.38) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 28px !important;
+}
+
+.bento-card-blue h3, .bento-card-purple h3, .bento-card-gold h3,
+.bento-blue h3, .bento-purple h3, .bento-gold h3 {
+  color: #FFFFFF !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25) !important;
+  font-weight: 800 !important;
+}
+
+.bento-card-blue p, .bento-card-purple p, .bento-card-gold p,
+.bento-blue p, .bento-purple p, .bento-gold p {
+  color: #F8FAFC !important;
+  opacity: 0.95 !important;
+  font-weight: 500 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Telegram Surface Cards */
+.bento-card-surface {
+  background: var(--card-bg) !important;
+  border: 1.5px solid var(--border-subtle) !important;
+  box-shadow: var(--shadow-card) !important;
+  border-radius: 28px !important;
+}
+
+.quiz-item-row {
+  background: var(--card-row-bg) !important;
+  border: 1.5px solid var(--border-subtle) !important;
+  border-radius: 22px !important;
+  transition: all 0.2s ease !important;
+}
+
+.quiz-item-row:hover {
+  border-color: var(--tg-blue) !important;
+  box-shadow: 0 4px 16px rgba(36, 129, 204, 0.15) !important;
+}

@@ -1,0 +1,44 @@
+# Multi-stage secure build for EduSelf Teacher Backend
+FROM python:3.12-slim AS builder
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# Final Stage
+FROM python:3.12-slim
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DJANGO_SETTINGS_MODULE=core.settings.production
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create a non-root system user for security
+RUN groupadd -r eduself && useradd -r -g eduself eduself
+
+COPY --from=builder /install /usr/local
+COPY . /app
+
+RUN chown -R eduself:eduself /app
+
+USER eduself
+
+EXPOSE 8000
+
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "core.asgi:application"]
