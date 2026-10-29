@@ -4,6 +4,7 @@ from .views import (
     google_auth_init,
     google_auth_callback,
     login_view,
+    register_view,
     logout_view,
     me_view,
 )
@@ -15,6 +16,7 @@ urlpatterns = [
     path("google/init/", google_auth_init, name="google_init"),
     path("google/callback/", google_auth_callback, name="google_callback"),
     path("login/", login_view, name="login"),
+    path("register/", register_view, name="register"),
     path("logout/", logout_view, name="logout"),
     path("me/", me_view, name="me"),
 ]

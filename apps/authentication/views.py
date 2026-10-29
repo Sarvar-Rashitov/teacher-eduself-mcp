@@ -236,6 +236,103 @@ def login_view(request):
 
 
 @csrf_exempt
+def register_view(request):
+    """
+    Yangi o'qituvchi / foydalanuvchini ro'yxatdan o'tkazish sahifasi.
+    Login va parol yaratadi, avtomatik tizimga kiritadi va Dashboard'ga yo'naltiradi.
+    """
+    if request.user.is_authenticated and request.method == "GET":
+        return redirect("/dashboard/")
+
+    if request.method == "GET":
+        return render(request, "auth/register.html")
+
+    is_api = _is_api_request(request)
+    data = {}
+    if request.content_type == "application/json" and request.body:
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            if is_api:
+                return JsonResponse({"error": "Yaroqsiz JSON format"}, status=400)
+            return render(request, "auth/register.html", {"error": "Yaroqsiz so'rov formati"}, status=400)
+    else:
+        data = request.POST.dict()
+
+    username = data.get("username", "").strip()
+    email = data.get("email", "").strip()
+    first_name = data.get("first_name", "").strip()
+    password = data.get("password", "")
+    password_confirm = data.get("password_confirm", "")
+
+    # 1. Maydonlarni tekshirish
+    if not username or not password:
+        err = "Login va parol kiritilishi shart."
+        if is_api:
+            return JsonResponse({"error": err}, status=400)
+        return render(request, "auth/register.html", {"error": err, "data": data}, status=400)
+
+    if len(username) < 3:
+        err = "Login kamida 3 ta belgidan iborat bo'lishi kerak."
+        if is_api:
+            return JsonResponse({"error": err}, status=400)
+        return render(request, "auth/register.html", {"error": err, "data": data}, status=400)
+
+    if len(password) < 6:
+        err = "Parol kamida 6 ta belgidan iborat bo'lishi kerak."
+        if is_api:
+            return JsonResponse({"error": err}, status=400)
+        return render(request, "auth/register.html", {"error": err, "data": data}, status=400)
+
+    if password_confirm and password != password_confirm:
+        err = "Kiritilgan parollar bir-biriga mos kelmadi."
+        if is_api:
+            return JsonResponse({"error": err}, status=400)
+        return render(request, "auth/register.html", {"error": err, "data": data}, status=400)
+
+    # 2. Mavjudligini tekshirish
+    if User.objects.filter(username__iexact=username).exists():
+        err = f"'{username}' nomli login band. Iltimos, boshqa login tanlang."
+        if is_api:
+            return JsonResponse({"error": err}, status=400)
+        return render(request, "auth/register.html", {"error": err, "data": data}, status=400)
+
+    if email and User.objects.filter(email__iexact=email).exists():
+        err = f"'{email}' elektron pochtasi allaqachon ro'yxatdan o'tgan."
+        if is_api:
+            return JsonResponse({"error": err}, status=400)
+        return render(request, "auth/register.html", {"error": err, "data": data}, status=400)
+
+    # 3. Yangi foydalanuvchi yaratish
+    user = User.objects.create_user(
+        username=username,
+        email=email or f"{username}@eduself.uz",
+        first_name=first_name,
+        password=password,
+        role="teacher",
+        is_active=True
+    )
+
+    # 4. Tizimga avtomatik kiritish va yo'naltirish
+    login(request, user)
+
+    if is_api:
+        return JsonResponse({
+            "status": "ok",
+            "message": "Muvaffaqiyatli ro'yxatdan o'tildi",
+            "user": {
+                "id": str(user.id),
+                "username": user.username,
+                "email": user.email,
+                "role": user.role,
+            },
+            "redirect_url": "/dashboard/"
+        }, status=201)
+
+    return redirect("/dashboard/")
+
+
+@csrf_exempt
 def logout_view(request):
     """
     Sessiyani yakunlash (Logout).

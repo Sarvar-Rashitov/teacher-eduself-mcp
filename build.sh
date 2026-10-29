@@ -14,4 +14,7 @@ python manage.py collectstatic --noinput
 echo "==> Applying database migrations..."
 python manage.py migrate --noinput
 
+echo "==> Creating / updating superadmin user..."
+python deploy/scripts/create_superuser.py || true
+
 echo "==> Build completed successfully!"
