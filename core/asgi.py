@@ -11,7 +11,10 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 from channels.auth import AuthMiddlewareStack
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings.local")
+if os.getenv("RENDER"):
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings.production")
+else:
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings.local")
 
 # Initialize Django ASGI application early to ensure the AppRegistry
 # is populated before importing code that may import ORM models.
