@@ -99,14 +99,23 @@
   <!-- Global Header / Navbar (Telegram Styled) -->
   <header class="showcase-header" style="background: var(--header-bg); border-bottom: 1.5px solid var(--border-subtle); transition: background-color 0.25s ease;">
     <div class="header-container" style="max-width: 1440px; width: 100%; margin: 0 auto; padding: 12px 28px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
-      <div class="brand-badge">
-        <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 12px; color: inherit;">
-          <div class="logo-icon" style="width: 42px; height: 42px; border-radius: 50% !important; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF7B1C, #FF5A00); font-size: 20px; box-shadow: 0 4px 12px rgba(255,106,0,0.35);">✨</div>
-          <div>
-            <h1 class="brand-title" style="color: var(--text-main); margin: 0; font-size: 20px; font-weight: 800; line-height: 1.2;">EduSelf</h1>
-            <p class="brand-subtitle" style="color: var(--text-muted); margin: 0; font-size: 12px; font-weight: 600;">EduPlay 3D Gamified Learning</p>
-          </div>
-        </a>
+      
+      <!-- Chap burchak: Uchta chiziqcha (☰) + Logotip -->
+      <div class="header-left" style="display: flex; align-items: center; gap: 12px;">
+        <!-- Hamburger Menu Button (Chap burchakda) -->
+        <button class="hamburger-btn" id="mobileDrawerOpenBtn" type="button" aria-label="Menyu ochish" title="Menyu">
+          <span>☰</span>
+        </button>
+
+        <div class="brand-badge">
+          <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 12px; color: inherit;">
+            <div class="logo-icon" style="width: 42px; height: 42px; border-radius: 50% !important; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF7B1C, #FF5A00); font-size: 20px; box-shadow: 0 4px 12px rgba(255,106,0,0.35);">✨</div>
+            <div>
+              <h1 class="brand-title" style="color: var(--text-main); margin: 0; font-size: 20px; font-weight: 800; line-height: 1.2;">EduSelf</h1>
+              <p class="brand-subtitle" style="color: var(--text-muted); margin: 0; font-size: 12px; font-weight: 600;">EduPlay 3D Gamified Learning</p>
+            </div>
+          </a>
+        </div>
       </div>
 
       <!-- Navigation Links -->
@@ -118,7 +127,7 @@
         <a href="/play/" class="nav-link font-heading" style="text-decoration: none; color: var(--primary-orange); font-size: 14px; font-weight: 800; padding: 6px 14px; border-radius: 9999px; background: var(--primary-orange-soft); border: 1.5px solid var(--primary-orange-border);">🎮 O‘yin (Play)</a>
       </nav>
 
-      <!-- Header Actions (Telegram Theme Switch, Audio, Coins, User) -->
+      <!-- Header Actions (Telegram Theme Switch, Coins faqat ro'yxatdan o'tganlarga, User) -->
       <div class="audio-controls" style="display: flex; align-items: center; gap: 12px;">
         
         <!-- Telegram-Style Animated Night Mode Switch -->
@@ -131,18 +140,13 @@
           <span class="tg-switch-label hide-mobile" id="themeText">Kunduzgi</span>
         </button>
 
-        <!-- Audio Mute/Unmute (Pill Rounded) -->
-        <button class="audio-btn" id="muteToggleBtn" title="Tovushni yoqish / o'chirish" style="border-radius: 9999px !important; border: 1.5px solid var(--border-subtle); background: var(--bg-surface-subtle); color: var(--text-main); padding: 7px 16px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-          <span>🔊</span> <span class="hide-mobile">Tovush</span>
-        </button>
-
-        <!-- Coin Pill (Pill Rounded) -->
-        <div class="coin-reward-pill" style="margin-bottom: 0; padding: 6px 14px; font-size: 14px; border-radius: 9999px !important; background: rgba(255,168,52,0.15); border: 1.5px solid rgba(255,168,52,0.4); color: #FFA834; font-weight: 800; display: flex; align-items: center; gap: 6px;">
-          <span>🪙</span>
-          <span id="globalCoinCount">1,420</span>
-        </div>
-
         {% if user.is_authenticated %}
+          <!-- Coin Pill: FAQAT RO'YXATDAN O'TGAN FOYDALANUVCHILAR UCHUN -->
+          <div class="coin-reward-pill" style="margin-bottom: 0; padding: 6px 14px; font-size: 14px; border-radius: 9999px !important; background: rgba(255,168,52,0.15); border: 1.5px solid rgba(255,168,52,0.4); color: #FFA834; font-weight: 800; display: flex; align-items: center; gap: 6px;">
+            <span>🪙</span>
+            <span id="globalCoinCount">1,420</span>
+          </div>
+
           <a href="/auth/profile/" style="text-decoration: none;" title="Profil: {{ user.username }}">
             <div class="avatar-circle" style="width: 40px; height: 40px; font-size: 19px; border-radius: 50% !important; border: 2.5px solid var(--primary-orange); box-shadow: 0 4px 10px rgba(255,106,0,0.25); display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-surface-subtle);">
               {% if user.avatar_url %}
@@ -157,27 +161,35 @@
             Kirish
           </a>
         {% endif %}
-
-        <!-- Hamburger Menu Button (Mobile Only) -->
-        <button class="hamburger-btn" id="mobileDrawerOpenBtn" type="button" aria-label="Menyu ochish" title="Menyu">
-          <span>☰</span>
-        </button>
       </div>
     </div>
   </header>
 
-  <!-- Mobile Navigation Overlay & Drawer -->
+  <!-- Mobile Navigation Overlay & Drawer (Chap tomondan ochiladi) -->
   <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
   <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Mobil Menyu">
-    <button class="drawer-close-btn" id="mobileDrawerCloseBtn" aria-label="Yopish">✕</button>
-    
-    <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-subtle); margin-bottom: 8px;">
-      <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #FF7B1C, #FF5A00); display: flex; align-items: center; justify-content: center; font-size: 18px;">✨</div>
-      <div>
-        <h3 style="margin: 0; font-size: 16px; color: var(--text-main); font-weight: 800;">EduSelf</h3>
-        <p style="margin: 0; font-size: 11px; color: var(--text-muted); font-weight: 600;">EduPlay 3D Gamification</p>
+    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-subtle); margin-bottom: 8px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 36px; height: 36px; border-radius: 50% !important; background: linear-gradient(135deg, #FF7B1C, #FF5A00); display: flex; align-items: center; justify-content: center; font-size: 18px;">✨</div>
+        <div>
+          <h3 style="margin: 0; font-size: 16px; color: var(--text-main); font-weight: 800;">EduSelf</h3>
+          <p style="margin: 0; font-size: 11px; color: var(--text-muted); font-weight: 600;">EduPlay 3D Gamification</p>
+        </div>
       </div>
+      <button class="drawer-close-btn" id="mobileDrawerCloseBtn" aria-label="Yopish">✕</button>
     </div>
+
+    <!-- Ovoz tugmasi: UCHTA CHIZIQCHA ICHIDA -->
+    <button class="drawer-nav-link audio-btn" id="muteToggleBtn" type="button" title="Tovushni yoqish / o'chirish" style="width: 100%; cursor: pointer; text-align: left; font-family: inherit; margin-bottom: 4px;">
+      <span>🔊</span> <span>Tovush: Yoqilgan</span>
+    </button>
+
+    {% if user.is_authenticated %}
+      <!-- Ro'yxatdan o'tgan foydalanuvchi tangasi menyu ichida -->
+      <div class="drawer-nav-link" style="background: rgba(255,168,52,0.12); border-color: rgba(255,168,52,0.35); color: #FFA834; font-weight: 800;">
+        <span>🪙</span> <span>Tangalar: <strong id="drawerCoinCount">1,420</strong></span>
+      </div>
+    {% endif %}
 
     <a href="/dashboard/" class="drawer-nav-link">
       <span>📊</span> <span>Dashboard</span>

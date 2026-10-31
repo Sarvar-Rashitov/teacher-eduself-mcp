@@ -4,24 +4,31 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. NAVBAR — Hamburger Menu (Mobilda) & Desktop Nav
+   1. NAVBAR — Hamburger Menu (Chap burchakda) & Desktop Nav
    -------------------------------------------------------------------------- */
 
 .hamburger-btn {
-  display: none;
-  background: none;
-  border: none;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface-subtle);
+  border: 1.5px solid var(--border-subtle);
   cursor: pointer;
-  padding: 8px;
-  border-radius: 12px !important;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50% !important;
   color: var(--text-main);
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
   -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
 }
 .hamburger-btn:hover {
-  background: var(--bg-surface-subtle);
+  background: var(--card-row-bg);
+  border-color: var(--tg-blue);
+  transform: scale(1.05);
 }
 
 /* Mobile nav overlay */
@@ -29,37 +36,42 @@
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: 9998;
   opacity: 0;
   transition: opacity 0.25s ease;
 }
 .mobile-nav-overlay.open {
+  display: block !important;
   opacity: 1;
 }
 
-/* Mobile nav drawer */
+/* Mobile nav drawer (Chap tomondan silliq ochiladi) */
 .mobile-nav-drawer {
   position: fixed;
   top: 0;
-  right: -320px;
-  width: 280px;
+  left: -320px;
+  right: auto;
+  width: 290px;
   max-width: 85vw;
   height: 100%;
   background: var(--bg-surface);
-  border-left: 1.5px solid var(--border-subtle);
+  border-right: 1.5px solid var(--border-subtle);
+  border-left: none;
   z-index: 9999;
-  padding: 24px 20px;
+  padding: 22px 18px;
   box-sizing: border-box;
-  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.25);
+  transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.28);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 .mobile-nav-drawer.open {
-  right: 0;
+  left: 0;
+  right: auto;
 }
 
 .mobile-nav-drawer .drawer-close-btn {
