@@ -90,6 +90,8 @@
 
   <!-- EduPlay 3D Design System Stylesheet (with cache-busting version) -->
   <link rel="stylesheet" href="{% static 'css/eduplay_3d.css' %}?v=tg2026_v6">
+  <!-- Mobile Responsive CSS -->
+  <link rel="stylesheet" href="{% static 'css/mobile_responsive.css' %}?v=mob2026_v1">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -115,6 +117,9 @@
         {% endif %}
         <a href="/play/" class="nav-link font-heading" style="text-decoration: none; color: var(--primary-orange); font-size: 14px; font-weight: 800; padding: 6px 14px; border-radius: 9999px; background: var(--primary-orange-soft); border: 1.5px solid var(--primary-orange-border);">🎮 O‘yin (Play)</a>
       </nav>
+
+      <!-- Hamburger Menu Button (Mobile Only) -->
+      <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Menyu" title="Menyu">☰</button>
 
       <!-- Header Actions (Telegram Theme Switch, Audio, Coins, User) -->
       <div class="audio-controls" style="display: flex; align-items: center; gap: 12px;">
@@ -164,6 +169,27 @@
     {% block content %}
     {% endblock %}
   </main>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <button class="drawer-close-btn" id="drawerCloseBtn" type="button">✕</button>
+    
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; padding: 12px 16px; background: var(--bg-surface-subtle); border-radius: 20px !important;">
+      <div style="width: 36px; height: 36px; border-radius: 50% !important; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF7B1C, #FF5A00); font-size: 18px;">✨</div>
+      <span style="font-weight: 800; font-size: 16px; color: var(--text-main);">EduSelf</span>
+    </div>
+
+    {% if user.is_authenticated %}
+      <a href="/dashboard/" class="drawer-nav-link">📊 Dashboard</a>
+      <a href="/editor/new/" class="drawer-nav-link">➕ Yangi Viktorina</a>
+      <a href="/auth/profile/" class="drawer-nav-link">👤 Profilim ({{ user.username }})</a>
+    {% endif %}
+    <a href="/play/" class="drawer-nav-link" style="background: rgba(255,106,0,0.1); border-color: var(--primary-orange); color: var(--primary-orange);">🎮 O'yin (Play)</a>
+    {% if not user.is_authenticated %}
+      <a href="/auth/login/" class="drawer-nav-link" style="background: rgba(36,129,204,0.12); border-color: var(--tg-blue); color: var(--tg-blue);">🔑 Kirish</a>
+    {% endif %}
+  </div>
 
   <!-- Global Audio & Component Scripts -->
   <script src="{% static 'js/audio.js' %}"></script>
@@ -225,6 +251,35 @@
     })();
   </script>
   <script src="{% static 'js/components.js' %}"></script>
+  <script>
+    // Hamburger / Mobile Drawer Logic
+    (function() {
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const overlay = document.getElementById('mobileNavOverlay');
+      const drawer = document.getElementById('mobileNavDrawer');
+      const closeBtn = document.getElementById('drawerCloseBtn');
+
+      function openDrawer() {
+        overlay.style.display = 'block';
+        setTimeout(() => {
+          overlay.classList.add('open');
+          drawer.classList.add('open');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeDrawer() {
+        overlay.classList.remove('open');
+        drawer.classList.remove('open');
+        document.body.style.overflow = '';
+        setTimeout(() => { overlay.style.display = 'none'; }, 300);
+      }
+
+      if (hamburgerBtn) hamburgerBtn.addEventListener('click', openDrawer);
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (overlay) overlay.addEventListener('click', closeDrawer);
+    })();
+  </script>
   {% block extra_js %}{% endblock %}
 
 </body>

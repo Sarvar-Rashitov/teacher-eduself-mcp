@@ -1,0 +1,680 @@
+/* ==========================================================================
+   EduSelf Teacher — Mobile Responsive (Telefon uchun moslashtirilgan)
+   Barcha breakpoint'lar: 768px (tablet) va 480px (kichik telefon)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. NAVBAR — Hamburger Menu (Mobilda) & Desktop Nav
+   -------------------------------------------------------------------------- */
+
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 12px !important;
+  color: var(--text-main);
+  font-size: 22px;
+  line-height: 1;
+  transition: background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.hamburger-btn:hover {
+  background: var(--bg-surface-subtle);
+}
+
+/* Mobile nav overlay */
+.mobile-nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.mobile-nav-overlay.open {
+  opacity: 1;
+}
+
+/* Mobile nav drawer */
+.mobile-nav-drawer {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 280px;
+  max-width: 85vw;
+  height: 100%;
+  background: var(--bg-surface);
+  border-left: 1.5px solid var(--border-subtle);
+  z-index: 9999;
+  padding: 24px 20px;
+  box-sizing: border-box;
+  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.mobile-nav-drawer.open {
+  right: 0;
+}
+
+.mobile-nav-drawer .drawer-close-btn {
+  align-self: flex-end;
+  background: var(--bg-surface-subtle);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 9999px !important;
+  width: 38px;
+  height: 38px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.mobile-nav-drawer .drawer-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text-main);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 12px 16px;
+  border-radius: 16px !important;
+  background: var(--bg-surface-subtle);
+  border: 1.5px solid var(--border-subtle);
+  transition: background 0.2s, border-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.mobile-nav-drawer .drawer-nav-link:hover,
+.mobile-nav-drawer .drawer-nav-link:active {
+  background: var(--card-row-bg);
+  border-color: var(--tg-blue);
+}
+
+/* Hide text labels on small screens in header (already has .hide-mobile) */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-nav-overlay {
+    display: block;
+  }
+
+  /* Shrink header padding */
+  .header-container {
+    padding: 10px 16px !important;
+  }
+
+  /* Hide desktop nav links */
+  .nav-links {
+    display: none !important;
+  }
+
+  /* Tighten audio-controls gap */
+  .audio-controls {
+    gap: 8px !important;
+  }
+
+  /* Shrink coin pill */
+  .coin-reward-pill {
+    padding: 5px 10px !important;
+    font-size: 13px !important;
+  }
+
+  /* Audio btn icon only */
+  .audio-btn {
+    padding: 7px 10px !important;
+  }
+
+  /* Smaller brand title */
+  .brand-title {
+    font-size: 17px !important;
+  }
+  .brand-subtitle {
+    display: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. DASHBOARD — teacher_home.html
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  /* Dashboard container full width */
+  .dashboard-container {
+    margin: 16px auto !important;
+    padding: 0 14px !important;
+  }
+
+  /* Hero section stack vertically */
+  .dashboard-container > div:first-child {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Hero heading size */
+  .dashboard-container h1 {
+    font-size: 24px !important;
+  }
+  .dashboard-container p {
+    font-size: 14px !important;
+  }
+
+  /* Bento grid: single column on mobile */
+  .bento-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Bento card min-height smaller on mobile */
+  .bento-card {
+    min-height: 160px !important;
+    padding: 20px !important;
+  }
+
+  /* Glass frost workspace padding */
+  .glass-frost-workspace {
+    padding: 20px 16px !important;
+    border-radius: 24px !important;
+  }
+
+  /* Quiz list section */
+  #quizzesSection {
+    padding: 20px 16px !important;
+    border-radius: 24px !important;
+  }
+
+  /* Quiz item rows — stack buttons */
+  .quiz-item-row {
+    padding: 14px 14px !important;
+  }
+
+  /* Quizzes section heading row */
+  #quizzesSection > div:first-child {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  /* Hero CTA buttons full width */
+  .dashboard-container .pill-button-green,
+  .dashboard-container .pill-button-blue {
+    width: 100% !important;
+    justify-content: center !important;
+    height: 48px !important;
+    font-size: 15px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 0 10px !important;
+    margin: 10px auto !important;
+  }
+  .bento-card {
+    min-height: 140px !important;
+    padding: 16px !important;
+  }
+  .bento-card h2,
+  .bento-card h3 {
+    font-size: 18px !important;
+  }
+  .glass-frost-workspace {
+    padding: 14px 12px !important;
+    border-radius: 20px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. QUIZ EDITOR — quiz_editor.html
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .editor-container {
+    padding: 0 12px !important;
+    margin: 16px auto !important;
+  }
+
+  /* Editor top bar: stack vertically */
+  .editor-container > div:first-child {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  /* Title inputs full width */
+  #quizTitleInput {
+    width: 100% !important;
+    font-size: 16px !important;
+    box-sizing: border-box !important;
+  }
+  #quizSubjectInput {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 2-column grid → single column on mobile */
+  .editor-container > div[style*="grid-template-columns: 310px"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Also target via attribute wildcard */
+  [style*="grid-template-columns: 310px"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  /* Sidebar max-height (scrollable question list) */
+  #questionsSidebarList {
+    max-height: 240px !important;
+  }
+
+  /* Question form card */
+  .editor-container .bento-card {
+    padding: 18px !important;
+  }
+
+  /* Answers grid 2 cols on phone (already good) */
+  /* AI Modal */
+  #aiModal > div {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    margin: 0 auto !important;
+    border-radius: 24px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .editor-container {
+    padding: 0 8px !important;
+    margin: 8px auto !important;
+  }
+
+  /* Top bar action buttons full width */
+  .editor-container .pill-button-blue,
+  .editor-container .pill-button-primary {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. HOST SCREEN — host_screen.html
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .host-container {
+    padding: 0 12px !important;
+    margin: 12px auto !important;
+  }
+
+  /* Top status bar: wrap */
+  .host-container > div:first-child {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+  }
+
+  /* Question header: smaller */
+  .host-container h2 {
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Options grid: 2 cols on tablet/phone */
+  .host-options-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+
+  .host-option-card {
+    padding: 16px 14px !important;
+    font-size: 16px !important;
+    gap: 10px !important;
+  }
+
+  /* QR / Waiting screen */
+  .host-waiting-screen img {
+    max-width: 180px !important;
+  }
+
+  /* Leaderboard table: scroll */
+  .host-leaderboard-table {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 480px) {
+  .host-options-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .host-option-card {
+    font-size: 14px !important;
+    padding: 14px 12px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. STUDENT GAME — student_game.html
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .game-container {
+    padding: 0 12px !important;
+    margin: 12px auto !important;
+  }
+
+  /* Question card */
+  .game-question-card {
+    padding: 20px 16px !important;
+    border-radius: 24px !important;
+  }
+
+  .game-question-text {
+    font-size: 18px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Answers: 2 columns (already 2x2 on desktop, keep 2x2) */
+  .game-answers-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+  }
+
+  .game-answer-btn {
+    font-size: 15px !important;
+    padding: 14px 10px !important;
+    border-radius: 20px !important;
+    min-height: 70px !important;
+  }
+
+  /* Timer */
+  .game-timer {
+    font-size: 28px !important;
+  }
+
+  /* Score pill */
+  .game-score-pill {
+    font-size: 13px !important;
+    padding: 6px 14px !important;
+  }
+
+  /* Waiting screen */
+  .game-waiting-screen {
+    padding: 28px 16px !important;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-question-text {
+    font-size: 15px !important;
+  }
+
+  .game-answers-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .game-answer-btn {
+    font-size: 14px !important;
+    padding: 14px 12px !important;
+    min-height: 56px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. AUTH PAGES — login.html, register.html, profile.html
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  /* Auth card */
+  .auth-card {
+    margin: 20px 14px !important;
+    padding: 28px 22px !important;
+    border-radius: 28px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Auth form inputs */
+  .auth-card input[type="text"],
+  .auth-card input[type="email"],
+  .auth-card input[type="password"],
+  .auth-card input[type="number"],
+  .auth-card select,
+  .auth-card textarea {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 16px !important; /* Prevent iOS zoom on focus */
+  }
+
+  /* Auth submit button */
+  .auth-card button[type="submit"],
+  .auth-card .pill-button-primary,
+  .auth-card .pill-button-green,
+  .auth-card .pill-button-blue {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Auth page heading */
+  .auth-card h2,
+  .auth-card h1 {
+    font-size: 22px !important;
+  }
+
+  /* Profile avatar */
+  .avatar-xl {
+    width: 80px !important;
+    height: 80px !important;
+    font-size: 36px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    margin: 12px 10px !important;
+    padding: 22px 16px !important;
+    border-radius: 22px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. GLOBAL FIXES — All pages
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  /* Page container padding */
+  .page-container {
+    padding: 0 !important;
+  }
+
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden !important;
+  }
+
+  /* Tables: horizontal scroll on mobile */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  /* Generic large containers */
+  [style*="max-width: 1440px"],
+  [style*="max-width:1440px"],
+  [style*="max-width: 1280px"],
+  [style*="max-width:1280px"] {
+    max-width: 100% !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  /* Pill badges smaller on mobile */
+  .pill-badge {
+    font-size: 12px !important;
+    padding: 5px 14px !important;
+  }
+
+  /* Modal fullscreen on mobile */
+  .modal-overlay > div,
+  .modal-container {
+    width: 95vw !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    border-radius: 24px !important;
+  }
+
+  /* Background attachment: scroll on mobile (fixed causes issues) */
+  body {
+    background-attachment: scroll !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small screens */
+  h1 { font-size: 20px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 16px !important; }
+
+  .pill-badge {
+    font-size: 11px !important;
+    padding: 4px 10px !important;
+  }
+
+  /* Bento card surface */
+  .bento-card-surface {
+    padding: 14px !important;
+    border-radius: 20px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. TOUCH IMPROVEMENTS — Bigger tap targets, no hover flicker on touch
+   -------------------------------------------------------------------------- */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Disable hover transforms on touch devices */
+  .bento-card:hover,
+  .quiz-item-row:hover,
+  .host-option-card:hover,
+  .glass-card-blue:hover,
+  .glass-card-purple:hover,
+  .glass-card-gold:hover {
+    transform: none !important;
+  }
+
+  /* Active state feedback instead */
+  .bento-card:active {
+    transform: scale(0.97) !important;
+  }
+
+  .game-answer-btn:active {
+    transform: scale(0.95) !important;
+  }
+
+  /* Minimum tap target 44px height */
+  button,
+  .nav-link,
+  .pill-button-primary,
+  .pill-button-green,
+  .pill-button-blue,
+  .pill-button-secondary {
+    min-height: 44px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. AUTH WRAPPERS (login / register outer div)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  /* Outer centering wrapper */
+  div[style*="max-width: 460px"],
+  div[style*="max-width: 480px"] {
+    padding: 0 10px !important;
+    margin-top: 16px !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* Inner card */
+  div[style*="max-width: 460px"] .bento-card-surface,
+  div[style*="max-width: 480px"] .bento-card-surface {
+    padding: 26px 18px !important;
+    border-radius: 28px !important;
+  }
+
+  /* All inputs inside auth forms */
+  div[style*="max-width: 460px"] input,
+  div[style*="max-width: 480px"] input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: 16px !important;
+  }
+
+  /* Social login buttons */
+  div[style*="max-width: 460px"] a.pill-button-secondary,
+  div[style*="max-width: 480px"] a.pill-button-secondary {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 480px) {
+  div[style*="max-width: 460px"] .bento-card-surface,
+  div[style*="max-width: 480px"] .bento-card-surface {
+    padding: 20px 14px !important;
+    border-radius: 22px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   10. DASHBOARD mobile quiz item rows: hide long text, wrap buttons
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+  /* Quiz item row inner flex: stack content + actions */
+  .quiz-item-row > div {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  /* Host screen status bar wrap */
+  .host-container > div:first-child > div {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   11. DASHBOARD background-attachment fix (fixed causes blur on iOS Safari)
+   -------------------------------------------------------------------------- */
+
+@supports (-webkit-touch-callout: none) {
+  body {
+    background-attachment: scroll !important;
+  }
+}
