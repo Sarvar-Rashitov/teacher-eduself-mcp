@@ -164,20 +164,20 @@
 <div class="dashboard-container" style="max-width: 1440px; margin: 32px auto; padding: 0 28px; width: 100%; box-sizing: border-box;">
 
   <!-- Hero Header -->
-  <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; flex-wrap: wrap; gap: 20px;">
-    <div>
+  <div class="dashboard-hero-row" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; flex-wrap: wrap; gap: 20px;">
+    <div class="dashboard-hero-text">
       <span class="pill-badge" style="background: rgba(255,106,0,0.2); color: var(--primary-orange); border: 1.5px solid var(--primary-orange); padding: 6px 18px; border-radius: 9999px !important; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; backdrop-filter: blur(12px); box-shadow: 0 4px 16px rgba(255,106,0,0.25);">
         <span>🎓</span> Xush kelibsiz, {{ user.first_name|default:user.username }}!
       </span>
-      <h1 class="font-heading" style="font-size: 34px; color: var(--text-main); margin-bottom: 6px; letter-spacing: -0.5px; text-shadow: 0 2px 12px rgba(0,0,0,0.5);">
+      <h1 class="font-heading dashboard-hero-title" style="font-size: 34px; color: var(--text-main); margin-bottom: 6px; letter-spacing: -0.5px; text-shadow: 0 2px 12px rgba(0,0,0,0.5);">
         Darslar va O‘yinlar Boshqaruvi
       </h1>
-      <p style="font-size: 16px; color: var(--text-muted); font-weight: 500; text-shadow: 0 1px 6px rgba(0,0,0,0.4);">
+      <p class="dashboard-hero-subtitle" style="font-size: 16px; color: var(--text-muted); font-weight: 500; text-shadow: 0 1px 6px rgba(0,0,0,0.4);">
         Sinfingiz uchun interaktiv darslar yarating va jonli o‘yinlarni boshqaring.
       </p>
     </div>
 
-    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <div class="dashboard-hero-actions" style="display: flex; gap: 12px; flex-wrap: wrap;">
       <a href="/play/" target="_blank" class="pill-button-green" style="text-decoration: none; height: 48px; padding: 0 24px; font-size: 15px; border-radius: 9999px !important; display: inline-flex; align-items: center; gap: 8px;">
         <span>🎮</span> Blooket O‘ynash
       </a>
@@ -254,13 +254,13 @@
 
     <!-- Quizzes Table Section (Telegram Surface Card) -->
     <div id="quizzesSection" class="bento-card bento-card-surface" style="padding: 32px; border-radius: 28px !important; border: 1.5px solid var(--border-subtle); box-shadow: var(--shadow-card);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+      <div class="quizzes-header-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
         <h2 class="font-heading" style="font-size: 24px; color: var(--text-main); display: flex; align-items: center; gap: 10px; margin: 0;">
           <span>📚</span> Sizning Viktorinalaringiz
         </h2>
-      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+      <div class="quizzes-search-controls" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
         <input type="text" id="quizSearchInput" placeholder="🔍 Qidirish..." oninput="filterQuizzes(this.value)" style="height: 40px; border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 0 16px; font-size: 13px; font-weight: 600; outline: none; width: 180px;">
-        <span style="font-size: 14px; color: var(--text-muted); background: var(--bg-surface-subtle); padding: 6px 18px; border-radius: 9999px !important; font-weight: 700; border: 1.5px solid var(--border-subtle);">
+        <span class="quiz-total-badge" style="font-size: 14px; color: var(--text-muted); background: var(--bg-surface-subtle); padding: 6px 18px; border-radius: 9999px !important; font-weight: 700; border: 1.5px solid var(--border-subtle);">
           Jami: <strong id="totalQuizzesCount" style="color: var(--primary-orange);">{{ quizzes|length|default:"0" }}</strong> ta test
         </span>
       </div>
@@ -270,7 +270,7 @@
       <div id="quizzesListContainer" style="display: flex; flex-direction: column; gap: 14px;">
         {% for quiz in quizzes %}
           <div class="quiz-item-row" data-title="{{ quiz.title|lower }}" data-subject="{{ quiz.subject|lower }}" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-radius: 22px !important; background: var(--card-row-bg); border: 1.5px solid var(--border-subtle); flex-wrap: wrap; gap: 16px;">
-            <div>
+            <div class="quiz-item-info">
               <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px; flex-wrap: wrap;">
                 <h4 class="font-heading" style="font-size: 19px; color: var(--text-main); margin: 0;">
                   {{ quiz.title }}
@@ -287,7 +287,7 @@
               </p>
             </div>
 
-            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <div class="quiz-item-actions" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
               <a href="/editor/{{ quiz.id }}/" class="pill-button-secondary" style="height: 42px; padding: 0 18px; font-size: 13px; border-radius: 9999px !important; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                 <span>✏️</span> Tahrirlash
               </a>
@@ -336,7 +336,7 @@
       EduPlay 3D o'yin rejimlari o'quvchilarda jamoaviy ishlash va qiziqishni 3 barobarga oshiradi:
     </p>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;">
+    <div class="game-modes-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;">
       
       <!-- Mode 1: Classic -->
       <div style="padding: 16px; border-radius: 20px; background: var(--bg-surface-subtle); border: 2px solid var(--border-subtle); cursor: pointer;" onclick="selectMode('classic')">

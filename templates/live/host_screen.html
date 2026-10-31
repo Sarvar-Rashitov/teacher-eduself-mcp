@@ -65,17 +65,17 @@
 <div id="hostScreenApp" class="host-container">
 
   <!-- TOP STATUS BAR -->
-  <div style="display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-radius: 28px !important; padding: 16px 28px; border: 2px solid var(--border-subtle); box-shadow: var(--shadow-card); margin-bottom: 24px;">
-    <div style="display: flex; align-items: center; gap: 16px;">
+  <div class="host-status-bar" style="display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-radius: 28px !important; padding: 16px 28px; border: 2px solid var(--border-subtle); box-shadow: var(--shadow-card); margin-bottom: 24px;">
+    <div class="host-status-left" style="display: flex; align-items: center; gap: 16px;">
       <button onclick="copyRoomPin()" title="PIN kodni nusxalash" class="pill-badge" style="background: var(--primary-orange-soft); color: var(--primary-orange); padding: 8px 24px; border-radius: 9999px !important; font-weight: 800; font-size: 16px; border: 1.5px solid var(--primary-orange-border); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
         GAME PIN: <span id="displayPin">{{ room_code }}</span> 📋
       </button>
-      <span style="font-size: 15px; font-weight: 700; color: var(--text-muted);">
+      <span class="host-instruction-text" style="font-size: 15px; font-weight: 700; color: var(--text-muted);">
         O‘quvchilar ulanishi: <strong style="color: var(--primary-orange);">eduself.uz/play</strong>
       </span>
     </div>
 
-    <div style="display: flex; align-items: center; gap: 20px;">
+    <div class="host-status-right" style="display: flex; align-items: center; gap: 20px;">
       <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-surface-subtle); padding: 8px 18px; border-radius: 9999px; border: 1.5px solid var(--border-subtle);">
         <span style="font-size: 20px;">🐾</span>
         <span style="font-size: 15px; font-weight: 800; color: var(--text-main);" id="studentCountBadge">0 o‘quvchi</span>
@@ -98,8 +98,8 @@
     </p>
 
     <!-- Giant PIN Display -->
-    <div style="background: var(--bg-surface-subtle); border: 3.5px dashed var(--primary-orange); border-radius: 28px; padding: 20px 64px; margin-bottom: 36px; box-shadow: var(--primary-shadow);">
-      <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 68px; font-weight: 800; letter-spacing: 14px; color: var(--primary-orange);">
+    <div class="host-pin-box" style="background: var(--bg-surface-subtle); border: 3.5px dashed var(--primary-orange); border-radius: 28px; padding: 20px 64px; margin-bottom: 36px; box-shadow: var(--primary-shadow);">
+      <span class="host-pin-text" style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 68px; font-weight: 800; letter-spacing: 14px; color: var(--primary-orange);">
         {{ room_code }}
       </span>
     </div>
@@ -148,7 +148,7 @@
     </div>
 
     <!-- 4 Dual-Coded Options Grid on Projector -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <div class="host-options-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
       
       <!-- Option A (Red ▲) -->
       <div id="optCardA" class="host-option-card host-opt-red">

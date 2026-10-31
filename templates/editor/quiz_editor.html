@@ -7,14 +7,14 @@
 <div class="editor-container" style="max-width: 1440px; margin: 28px auto; padding: 0 28px; width: 100%; box-sizing: border-box;">
 
   <!-- Editor Top Bar -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
-    <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+  <div class="editor-top-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+    <div class="editor-top-left" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
       <a href="/dashboard/" class="pill-button-secondary" style="height: 44px; padding: 0 20px; text-decoration: none; border-radius: 9999px !important;">
         <span>←</span> Boshqaruvga
       </a>
       
       <!-- Quiz Title & Subject Inputs -->
-      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <div class="editor-meta-inputs" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
         <input type="text" id="quizTitleInput" value="{{ quiz.title|default:'Yangi Viktorina' }}" placeholder="Viktorina nomi..." style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 20px; font-weight: 800; color: var(--text-main); background: var(--bg-surface-subtle); border: 1.5px solid var(--border-subtle); border-radius: 9999px !important; padding: 6px 18px; outline: none; width: 280px; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--tg-blue)'" onblur="this.style.borderColor='var(--border-subtle)'">
         
         <input type="text" id="quizSubjectInput" value="{{ quiz.subject|default:'Informatika' }}" placeholder="Fan..." style="font-size: 13px; font-weight: 700; color: var(--text-muted); background: var(--bg-surface-subtle); border: 1.5px solid var(--border-subtle); border-radius: 9999px !important; padding: 6px 14px; outline: none; width: 140px;">
@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <div style="display: flex; gap: 12px; align-items: center;">
+    <div class="editor-top-actions" style="display: flex; gap: 12px; align-items: center;">
       <button type="button" class="pill-button-blue" id="openAIModalBtn" style="height: 46px; padding: 0 22px; border-radius: 9999px !important; cursor: pointer;">
         <span>🤖</span> AI Yordamchi
       </button>
@@ -48,10 +48,10 @@
   </div>
 
   <!-- Main 2-Column Editor Layout -->
-  <div style="display: grid; grid-template-columns: 310px 1fr; gap: 24px;">
+  <div class="editor-main-layout" style="display: grid; grid-template-columns: 310px 1fr; gap: 24px;">
     
     <!-- LEFT: Questions Sidebar -->
-    <div class="bento-card bento-card-surface" style="padding: 22px; height: fit-content; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle);">
+    <div class="bento-card bento-card-surface editor-sidebar-card" style="padding: 22px; height: fit-content; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle);">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
         <span class="font-heading" style="font-size: 16px; color: var(--text-main);">Savollar Ro‘yxati (<span id="totalQuestionsCount">1</span>)</span>
         <button id="addQuestionBtn" type="button" class="pill-button-green" style="padding: 6px 16px; font-size: 13px; height: 34px; border-radius: 9999px !important; cursor: pointer;">
@@ -65,7 +65,7 @@
     </div>
 
     <!-- RIGHT: Active Question Details Form -->
-    <div class="bento-card bento-card-surface" style="padding: 30px; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle);">
+    <div class="bento-card bento-card-surface editor-form-card" style="padding: 30px; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle);">
       
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
         <h3 id="currentQuestionTitle" class="font-heading" style="font-size: 18px; color: var(--text-main); margin: 0;">
@@ -121,7 +121,7 @@
       <div style="margin-bottom: 26px;">
         <label style="display: block; font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 12px;">Variantlar (To‘g‘ri javob doirachasini belgilang)</label>
         
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <div class="editor-options-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
           
           <!-- Option A: Red Triangle -->
           <div style="display: flex; align-items: center; gap: 10px; background: rgba(239,68,68,0.12); border: 2px solid #F87171; border-radius: 9999px !important; padding: 8px 18px;">

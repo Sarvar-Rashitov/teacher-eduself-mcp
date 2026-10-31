@@ -1560,3 +1560,596 @@ input[type="submit"],
   border-color: var(--tg-blue) !important;
   box-shadow: 0 4px 16px rgba(36, 129, 204, 0.15) !important;
 }
+
+
+/* ==========================================================================
+   MOBILE & RESPONSIVE DESIGN SYSTEM (Smartphones, Tablets & Portrait Screens)
+   Authentic Telegram Glassmorphic UI & 100% Round Pill Mobile Ergonomics
+   ========================================================================== */
+
+/* Utility Visibility Classes */
+.hide-mobile {
+  display: inline-block;
+}
+.show-mobile {
+  display: none !important;
+}
+
+/* Base Mobile Bottom Navigation (Hidden on Desktop) */
+.mobile-bottom-nav {
+  display: none;
+}
+
+/* ==========================================================================
+   TABLET & MOBILE BREAKPOINT (<= 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .header-container {
+    padding: 12px 18px !important;
+  }
+  .dashboard-container,
+  .editor-container {
+    padding: 0 16px !important;
+  }
+}
+
+/* ==========================================================================
+   SMARTPHONE & PORTRAIT BREAKPOINT (<= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Prevent horizontal layout shifts / overflow bugs */
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Visibility Helpers */
+  .hide-mobile {
+    display: none !important;
+  }
+  .show-mobile {
+    display: block !important;
+  }
+
+  /* Main Container Padding to leave space for Mobile Bottom Nav */
+  main.page-container {
+    padding-bottom: 84px !important;
+    min-height: calc(100vh - 140px) !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     1. Mobile Header & Telegram-Style App Bar
+     ------------------------------------------------------------------------ */
+  .showcase-header {
+    position: sticky;
+    top: 0;
+    z-index: 80;
+    padding: 0 !important;
+  }
+
+  .header-container {
+    padding: 8px 12px !important;
+    gap: 8px !important;
+  }
+
+  .brand-badge {
+    gap: 8px !important;
+  }
+
+  .brand-badge .logo-icon {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 17px !important;
+  }
+
+  .brand-title {
+    font-size: 17px !important;
+  }
+
+  .brand-subtitle {
+    display: none !important;
+  }
+
+  /* Move top header nav to bottom nav on mobile */
+  .nav-links {
+    display: none !important;
+  }
+
+  .audio-controls {
+    gap: 6px !important;
+  }
+
+  .tg-theme-switch {
+    padding: 2px !important;
+  }
+
+  .tg-switch-track {
+    width: 44px !important;
+    height: 24px !important;
+  }
+
+  .tg-switch-thumb {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 12px !important;
+  }
+
+  .audio-btn {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+  }
+
+  .coin-reward-pill {
+    padding: 4px 10px !important;
+    font-size: 12px !important;
+    gap: 4px !important;
+  }
+
+  .avatar-circle {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 16px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     2. Sleek Frosted Glass Mobile Bottom Navigation Bar (App Experience)
+     ------------------------------------------------------------------------ */
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 64px !important;
+    padding: 4px 12px calc(4px + env(safe-area-inset-bottom, 0px)) 12px !important;
+    background: rgba(23, 33, 43, 0.88) !important;
+    backdrop-filter: blur(24px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+    border-top: 1.5px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25) !important;
+    z-index: 100 !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+  }
+
+  html[data-theme="light"] .mobile-bottom-nav {
+    background: rgba(255, 255, 255, 0.88) !important;
+    border-top: 1.5px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06) !important;
+  }
+
+  .mobile-nav-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    color: var(--text-muted) !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 6px 14px !important;
+    border-radius: 9999px !important;
+    transition: all 0.2s ease !important;
+    gap: 2px !important;
+  }
+
+  .mobile-nav-item.active,
+  .mobile-nav-item:active {
+    color: var(--primary-orange) !important;
+    background: rgba(255, 106, 0, 0.12) !important;
+  }
+
+  .mobile-nav-icon {
+    font-size: 20px !important;
+    line-height: 1 !important;
+  }
+
+  .mobile-nav-label {
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     3. Dashboard Responsiveness
+     ------------------------------------------------------------------------ */
+  .dashboard-container {
+    margin: 14px auto 60px auto !important;
+    padding: 0 12px !important;
+  }
+
+  .dashboard-hero-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .dashboard-hero-title {
+    font-size: clamp(22px, 6vw, 30px) !important;
+    line-height: 1.25 !important;
+  }
+
+  .dashboard-hero-subtitle {
+    font-size: 13.5px !important;
+    line-height: 1.4 !important;
+  }
+
+  .dashboard-hero-actions {
+    width: 100% !important;
+    display: flex !important;
+    gap: 10px !important;
+  }
+
+  .dashboard-hero-actions a {
+    flex: 1 !important;
+    justify-content: center !important;
+    height: 44px !important;
+    font-size: 13.5px !important;
+    padding: 0 12px !important;
+  }
+
+  .glass-frost-workspace {
+    padding: 16px 12px !important;
+    border-radius: 22px !important;
+  }
+
+  .bento-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .bento-card {
+    min-height: auto !important;
+    padding: 18px 16px !important;
+    border-radius: 22px !important;
+  }
+
+  .bento-card h3 {
+    font-size: 21px !important;
+  }
+
+  #quizzesSection {
+    padding: 18px 12px !important;
+    border-radius: 22px !important;
+  }
+
+  .quizzes-header-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .quizzes-header-bar h2 {
+    font-size: 20px !important;
+  }
+
+  .quizzes-search-controls {
+    width: 100% !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  #quizSearchInput {
+    width: 100% !important;
+    height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  .quiz-total-badge {
+    text-align: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .quiz-item-row {
+    padding: 14px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    border-radius: 18px !important;
+  }
+
+  .quiz-item-info h4 {
+    font-size: 17px !important;
+  }
+
+  .quiz-item-actions {
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  .quiz-item-actions a.pill-button-secondary {
+    flex: 1 !important;
+    justify-content: center !important;
+    height: 42px !important;
+    font-size: 13px !important;
+  }
+
+  .quiz-item-actions button.pill-button-green {
+    flex: 1.3 !important;
+    justify-content: center !important;
+    height: 42px !important;
+    font-size: 13px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     4. Quiz Editor Responsiveness
+     ------------------------------------------------------------------------ */
+  .editor-container {
+    margin: 12px auto 60px auto !important;
+    padding: 0 10px !important;
+  }
+
+  .editor-top-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .editor-top-left {
+    width: 100% !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .editor-meta-inputs {
+    width: 100% !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  #quizTitleInput {
+    width: 100% !important;
+    font-size: 18px !important;
+    box-sizing: border-box !important;
+    height: 44px !important;
+  }
+
+  #quizSubjectInput {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    height: 40px !important;
+  }
+
+  #quizGradeInput {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    height: 40px !important;
+  }
+
+  .editor-top-actions {
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  .editor-top-actions button {
+    flex: 1 !important;
+    justify-content: center !important;
+    height: 44px !important;
+  }
+
+  .editor-main-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  .editor-sidebar-card {
+    padding: 14px 12px !important;
+    border-radius: 20px !important;
+  }
+
+  #questionsSidebarList {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    max-height: none !important;
+    gap: 8px !important;
+    padding: 4px 0 8px 0 !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x proximity;
+  }
+
+  .q-sidebar-item {
+    min-width: 130px !important;
+    max-width: 160px !important;
+    flex-shrink: 0 !important;
+    padding: 8px 12px !important;
+    border-radius: 16px !important;
+    scroll-snap-align: start;
+  }
+
+  .editor-form-card {
+    padding: 18px 14px !important;
+    border-radius: 22px !important;
+  }
+
+  .editor-options-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .editor-options-grid > div {
+    padding: 10px 14px !important;
+  }
+
+  .editor-settings-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+
+  .editor-settings-row select {
+    width: 100% !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     5. Live Host Screen Responsiveness
+     ------------------------------------------------------------------------ */
+  .host-container {
+    padding: 0 10px !important;
+    margin: 10px auto !important;
+  }
+
+  .host-status-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding: 14px 16px !important;
+    text-align: center !important;
+  }
+
+  .host-status-left,
+  .host-status-right {
+    width: 100% !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  .host-pin-box {
+    padding: 14px 20px !important;
+    border-radius: 20px !important;
+  }
+
+  .host-pin-text {
+    font-size: clamp(38px, 12vw, 68px) !important;
+    letter-spacing: 6px !important;
+  }
+
+  .host-options-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .host-option-card {
+    font-size: 17px !important;
+    padding: 16px 20px !important;
+    border-radius: 18px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     6. Student Game Responsiveness
+     ------------------------------------------------------------------------ */
+  .blooket-container {
+    margin: 8px auto 70px auto !important;
+    padding: 0 12px !important;
+    max-width: 100% !important;
+  }
+
+  .blooket-answers-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .blooket-btn {
+    min-height: 80px !important;
+    padding: 14px 18px !important;
+    border-radius: 20px !important;
+  }
+
+  .btn-text {
+    font-size: 16px !important;
+  }
+
+  .blooks-grid {
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important;
+    gap: 8px !important;
+  }
+
+  .blook-emoji {
+    font-size: 32px !important;
+  }
+
+  .chests-container {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .chest-card {
+    padding: 14px 6px !important;
+    border-radius: 18px !important;
+  }
+
+  .chest-icon {
+    font-size: 42px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     7. Auth & Profile Responsiveness
+     ------------------------------------------------------------------------ */
+  .auth-card {
+    padding: 24px 16px !important;
+    border-radius: 24px !important;
+  }
+
+  .profile-names-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     8. Modals Mobile Ergonomics
+     ------------------------------------------------------------------------ */
+  #gameModesModal .bento-card,
+  #mcpModal .bento-card,
+  #aiModal .bento-card {
+    padding: 20px 16px !important;
+    border-radius: 24px !important;
+    max-width: 95vw !important;
+    max-height: 90vh !important;
+  }
+
+  .game-modes-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+}
+
+/* ==========================================================================
+   EXTRA SMALL PHONES (<= 420px: iPhone SE, small Androids)
+   ========================================================================== */
+@media (max-width: 420px) {
+  .header-container {
+    padding: 6px 8px !important;
+  }
+
+  .brand-badge .logo-icon {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 15px !important;
+  }
+
+  .brand-title {
+    font-size: 15px !important;
+  }
+
+  .coin-reward-pill {
+    display: none !important;
+  }
+
+  .dashboard-hero-title {
+    font-size: 21px !important;
+  }
+
+  .dashboard-hero-actions {
+    flex-direction: column !important;
+  }
+
+  .quiz-item-actions {
+    flex-wrap: wrap !important;
+  }
+
+  .blooket-btn {
+    min-height: 72px !important;
+  }
+}

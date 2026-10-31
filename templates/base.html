@@ -89,9 +89,9 @@
   </style>
 
   <!-- EduPlay 3D Design System Stylesheet (with cache-busting version) -->
-  <link rel="stylesheet" href="{% static 'css/eduplay_3d.css' %}?v=tg2026_v6">
-  <!-- Mobile Responsive CSS -->
-  <link rel="stylesheet" href="{% static 'css/mobile_responsive.css' %}?v=mob2026_v1">
+  <link rel="stylesheet" href="{% static 'css/eduplay_3d.css' %}?v=tg2026_mobile_v7">
+  <!-- Mobile Responsive Enhancements -->
+  <link rel="stylesheet" href="{% static 'css/mobile_responsive.css' %}?v=2">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -117,9 +117,6 @@
         {% endif %}
         <a href="/play/" class="nav-link font-heading" style="text-decoration: none; color: var(--primary-orange); font-size: 14px; font-weight: 800; padding: 6px 14px; border-radius: 9999px; background: var(--primary-orange-soft); border: 1.5px solid var(--primary-orange-border);">🎮 O‘yin (Play)</a>
       </nav>
-
-      <!-- Hamburger Menu Button (Mobile Only) -->
-      <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Menyu" title="Menyu">☰</button>
 
       <!-- Header Actions (Telegram Theme Switch, Audio, Coins, User) -->
       <div class="audio-controls" style="display: flex; align-items: center; gap: 12px;">
@@ -160,9 +157,53 @@
             Kirish
           </a>
         {% endif %}
+
+        <!-- Hamburger Menu Button (Mobile Only) -->
+        <button class="hamburger-btn" id="mobileDrawerOpenBtn" type="button" aria-label="Menyu ochish" title="Menyu">
+          <span>☰</span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Navigation Overlay & Drawer -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Mobil Menyu">
+    <button class="drawer-close-btn" id="mobileDrawerCloseBtn" aria-label="Yopish">✕</button>
+    
+    <div style="display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-subtle); margin-bottom: 8px;">
+      <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #FF7B1C, #FF5A00); display: flex; align-items: center; justify-content: center; font-size: 18px;">✨</div>
+      <div>
+        <h3 style="margin: 0; font-size: 16px; color: var(--text-main); font-weight: 800;">EduSelf</h3>
+        <p style="margin: 0; font-size: 11px; color: var(--text-muted); font-weight: 600;">EduPlay 3D Gamification</p>
+      </div>
+    </div>
+
+    <a href="/dashboard/" class="drawer-nav-link">
+      <span>📊</span> <span>Dashboard</span>
+    </a>
+    <a href="/editor/new/" class="drawer-nav-link">
+      <span>➕</span> <span>Yangi Viktorina</span>
+    </a>
+    <a href="/play/" class="drawer-nav-link" style="color: var(--primary-orange); border-color: var(--primary-orange-border);">
+      <span>🎮</span> <span>Blooket O‘yin (Play)</span>
+    </a>
+    {% if user.is_authenticated %}
+      <a href="/auth/profile/" class="drawer-nav-link">
+        <span>👤</span> <span>Profil ({{ user.username }})</span>
+      </a>
+      <a href="/auth/logout/" class="drawer-nav-link" style="color: #EF4444; margin-top: auto;">
+        <span>🚪</span> <span>Tizimdan Chiqish</span>
+      </a>
+    {% else %}
+      <a href="/auth/login/" class="drawer-nav-link" style="margin-top: auto;">
+        <span>🔑</span> <span>Kirish</span>
+      </a>
+      <a href="/auth/register/" class="drawer-nav-link">
+        <span>✨</span> <span>Ro'yxatdan O'tish</span>
+      </a>
+    {% endif %}
+  </aside>
 
   <!-- Main Content Area -->
   <main class="page-container" style="min-height: calc(100vh - 120px); transition: background-color 0.25s ease;">
@@ -170,26 +211,32 @@
     {% endblock %}
   </main>
 
-  <!-- Mobile Navigation Drawer -->
-  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
-  <div class="mobile-nav-drawer" id="mobileNavDrawer">
-    <button class="drawer-close-btn" id="drawerCloseBtn" type="button">✕</button>
-    
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; padding: 12px 16px; background: var(--bg-surface-subtle); border-radius: 20px !important;">
-      <div style="width: 36px; height: 36px; border-radius: 50% !important; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF7B1C, #FF5A00); font-size: 18px;">✨</div>
-      <span style="font-weight: 800; font-size: 16px; color: var(--text-main);">EduSelf</span>
-    </div>
-
+  <!-- Mobile Bottom Navigation Bar (Telegram/App style for smartphones) -->
+  <nav class="mobile-bottom-nav" aria-label="Mobil navigatsiya">
+    <a href="/dashboard/" class="mobile-nav-item {% if '/dashboard' in request.path %}active{% endif %}">
+      <span class="mobile-nav-icon">📊</span>
+      <span class="mobile-nav-label">Dashboard</span>
+    </a>
+    <a href="/editor/new/" class="mobile-nav-item {% if '/editor' in request.path %}active{% endif %}">
+      <span class="mobile-nav-icon">➕</span>
+      <span class="mobile-nav-label">Yangi</span>
+    </a>
+    <a href="/play/" class="mobile-nav-item {% if '/play' in request.path %}active{% endif %}">
+      <span class="mobile-nav-icon">🎮</span>
+      <span class="mobile-nav-label">O‘yin</span>
+    </a>
     {% if user.is_authenticated %}
-      <a href="/dashboard/" class="drawer-nav-link">📊 Dashboard</a>
-      <a href="/editor/new/" class="drawer-nav-link">➕ Yangi Viktorina</a>
-      <a href="/auth/profile/" class="drawer-nav-link">👤 Profilim ({{ user.username }})</a>
+      <a href="/auth/profile/" class="mobile-nav-item {% if '/auth/profile' in request.path %}active{% endif %}">
+        <span class="mobile-nav-icon">👤</span>
+        <span class="mobile-nav-label">Profil</span>
+      </a>
+    {% else %}
+      <a href="/auth/login/" class="mobile-nav-item {% if '/auth/login' in request.path %}active{% endif %}">
+        <span class="mobile-nav-icon">🔑</span>
+        <span class="mobile-nav-label">Kirish</span>
+      </a>
     {% endif %}
-    <a href="/play/" class="drawer-nav-link" style="background: rgba(255,106,0,0.1); border-color: var(--primary-orange); color: var(--primary-orange);">🎮 O'yin (Play)</a>
-    {% if not user.is_authenticated %}
-      <a href="/auth/login/" class="drawer-nav-link" style="background: rgba(36,129,204,0.12); border-color: var(--tg-blue); color: var(--tg-blue);">🔑 Kirish</a>
-    {% endif %}
-  </div>
+  </nav>
 
   <!-- Global Audio & Component Scripts -->
   <script src="{% static 'js/audio.js' %}"></script>
@@ -249,37 +296,32 @@
         });
       }
     })();
-  </script>
-  <script src="{% static 'js/components.js' %}"></script>
-  <script>
-    // Hamburger / Mobile Drawer Logic
+
+    // Mobile Navigation Drawer Toggle Logic
     (function() {
-      const hamburgerBtn = document.getElementById('hamburgerBtn');
-      const overlay = document.getElementById('mobileNavOverlay');
+      const openBtn = document.getElementById('mobileDrawerOpenBtn');
+      const closeBtn = document.getElementById('mobileDrawerCloseBtn');
       const drawer = document.getElementById('mobileNavDrawer');
-      const closeBtn = document.getElementById('drawerCloseBtn');
+      const overlay = document.getElementById('mobileNavOverlay');
+      if (!openBtn || !drawer || !overlay) return;
 
       function openDrawer() {
-        overlay.style.display = 'block';
-        setTimeout(() => {
-          overlay.classList.add('open');
-          drawer.classList.add('open');
-        }, 10);
+        drawer.classList.add('open');
+        overlay.classList.add('open');
         document.body.style.overflow = 'hidden';
       }
-
       function closeDrawer() {
-        overlay.classList.remove('open');
         drawer.classList.remove('open');
+        overlay.classList.remove('open');
         document.body.style.overflow = '';
-        setTimeout(() => { overlay.style.display = 'none'; }, 300);
       }
 
-      if (hamburgerBtn) hamburgerBtn.addEventListener('click', openDrawer);
+      openBtn.addEventListener('click', openDrawer);
       if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-      if (overlay) overlay.addEventListener('click', closeDrawer);
+      overlay.addEventListener('click', closeDrawer);
     })();
   </script>
+  <script src="{% static 'js/components.js' %}"></script>
   {% block extra_js %}{% endblock %}
 
 </body>
