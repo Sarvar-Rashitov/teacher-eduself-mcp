@@ -5,20 +5,34 @@
 
 {% block extra_css %}
 <style>
-  /* 1. Epic Background Wallpaper from Image 1 */
+  /* 1. Dynamic Wallpaper: 1-surat kunduzgi rejim, 2-surat tungi rejim */
   body {
-    background: linear-gradient(135deg, rgba(14, 22, 33, 0.72) 0%, rgba(10, 16, 26, 0.84) 100%),
-                url("{% static 'img/dashboard_bg.jpg' %}") no-repeat center center fixed !important;
+    background: url("{% static 'img/bg_dark.png' %}") no-repeat center center fixed !important;
     background-size: cover !important;
     background-attachment: fixed !important;
     min-height: 100vh;
   }
   
   html[data-theme="light"] body {
-    background: linear-gradient(135deg, rgba(241, 244, 247, 0.76) 0%, rgba(225, 232, 240, 0.86) 100%),
-                url("{% static 'img/dashboard_bg.jpg' %}") no-repeat center center fixed !important;
+    background: url("{% static 'img/bg_light.png' %}") no-repeat center center fixed !important;
     background-size: cover !important;
     background-attachment: fixed !important;
+  }
+
+  .dashboard-hero-title {
+    text-shadow: 0 2px 12px rgba(0,0,0,0.45);
+  }
+  html[data-theme="light"] .dashboard-hero-title {
+    text-shadow: none !important;
+    color: #1C242F !important;
+  }
+
+  .dashboard-hero-subtitle {
+    text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+  }
+  html[data-theme="light"] .dashboard-hero-subtitle {
+    text-shadow: none !important;
+    color: #475569 !important;
   }
 
   /* 2. Glassmorphic Sticky Header Navbar */
@@ -169,10 +183,10 @@
       <span class="pill-badge" style="background: rgba(255,106,0,0.2); color: var(--primary-orange); border: 1.5px solid var(--primary-orange); padding: 6px 18px; border-radius: 9999px !important; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; backdrop-filter: blur(12px); box-shadow: 0 4px 16px rgba(255,106,0,0.25);">
         <span>🎓</span> Xush kelibsiz, {{ user.first_name|default:user.username }}!
       </span>
-      <h1 class="font-heading dashboard-hero-title" style="font-size: 34px; color: var(--text-main); margin-bottom: 6px; letter-spacing: -0.5px; text-shadow: 0 2px 12px rgba(0,0,0,0.5);">
+      <h1 class="font-heading dashboard-hero-title" style="font-size: 34px; color: var(--text-main); margin-bottom: 6px; letter-spacing: -0.5px;">
         Darslar va O‘yinlar Boshqaruvi
       </h1>
-      <p class="dashboard-hero-subtitle" style="font-size: 16px; color: var(--text-muted); font-weight: 500; text-shadow: 0 1px 6px rgba(0,0,0,0.4);">
+      <p class="dashboard-hero-subtitle" style="font-size: 16px; color: var(--text-muted); font-weight: 500;">
         Sinfingiz uchun interaktiv darslar yarating va jonli o‘yinlarni boshqaring.
       </p>
     </div>
