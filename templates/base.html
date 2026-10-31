@@ -5,7 +5,71 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="csrf-token" content="{{ csrf_token }}">
-  <title>{% block title %}EduSelf Teacher — EduPlay 3D Gamification{% endblock %}</title>
+  <title>{% block title %}EduSelf Teacher — Interaktiv Ta'lim va 3D Gamifikatsiya Platformasi{% endblock %}</title>
+
+  <!-- =========================================================================
+       SEO PRIMARY META TAGS (Google, Yandex & Search Engines)
+       ========================================================================= -->
+  <meta name="description" content="{% block meta_description %}EduSelf — o‘qituvchilar uchun gamifikatsiyalashgan interaktiv darslar, Blooket uslubidagi jonli viktorinalar va sun'iy intellekt (AI) yordamida testlar yaratish platformasi.{% endblock %}">
+  <meta name="keywords" content="{% block meta_keywords %}eduself, ta'lim, interaktiv dars, viktorina, blooket uzbekistan, gamifikatsiya, o'qituvchi, maktab, testlar, ai test, quiz maker, o'yinli ta'lim, eduplay 3d{% endblock %}">
+  <meta name="author" content="EduSelf Team">
+  <meta name="robots" content="{% block meta_robots %}index, follow, max-image-preview:large{% endblock %}">
+  <meta name="googlebot" content="index, follow">
+  {% block canonical_url %}<link rel="canonical" href="{{ request.build_absolute_uri }}">{% endblock %}
+
+  <!-- Mobile & Progressive App Metadata -->
+  <meta name="theme-color" content="#FF6A00">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="EduSelf">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+
+  <!-- =========================================================================
+       OPEN GRAPH (Facebook, Telegram, WhatsApp, LinkedIn Rich Previews)
+       ========================================================================= -->
+  <meta property="og:site_name" content="EduSelf">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}EduSelf Teacher — Interaktiv Ta'lim va 3D Gamifikatsiya{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}O‘qituvchilar uchun interaktiv darslar va Blooket uslubidagi jonli viktorinalar platformasi.{% endblock %}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/dashboard_bg.jpg' %}{% endblock %}">
+  <meta property="og:locale" content="uz_UZ">
+
+  <!-- =========================================================================
+       TWITTER / X CARDS
+       ========================================================================= -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{% block twitter_title %}EduSelf Teacher — EduPlay 3D Gamification{% endblock %}">
+  <meta name="twitter:description" content="{% block twitter_description %}O‘qituvchilar uchun interaktiv darslar va jonli viktorinalar platformasi.{% endblock %}">
+  <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/dashboard_bg.jpg' %}{% endblock %}">
+
+  <!-- =========================================================================
+       SCHEMA.ORG JSON-LD STRUCTURED DATA (Google Rich Snippets)
+       ========================================================================= -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "EduSelf",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "description": "EduSelf — o‘qituvchilar uchun gamifikatsiyalashgan interaktiv darslar, Blooket uslubidagi jonli viktorinalar va AI test generatori.",
+    "url": "{{ request.scheme }}://{{ request.get_host }}",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "UZS"
+    },
+    "featureList": [
+      "Jonli Blooket uslubidagi viktorinalar",
+      "AI yordamida avtomatik testlar tuzish",
+      "O'quvchilar reytingi va 3D shohsupa",
+      "MCP va Claude sun'iy intellekt integratsiyasi"
+    ]
+  }
+  </script>
 
   <!-- Prevent Theme Flicker: Apply Telegram Dark/Light mode immediately before render -->
   <script>

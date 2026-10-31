@@ -3,6 +3,7 @@ Frontend MVT views for EduSelf Teacher — "EduPlay 3D" (Phase 08).
 """
 
 import json
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from apps.quizzes.models import Quiz
@@ -127,3 +128,51 @@ def profile_view(request):
         "user": request.user,
         "success_msg": success_msg,
     })
+
+
+def robots_txt(request):
+    """Qidiruv tizimlari (Google, Yandex) uchun robots.txt fayli."""
+    domain = request.build_absolute_uri('/')[:-1]
+    lines = [
+        "User-agent: *",
+        "Allow: /",
+        "Allow: /play/",
+        "Allow: /auth/login/",
+        "Allow: /auth/register/",
+        "Disallow: /admin/",
+        "Disallow: /api/",
+        "Disallow: /mcp/",
+        "Disallow: /health/",
+        "",
+        f"Sitemap: {domain}/sitemap.xml",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
+
+
+def sitemap_xml(request):
+    """Qidiruv tizimlari botlari uchun dinamik sitemap.xml xaritasi."""
+    domain = request.build_absolute_uri('/')[:-1]
+    xml_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{domain}/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>{domain}/play/</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>{domain}/auth/login/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>{domain}/auth/register/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>"""
+    return HttpResponse(xml_content.strip(), content_type="application/xml")

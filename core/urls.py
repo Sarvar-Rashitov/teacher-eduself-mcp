@@ -14,6 +14,8 @@ from core.views import (
     host_screen_view,
     student_game_view,
     profile_view,
+    robots_txt,
+    sitemap_xml,
 )
 
 
@@ -25,6 +27,9 @@ def health_check(request):
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("health/", include("deploy.health.urls", namespace="health")),
+    # SEO Endpoints
+    path("robots.txt", robots_txt, name="robots_txt"),
+    path("sitemap.xml", sitemap_xml, name="sitemap_xml"),
     # Frontend MVT Views (Phase 08)
     path("", home_view, name="home"),
     path("dashboard/", dashboard_view, name="dashboard"),
