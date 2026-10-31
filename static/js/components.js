@@ -40,8 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const isMuted = window.eduAudio ? window.eduAudio.toggleMute() : false;
       state.soundEnabled = !isMuted;
       muteBtn.innerHTML = isMuted 
-        ? '<span>🔇</span> Tovush: O‘chiq' 
-        : '<span>🔊</span> Tovush: Yoqilgan';
+        ? '<i class="fa-solid fa-volume-xmark"></i> <span>Tovush: O‘chiq</span>' 
+        : '<i class="fa-solid fa-volume-high"></i> <span>Tovush: Yoqilgan</span>';
       muteBtn.style.background = isMuted ? 'rgba(239, 68, 68, 0.15)' : 'var(--bg-surface-subtle)';
       muteBtn.style.color = isMuted ? '#EF4444' : 'var(--text-main)';
     });

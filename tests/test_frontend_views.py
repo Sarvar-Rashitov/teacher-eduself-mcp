@@ -106,3 +106,44 @@ class TestFrontendMVTViews:
         assert "■" in content  # Green Square
         assert "game_client.js" in content
         assert "audio.js" in content
+
+    def test_student_game_view_no_fallback_without_code(self):
+        """/play/ xona kodi ko'rsatilmaganda zaxira testlar yuklanmaydi, bo'sh ro'yxat qaytadi."""
+        response = self.client.get("/play/")
+        assert response.status_code == 200
+        content = response.content.decode("utf-8")
+        assert "studentQuestionsData" in content
+        assert "[]" in content
+
+    def test_student_join_api_success_and_invalid_code(self):
+        """POST /api/sessions/join/ haqiqiy xona savollarini qaytaradi, noto'g'ri kodda 400 beradi."""
+        from apps.quizzes.models import Question
+        Question.objects.create(
+            quiz=self.quiz,
+            order_index=1,
+            prompt="Amir Temur nechanchi yilda tug'ilgan?",
+            options=[{"id": "opt_1", "text": "1336"}, {"id": "opt_2", "text": "1405"}],
+            correct_answer="opt_1",
+            time_limit_seconds=20,
+            points=1000,
+        )
+
+        # 1. Muvaffaqiyatli ulanish
+        res_ok = self.client.post("/api/sessions/join/", data={
+            "room_code": self.session.room_code,
+            "nickname": "Azizbek",
+        }, content_type="application/json")
+        assert res_ok.status_code == 200
+        data_ok = res_ok.json()
+        assert data_ok["status"] == "ok"
+        assert data_ok["nickname"] == "Azizbek"
+        assert len(data_ok["questions"]) == 1
+        assert data_ok["questions"][0]["prompt"] == "Amir Temur nechanchi yilda tug'ilgan?"
+
+        # 2. Mavjud bo'lmagan PIN kod
+        res_bad = self.client.post("/api/sessions/join/", data={
+            "room_code": "999999",
+            "nickname": "Azizbek",
+        }, content_type="application/json")
+        assert res_bad.status_code == 400
+        assert "error" in res_bad.json()

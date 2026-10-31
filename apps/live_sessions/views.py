@@ -60,14 +60,32 @@ def session_join_view(request):
 
     try:
         participant, session = LiveSessionService.join_session(room_code=room_code, nickname=nickname)
+        questions = []
+        if session.quiz:
+            for q in session.quiz.questions.all().order_by("order_index"):
+                questions.append({
+                    "id": str(q.id),
+                    "order": q.order_index,
+                    "prompt": q.prompt,
+                    "media_url": q.media_url,
+                    "media_type": q.media_type,
+                    "type": q.type,
+                    "options": q.options,
+                    "correct_answer": q.correct_answer,
+                    "time_limit_seconds": q.time_limit_seconds,
+                    "points": q.points,
+                })
+
         return Response({
             "status": "ok",
             "session_id": str(session.id),
             "room_code": session.room_code,
+            "quiz_title": session.quiz.title if session.quiz else "",
             "participant_id": str(participant.id),
             "nickname": participant.nickname,
             "anonymous_token": participant.anonymous_token,
             "session_status": session.status,
+            "questions": questions,
         }, status=status.HTTP_200_OK)
     except ValidationError as exc:
         return Response({"error": str(exc.message if hasattr(exc, "message") else exc)}, status=status.HTTP_400_BAD_REQUEST)

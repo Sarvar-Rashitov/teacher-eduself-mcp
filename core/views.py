@@ -81,8 +81,6 @@ def student_game_view(request, room_code=""):
     """O'quvchi mobil ekrani (Dual-coded 4 ta rang/shakl)."""
     session = LiveSession.objects.filter(room_code=room_code).first() if room_code else None
     quiz = session.quiz if session else None
-    if not quiz:
-        quiz = Quiz.objects.filter(questions__isnull=False).distinct().order_by("-created_at").first()
 
     questions_data = []
     if quiz:

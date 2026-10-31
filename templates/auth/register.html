@@ -10,7 +10,7 @@
   <div class="bento-card bento-card-surface" style="padding: 38px 32px; border-radius: var(--radius-xl);">
     
     <div style="text-align: center; margin-bottom: 24px;">
-      <div style="font-size: 50px; margin-bottom: 10px; filter: drop-shadow(0 6px 12px rgba(255,106,0,0.3));">✨</div>
+      <div style="font-size: 46px; margin-bottom: 10px; color: var(--primary-orange); filter: drop-shadow(0 6px 12px rgba(255,106,0,0.3));"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
       <h2 class="font-heading" style="font-size: 26px; color: var(--text-main); margin-bottom: 6px;">Yangi Hisob Ochish</h2>
       <p style="font-size: 14px; color: var(--text-muted); font-weight: 500;">EduSelf interaktiv platformasiga qo'shiling</p>
     </div>
@@ -18,7 +18,7 @@
     <!-- Error Alert Banner -->
     {% if error %}
     <div style="background: rgba(239,68,68,0.12); border: 2px solid #F87171; color: #DC2626; padding: 12px 16px; border-radius: var(--radius-md); font-size: 14px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-weight: 700;">
-      <span style="font-size: 18px;">⚠️</span>
+      <i class="fa-solid fa-triangle-exclamation" style="font-size: 18px;"></i>
       <span>{{ error }}</span>
     </div>
     {% endif %}
@@ -52,14 +52,14 @@
         <input type="password" name="password_confirm" required placeholder="••••••••" style="width: 100%; height: 48px; border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 2px solid var(--border-subtle); padding: 0 20px; font-size: 14px; font-family: inherit; outline: none; transition: all 0.2s;" onfocus="this.style.borderColor='var(--primary-orange)'" onblur="this.style.borderColor='var(--border-subtle)'">
       </div>
 
-      <button type="submit" class="pill-button-primary" id="registerSubmitBtn" style="width: 100%; height: 50px; font-size: 15px; border-radius: 9999px !important;">
-        <span>✨</span> Ro'yxatdan O'tish
+      <button type="submit" class="pill-button-primary" id="registerSubmitBtn" style="width: 100%; height: 50px; font-size: 15px; border-radius: 9999px !important; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="fa-solid fa-user-plus"></i> Ro'yxatdan O'tish
       </button>
     </form>
 
     <div style="text-align: center; margin-top: 22px; font-size: 14px; color: var(--text-muted); font-weight: 600;">
       Allaqachon hisobingiz bormi? 
-      <a href="/auth/login/" style="color: var(--primary-orange); text-decoration: none; font-weight: 800;">Tizimga kirish 🚀</a>
+      <a href="/auth/login/" style="color: var(--primary-orange); text-decoration: none; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">Tizimga kirish <i class="fa-solid fa-arrow-right-to-bracket"></i></a>
     </div>
 
   </div>

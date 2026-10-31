@@ -68,7 +68,7 @@
   <div class="host-status-bar" style="display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); border-radius: 28px !important; padding: 16px 28px; border: 2px solid var(--border-subtle); box-shadow: var(--shadow-card); margin-bottom: 24px;">
     <div class="host-status-left" style="display: flex; align-items: center; gap: 16px;">
       <button onclick="copyRoomPin()" title="PIN kodni nusxalash" class="pill-badge" style="background: var(--primary-orange-soft); color: var(--primary-orange); padding: 8px 24px; border-radius: 9999px !important; font-weight: 800; font-size: 16px; border: 1.5px solid var(--primary-orange-border); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-        GAME PIN: <span id="displayPin">{{ room_code }}</span> 📋
+        GAME PIN: <span id="displayPin">{{ room_code }}</span> <i class="fa-solid fa-copy"></i>
       </button>
       <span class="host-instruction-text" style="font-size: 15px; font-weight: 700; color: var(--text-muted);">
         O‘quvchilar ulanishi: <strong style="color: var(--primary-orange);">eduself.uz/play</strong>
@@ -77,19 +77,19 @@
 
     <div class="host-status-right" style="display: flex; align-items: center; gap: 20px;">
       <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-surface-subtle); padding: 8px 18px; border-radius: 9999px; border: 1.5px solid var(--border-subtle);">
-        <span style="font-size: 20px;">🐾</span>
+        <span style="font-size: 18px; color: var(--primary-orange);"><i class="fa-solid fa-users"></i></span>
         <span style="font-size: 15px; font-weight: 800; color: var(--text-main);" id="studentCountBadge">0 o‘quvchi</span>
       </div>
 
-      <button id="hostActionBtn" onclick="handleHostAction()" class="pill-button-green" style="height: 48px; padding: 0 32px; font-size: 16px; font-weight: 800; width: auto; border-radius: 9999px !important; cursor: pointer; border-bottom: 5px solid #1C6B24 !important;">
-        🚀 O‘yinni Boshlash
+      <button id="hostActionBtn" onclick="handleHostAction()" class="pill-button-green" style="height: 48px; padding: 0 32px; font-size: 16px; font-weight: 800; width: auto; border-radius: 9999px !important; cursor: pointer; border-bottom: 5px solid #1C6B24 !important; display: inline-flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-play"></i> O‘yinni Boshlash
       </button>
     </div>
   </div>
 
   <!-- PHASE 1: LOBBY SCREEN -->
   <div id="lobbyPhase" class="bento-card bento-card-surface" style="background: var(--card-bg); border: 2px solid var(--border-subtle); border-radius: 32px !important; min-height: 520px; padding: 48px 32px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--shadow-card);">
-    <div style="font-size: 64px; margin-bottom: 12px; animation: heroBounce 2s infinite;">🐾</div>
+    <div style="font-size: 54px; color: var(--primary-orange); margin-bottom: 12px; animation: heroBounce 2s infinite;"><i class="fa-solid fa-users"></i></div>
     <h1 class="font-heading" style="font-size: 38px; color: var(--text-main); margin-bottom: 8px;">
       O‘quvchilar ulanishini kuting
     </h1>
@@ -126,7 +126,7 @@
 
       <!-- Live Answers Progress Pill -->
       <div style="display: flex; align-items: center; gap: 8px; background: rgba(16,185,129,0.15); color: #10B981; padding: 8px 22px; border-radius: 9999px; font-weight: 800; font-size: 16px;">
-        <span>⚡</span> <span id="answersReceivedBadge">Javoblar kutilmoqda...</span>
+        <span><i class="fa-solid fa-bolt"></i></span> <span id="answersReceivedBadge">Javoblar kutilmoqda...</span>
       </div>
 
       <!-- Countdown Circle -->
@@ -180,7 +180,7 @@
 
   <!-- PHASE 3: FINAL 3D PODIUM SCREEN -->
   <div id="podiumPhase" class="bento-card bento-card-surface" style="display: none; background: var(--card-bg); border: 2px solid var(--border-subtle); border-radius: 32px !important; padding: 48px 32px; text-align: center; min-height: 540px; box-shadow: var(--shadow-card);">
-    <div style="font-size: 64px; margin-bottom: 8px;">🎉</div>
+    <div style="font-size: 54px; margin-bottom: 8px; color: #F59E0B;"><i class="fa-solid fa-trophy"></i></div>
     <h1 class="font-heading" style="font-size: 38px; color: var(--text-main); margin-bottom: 8px;">
       O‘yin G‘oliblari (Blooket Shohsupasi)
     </h1>
@@ -191,27 +191,27 @@
       
       <!-- 2nd Rank (Blue) -->
       <div class="podium-stand" style="background: linear-gradient(180deg, #93C5FD 0%, #3B82F6 100%); width: 150px; height: 170px; border-radius: 24px 24px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 16px; color: #FFFFFF; box-shadow: 0 12px 28px rgba(59, 130, 246, 0.35);">
-        <div class="avatar-circle" style="background: #FFFFFF; width: 50px; height: 50px; font-size: 26px; border: 3px solid #60A5FA; margin-bottom: 6px; border-radius: 50% !important;">🥈</div>
-        <span id="podiumNick2" style="font-weight: 800; font-size: 16px;">🐼 Madina</span>
+        <div class="avatar-circle" style="background: #FFFFFF; width: 50px; height: 50px; font-size: 24px; color: #64748B; border: 3px solid #60A5FA; margin-bottom: 6px; border-radius: 50% !important; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-medal"></i></div>
+        <span id="podiumNick2" style="font-weight: 800; font-size: 16px;"><i class="fa-solid fa-cat"></i> 2-O‘rin</span>
         <span style="font-size: 28px; font-weight: 800; margin-top: 6px;">2</span>
-        <span id="podiumScore2" style="font-size: 14px; opacity: 0.95; font-weight: 700;">2,200 🪙</span>
+        <span id="podiumScore2" style="font-size: 14px; opacity: 0.95; font-weight: 700;">2,200 <i class="fa-solid fa-coins"></i></span>
       </div>
 
       <!-- 1st Rank (Orange / Gold) -->
       <div class="podium-stand" style="background: linear-gradient(180deg, #FDBA74 0%, #FF7527 100%); width: 170px; height: 230px; border-radius: 28px 28px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 16px; color: #FFFFFF; box-shadow: 0 18px 40px rgba(255, 117, 39, 0.45); position: relative;">
-        <div style="position: absolute; top: -34px; font-size: 40px;">👑</div>
-        <div class="avatar-circle" style="background: #FFFFFF; width: 60px; height: 60px; font-size: 32px; border: 3px solid #FF7527; margin-bottom: 6px; border-radius: 50% !important;">🥇</div>
-        <span id="podiumNick1" style="font-weight: 800; font-size: 18px;">🦊 Jasur</span>
+        <div style="position: absolute; top: -34px; font-size: 36px; color: #F59E0B;"><i class="fa-solid fa-crown"></i></div>
+        <div class="avatar-circle" style="background: #FFFFFF; width: 60px; height: 60px; font-size: 28px; color: #EAB308; border: 3px solid #FF7527; margin-bottom: 6px; border-radius: 50% !important; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-medal"></i></div>
+        <span id="podiumNick1" style="font-weight: 800; font-size: 18px;"><i class="fa-solid fa-dog"></i> 1-O‘rin</span>
         <span style="font-size: 34px; font-weight: 800; margin-top: 6px;">1</span>
-        <span id="podiumScore1" style="font-size: 15px; opacity: 0.95; font-weight: 700;">3,450 🪙</span>
+        <span id="podiumScore1" style="font-size: 15px; opacity: 0.95; font-weight: 700;">3,450 <i class="fa-solid fa-coins"></i></span>
       </div>
 
       <!-- 3rd Rank (Yellow) -->
       <div class="podium-stand" style="background: linear-gradient(180deg, #FDE047 0%, #EAB308 100%); width: 150px; height: 140px; border-radius: 24px 24px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 16px; color: #FFFFFF; box-shadow: 0 12px 28px rgba(234, 179, 8, 0.35);">
-        <div class="avatar-circle" style="background: #FFFFFF; width: 50px; height: 50px; font-size: 26px; border: 3px solid #FACC15; margin-bottom: 6px; border-radius: 50% !important;">🥉</div>
-        <span id="podiumNick3" style="font-weight: 800; font-size: 16px;">🦁 Sardor</span>
+        <div class="avatar-circle" style="background: #FFFFFF; width: 50px; height: 50px; font-size: 24px; color: #B45309; border: 3px solid #FACC15; margin-bottom: 6px; border-radius: 50% !important; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-medal"></i></div>
+        <span id="podiumNick3" style="font-weight: 800; font-size: 16px;"><i class="fa-solid fa-shield-cat"></i> 3-O‘rin</span>
         <span style="font-size: 28px; font-weight: 800; margin-top: 6px;">3</span>
-        <span id="podiumScore3" style="font-size: 14px; opacity: 0.95; font-weight: 700;">1,850 🪙</span>
+        <span id="podiumScore3" style="font-size: 14px; opacity: 0.95; font-weight: 700;">1,850 <i class="fa-solid fa-coins"></i></span>
       </div>
 
     </div>
@@ -237,7 +237,7 @@
   function copyRoomPin() {
     navigator.clipboard.writeText("{{ room_code }}").then(() => {
       const pinEl = document.getElementById('displayPin');
-      pinEl.textContent = 'Nusxalandi! ✅';
+      pinEl.innerHTML = 'Nusxalandi! <i class="fa-solid fa-check"></i>';
       setTimeout(() => { pinEl.textContent = "{{ room_code }}"; }, 2000);
       if (window.eduAudio && typeof window.eduAudio.playCoin === 'function') {
         window.eduAudio.playCoin();
@@ -313,36 +313,35 @@
   let currentPhase = 'lobby';
   let currentQuestionIndex = 0;
   let timerInterval = null;
+  let answersCount = 0;
 
   if (client) {
     client.on('participant_joined', (data) => {
       if (window.eduAudio) window.eduAudio.playCoin();
       const nick = data.nickname || data.participant?.nickname || 'O‘quvchi';
-      const avatar = data.avatar || data.participant?.avatar || '🦊';
+      const avatar = data.avatar || data.participant?.avatar || 'fa-solid fa-dog';
       renderStudentPill(nick, avatar);
+    });
+
+    client.on('answer_count_updated', () => {
+      answersCount++;
+      const badge = document.getElementById('answersReceivedBadge');
+      if (badge) badge.textContent = `${answersCount} ta javob qabul qilindi`;
     });
   }
 
-  function renderStudentPill(nickname, avatar = '🦊') {
+  function renderStudentPill(nickname, avatar = 'fa-solid fa-dog') {
     if (!nickname) return;
     if (studentsGrid.innerHTML.includes('Hali hech kim ulanmadi')) {
       studentsGrid.innerHTML = '';
     }
     const pill = document.createElement('div');
     pill.className = 'host-blook-card';
-    pill.innerHTML = `<span>${avatar}</span> <span>${nickname}</span>`;
+    const iconHtml = (avatar && avatar.includes('fa-')) ? `<i class="${avatar}"></i>` : `<i class="fa-solid fa-paw"></i>`;
+    pill.innerHTML = `<span>${iconHtml}</span> <span>${nickname}</span>`;
     studentsGrid.appendChild(pill);
     studentCountBadge.textContent = `${studentsGrid.children.length} o‘quvchi`;
   }
-
-  // Demo participant simulation in lobby for immediate live testing
-  setTimeout(() => {
-    if (currentPhase === 'lobby' && studentsGrid.children.length <= 1) {
-      renderStudentPill('Jasur', '🦊');
-      setTimeout(() => renderStudentPill('Madina', '🐼'), 600);
-      setTimeout(() => renderStudentPill('Sardor', '🦁'), 1200);
-    }
-  }, 1500);
 
   // Host Action Handler (Start game or next question)
   function handleHostAction() {
@@ -354,7 +353,7 @@
       currentPhase = 'question';
       lobbyPhase.style.display = 'none';
       questionPhase.style.display = 'block';
-      hostActionBtn.innerHTML = '<span>➡️</span> Keyingi Savol';
+      hostActionBtn.innerHTML = '<i class="fa-solid fa-arrow-right"></i> Keyingi Savol';
 
       // Send to WebSocket client
       if (client && typeof client.hostStartGame === 'function') {
@@ -393,6 +392,7 @@
     const q = hostQuestions[idx];
     if (!q) return;
 
+    answersCount = 0;
     document.getElementById('questionNumberBadge').textContent = `${idx + 1}-savol / ${hostQuestions.length}`;
     document.getElementById('hostQuestionPrompt').textContent = q.prompt || '';
 
@@ -434,7 +434,7 @@
       }
       if (s <= 0) {
         clearInterval(timerInterval);
-        document.getElementById('answersReceivedBadge').textContent = "Vaqt tugadi! ⌛";
+        document.getElementById('answersReceivedBadge').innerHTML = 'Vaqt tugadi! <i class="fa-solid fa-hourglass-end"></i>';
       }
     }, 1000);
   }

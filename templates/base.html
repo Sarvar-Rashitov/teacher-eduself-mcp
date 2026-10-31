@@ -22,8 +22,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="EduSelf">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF6A00'><path d='M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z'/></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF6A00'><path d='M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z'/></svg>">
 
   <!-- =========================================================================
        OPEN GRAPH (Facebook, Telegram, WhatsApp, LinkedIn Rich Previews)
@@ -91,6 +91,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome 6 Free Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Core Critical Telegram Theme & Round-Button Fallback -->
   <style id="critical-telegram-theme">
@@ -164,16 +167,16 @@
   <header class="showcase-header" style="background: var(--header-bg); border-bottom: 1.5px solid var(--border-subtle); transition: background-color 0.25s ease;">
     <div class="header-container" style="max-width: 1440px; width: 100%; margin: 0 auto; padding: 12px 28px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
       
-      <!-- Chap burchak: Uchta chiziqcha (☰) + Logotip -->
+      <!-- Chap burchak: Uchta chiziqcha (fa-bars) + Logotip -->
       <div class="header-left" style="display: flex; align-items: center; gap: 12px;">
         <!-- Hamburger Menu Button (Chap burchakda) -->
         <button class="hamburger-btn" id="mobileDrawerOpenBtn" type="button" aria-label="Menyu ochish" title="Menyu">
-          <span>☰</span>
+          <i class="fa-solid fa-bars"></i>
         </button>
 
         <div class="brand-badge">
           <a href="/" style="text-decoration: none; display: flex; align-items: center; gap: 12px; color: inherit;">
-            <div class="logo-icon" style="width: 42px; height: 42px; border-radius: 50% !important; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF7B1C, #FF5A00); font-size: 20px; box-shadow: 0 4px 12px rgba(255,106,0,0.35);">✨</div>
+            <div class="logo-icon" style="width: 42px; height: 42px; border-radius: 50% !important; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF7B1C, #FF5A00); font-size: 18px; color: #FFFFFF; box-shadow: 0 4px 12px rgba(255,106,0,0.35);"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
             <div>
               <h1 class="brand-title" style="color: var(--text-main); margin: 0; font-size: 20px; font-weight: 800; line-height: 1.2;">EduSelf</h1>
               <p class="brand-subtitle" style="color: var(--text-muted); margin: 0; font-size: 12px; font-weight: 600;">EduPlay 3D Gamified Learning</p>
@@ -185,10 +188,10 @@
       <!-- Navigation Links -->
       <nav class="nav-links" style="display: flex; gap: 14px; align-items: center;">
         {% if user.is_authenticated %}
-          <a href="/dashboard/" class="nav-link font-heading" style="text-decoration: none; color: var(--text-main); font-size: 14px; font-weight: 700; padding: 6px 14px; border-radius: 9999px;">📊 Dashboard</a>
-          <a href="/editor/new/" class="nav-link font-heading" style="text-decoration: none; color: var(--text-main); font-size: 14px; font-weight: 700; padding: 6px 14px; border-radius: 9999px;">➕ Yangi Viktorina</a>
+          <a href="/dashboard/" class="nav-link font-heading" style="text-decoration: none; color: var(--text-main); font-size: 14px; font-weight: 700; padding: 6px 14px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 6px;"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+          <a href="/editor/new/" class="nav-link font-heading" style="text-decoration: none; color: var(--text-main); font-size: 14px; font-weight: 700; padding: 6px 14px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 6px;"><i class="fa-solid fa-plus"></i> Yangi Viktorina</a>
         {% endif %}
-        <a href="/play/" class="nav-link font-heading" style="text-decoration: none; color: var(--primary-orange); font-size: 14px; font-weight: 800; padding: 6px 14px; border-radius: 9999px; background: var(--primary-orange-soft); border: 1.5px solid var(--primary-orange-border);">🎮 O‘yin (Play)</a>
+        <a href="/play/" class="nav-link font-heading" style="text-decoration: none; color: var(--primary-orange); font-size: 14px; font-weight: 800; padding: 6px 14px; border-radius: 9999px; background: var(--primary-orange-soft); border: 1.5px solid var(--primary-orange-border); display: inline-flex; align-items: center; gap: 6px;"><i class="fa-solid fa-gamepad"></i> O‘yin (Play)</a>
       </nav>
 
       <!-- Header Actions (Telegram Theme Switch, Coins faqat ro'yxatdan o'tganlarga, User) -->
@@ -198,7 +201,7 @@
         <button class="tg-theme-switch" id="themeToggleBtn" type="button" title="Tungi / Kunduzgi rejim (Telegram uslubida)">
           <div class="tg-switch-track" id="tgSwitchTrack">
             <div class="tg-switch-thumb" id="tgSwitchThumb">
-              <span id="themeThumbIcon">☀️</span>
+              <span id="themeThumbIcon"><i class="fa-solid fa-sun"></i></span>
             </div>
           </div>
           <span class="tg-switch-label hide-mobile" id="themeText">Kunduzgi</span>
@@ -207,22 +210,22 @@
         {% if user.is_authenticated %}
           <!-- Coin Pill: FAQAT RO'YXATDAN O'TGAN FOYDALANUVCHILAR UCHUN -->
           <div class="coin-reward-pill" style="margin-bottom: 0; padding: 6px 14px; font-size: 14px; border-radius: 9999px !important; background: rgba(255,168,52,0.15); border: 1.5px solid rgba(255,168,52,0.4); color: #FFA834; font-weight: 800; display: flex; align-items: center; gap: 6px;">
-            <span>🪙</span>
+            <i class="fa-solid fa-coins"></i>
             <span id="globalCoinCount">1,420</span>
           </div>
 
           <a href="/auth/profile/" style="text-decoration: none;" title="Profil: {{ user.username }}">
-            <div class="avatar-circle" style="width: 40px; height: 40px; font-size: 19px; border-radius: 50% !important; border: 2.5px solid var(--primary-orange); box-shadow: 0 4px 10px rgba(255,106,0,0.25); display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-surface-subtle);">
+            <div class="avatar-circle" style="width: 40px; height: 40px; font-size: 18px; border-radius: 50% !important; border: 2.5px solid var(--primary-orange); box-shadow: 0 4px 10px rgba(255,106,0,0.25); display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg-surface-subtle); color: var(--primary-orange);">
               {% if user.avatar_url %}
                 <img src="{{ user.avatar_url }}" alt="{{ user.username }}" style="width: 100%; height: 100%; object-fit: cover;">
               {% else %}
-                🧑‍🏫
+                <i class="fa-solid fa-chalkboard-user"></i>
               {% endif %}
             </div>
           </a>
         {% else %}
-          <a href="/auth/login/" class="pill-button-primary" style="height: 42px; padding: 0 20px; font-size: 14px; text-decoration: none; width: auto; border-radius: 9999px !important;">
-            Kirish
+          <a href="/auth/login/" class="pill-button-primary" style="height: 42px; padding: 0 20px; font-size: 14px; text-decoration: none; width: auto; border-radius: 9999px !important; display: inline-flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Kirish
           </a>
         {% endif %}
       </div>
@@ -234,49 +237,49 @@
   <aside class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Mobil Menyu">
     <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1.5px solid var(--border-subtle); margin-bottom: 8px;">
       <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="width: 36px; height: 36px; border-radius: 50% !important; background: linear-gradient(135deg, #FF7B1C, #FF5A00); display: flex; align-items: center; justify-content: center; font-size: 18px;">✨</div>
+        <div style="width: 36px; height: 36px; border-radius: 50% !important; background: linear-gradient(135deg, #FF7B1C, #FF5A00); display: flex; align-items: center; justify-content: center; font-size: 16px; color: #FFFFFF;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
         <div>
           <h3 style="margin: 0; font-size: 16px; color: var(--text-main); font-weight: 800;">EduSelf</h3>
           <p style="margin: 0; font-size: 11px; color: var(--text-muted); font-weight: 600;">EduPlay 3D Gamification</p>
         </div>
       </div>
-      <button class="drawer-close-btn" id="mobileDrawerCloseBtn" aria-label="Yopish">✕</button>
+      <button class="drawer-close-btn" id="mobileDrawerCloseBtn" aria-label="Yopish"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <!-- Ovoz tugmasi: UCHTA CHIZIQCHA ICHIDA -->
     <button class="drawer-nav-link audio-btn" id="muteToggleBtn" type="button" title="Tovushni yoqish / o'chirish" style="width: 100%; cursor: pointer; text-align: left; font-family: inherit; margin-bottom: 4px;">
-      <span>🔊</span> <span>Tovush: Yoqilgan</span>
+      <i class="fa-solid fa-volume-high"></i> <span>Tovush: Yoqilgan</span>
     </button>
 
     {% if user.is_authenticated %}
       <!-- Ro'yxatdan o'tgan foydalanuvchi tangasi menyu ichida -->
       <div class="drawer-nav-link" style="background: rgba(255,168,52,0.12); border-color: rgba(255,168,52,0.35); color: #FFA834; font-weight: 800;">
-        <span>🪙</span> <span>Tangalar: <strong id="drawerCoinCount">1,420</strong></span>
+        <i class="fa-solid fa-coins"></i> <span>Tangalar: <strong id="drawerCoinCount">1,420</strong></span>
       </div>
     {% endif %}
 
     <a href="/dashboard/" class="drawer-nav-link">
-      <span>📊</span> <span>Dashboard</span>
+      <i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span>
     </a>
     <a href="/editor/new/" class="drawer-nav-link">
-      <span>➕</span> <span>Yangi Viktorina</span>
+      <i class="fa-solid fa-plus"></i> <span>Yangi Viktorina</span>
     </a>
     <a href="/play/" class="drawer-nav-link" style="color: var(--primary-orange); border-color: var(--primary-orange-border);">
-      <span>🎮</span> <span>Blooket O‘yin (Play)</span>
+      <i class="fa-solid fa-gamepad"></i> <span>Blooket O‘yin (Play)</span>
     </a>
     {% if user.is_authenticated %}
       <a href="/auth/profile/" class="drawer-nav-link">
-        <span>👤</span> <span>Profil ({{ user.username }})</span>
+        <i class="fa-solid fa-user"></i> <span>Profil ({{ user.username }})</span>
       </a>
       <a href="/auth/logout/" class="drawer-nav-link" style="color: #EF4444; margin-top: auto;">
-        <span>🚪</span> <span>Tizimdan Chiqish</span>
+        <i class="fa-solid fa-right-from-bracket"></i> <span>Tizimdan Chiqish</span>
       </a>
     {% else %}
       <a href="/auth/login/" class="drawer-nav-link" style="margin-top: auto;">
-        <span>🔑</span> <span>Kirish</span>
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> <span>Kirish</span>
       </a>
       <a href="/auth/register/" class="drawer-nav-link">
-        <span>✨</span> <span>Ro'yxatdan O'tish</span>
+        <i class="fa-solid fa-user-plus"></i> <span>Ro'yxatdan O'tish</span>
       </a>
     {% endif %}
   </aside>
@@ -290,25 +293,25 @@
   <!-- Mobile Bottom Navigation Bar (Telegram/App style for smartphones) -->
   <nav class="mobile-bottom-nav" aria-label="Mobil navigatsiya">
     <a href="/dashboard/" class="mobile-nav-item {% if '/dashboard' in request.path %}active{% endif %}">
-      <span class="mobile-nav-icon">📊</span>
+      <span class="mobile-nav-icon"><i class="fa-solid fa-chart-pie"></i></span>
       <span class="mobile-nav-label">Dashboard</span>
     </a>
     <a href="/editor/new/" class="mobile-nav-item {% if '/editor' in request.path %}active{% endif %}">
-      <span class="mobile-nav-icon">➕</span>
+      <span class="mobile-nav-icon"><i class="fa-solid fa-plus"></i></span>
       <span class="mobile-nav-label">Yangi</span>
     </a>
     <a href="/play/" class="mobile-nav-item {% if '/play' in request.path %}active{% endif %}">
-      <span class="mobile-nav-icon">🎮</span>
+      <span class="mobile-nav-icon"><i class="fa-solid fa-gamepad"></i></span>
       <span class="mobile-nav-label">O‘yin</span>
     </a>
     {% if user.is_authenticated %}
       <a href="/auth/profile/" class="mobile-nav-item {% if '/auth/profile' in request.path %}active{% endif %}">
-        <span class="mobile-nav-icon">👤</span>
+        <span class="mobile-nav-icon"><i class="fa-solid fa-user"></i></span>
         <span class="mobile-nav-label">Profil</span>
       </a>
     {% else %}
       <a href="/auth/login/" class="mobile-nav-item {% if '/auth/login' in request.path %}active{% endif %}">
-        <span class="mobile-nav-icon">🔑</span>
+        <span class="mobile-nav-icon"><i class="fa-solid fa-arrow-right-to-bracket"></i></span>
         <span class="mobile-nav-label">Kirish</span>
       </a>
     {% endif %}
@@ -347,7 +350,7 @@
 
         // Update Telegram Switch UI
         if (themeThumbIcon) {
-          themeThumbIcon.textContent = isDark ? '🌙' : '☀️';
+          themeThumbIcon.innerHTML = isDark ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
         }
         if (themeText) {
           themeText.textContent = isDark ? 'Tungi' : 'Kunduzgi';

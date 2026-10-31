@@ -181,7 +181,7 @@
   <div class="dashboard-hero-row" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; flex-wrap: wrap; gap: 20px;">
     <div class="dashboard-hero-text">
       <span class="pill-badge" style="background: rgba(255,106,0,0.2); color: var(--primary-orange); border: 1.5px solid var(--primary-orange); padding: 6px 18px; border-radius: 9999px !important; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; backdrop-filter: blur(12px); box-shadow: 0 4px 16px rgba(255,106,0,0.25);">
-        <span>🎓</span> Xush kelibsiz, {{ user.first_name|default:user.username }}!
+        <i class="fa-solid fa-graduation-cap"></i> Xush kelibsiz, {{ user.first_name|default:user.username }}!
       </span>
       <h1 class="font-heading dashboard-hero-title" style="font-size: 34px; color: var(--text-main); margin-bottom: 6px; letter-spacing: -0.5px;">
         Darslar va O‘yinlar Boshqaruvi
@@ -193,10 +193,10 @@
 
     <div class="dashboard-hero-actions" style="display: flex; gap: 12px; flex-wrap: wrap;">
       <a href="/play/" target="_blank" class="pill-button-green" style="text-decoration: none; height: 48px; padding: 0 24px; font-size: 15px; border-radius: 9999px !important; display: inline-flex; align-items: center; gap: 8px;">
-        <span>🎮</span> Blooket O‘ynash
+        <i class="fa-solid fa-gamepad"></i> Blooket O‘ynash
       </a>
       <a href="/editor/new/" class="pill-button-blue" style="text-decoration: none; height: 48px; padding: 0 26px; font-size: 15px; border-radius: 9999px !important; display: inline-flex; align-items: center; gap: 8px;">
-        <span>✨</span> Yangi Viktorina
+        <i class="fa-solid fa-plus"></i> Yangi Viktorina
       </a>
     </div>
   </div>
@@ -210,8 +210,8 @@
       <!-- Card 1: Play Earn Win (Oceanic Blue Glass) -->
       <div onclick="scrollToQuizzes()" class="bento-card bento-card-blue glass-card-blue" title="Pastdagi viktorinalarni boshlash uchun bosing" style="border-radius: 28px !important; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; padding: 26px; cursor: pointer;">
         <div>
-          <span style="font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.22); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 9999px !important; display: inline-block; color: #FFFFFF;">
-            🎮 PLAY EARN WIN
+          <span style="font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.22); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 9999px !important; display: inline-flex; align-items: center; gap: 6px; color: #FFFFFF;">
+            <i class="fa-solid fa-gamepad"></i> PLAY EARN WIN
           </span>
           <h3 class="font-heading" style="font-size: 26px; margin-top: 14px; margin-bottom: 8px; color: #FFFFFF !important; text-shadow: 0 2px 4px rgba(0,0,0,0.25);">
             Jonli Gamifikatsiya
@@ -222,15 +222,15 @@
         </div>
         <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
           <span style="font-size: 13px; font-weight: 700; color: #FFFFFF; text-decoration: underline;">O‘yinni boshlash ↓</span>
-          <span style="font-size: 44px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));">🏆</span>
+          <span style="font-size: 38px; color: #FFFFFF; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));"><i class="fa-solid fa-trophy"></i></span>
         </div>
       </div>
 
       <!-- Card 2: Challenge Friends (Royal Violet Glass) -->
       <div onclick="openGameModesModal()" class="bento-card bento-card-purple glass-card-purple" title="O'yin rejimlari ro'yxatini ko'rish uchun bosing" style="border-radius: 28px !important; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; padding: 26px; cursor: pointer;">
         <div>
-          <span style="font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.22); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 9999px !important; display: inline-block; color: #FFFFFF;">
-            ⚡ 40+ O‘YIN REJIMLARI
+          <span style="font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.22); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 9999px !important; display: inline-flex; align-items: center; gap: 6px; color: #FFFFFF;">
+            <i class="fa-solid fa-bolt"></i> 40+ O‘YIN REJIMLARI
           </span>
           <h3 class="font-heading" style="font-size: 26px; margin-top: 14px; margin-bottom: 8px; color: #FFFFFF !important; text-shadow: 0 2px 4px rgba(0,0,0,0.25);">
             Jamoaviy Musobaqa
@@ -241,15 +241,15 @@
         </div>
         <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
           <span style="font-size: 13px; font-weight: 700; color: #FFFFFF; text-decoration: underline;">Rejimlarni ko‘rish →</span>
-          <span style="font-size: 44px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));">⚡</span>
+          <span style="font-size: 38px; color: #FFFFFF; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));"><i class="fa-solid fa-bolt"></i></span>
         </div>
       </div>
 
       <!-- Card 3: AI Assistant & MCP (Radiant Amber Glass) -->
       <div onclick="openMcpModal()" class="bento-card bento-card-gold glass-card-gold" title="Claude / ChatGPT ulanish yo'riqnomasi" style="border-radius: 28px !important; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; padding: 26px; cursor: pointer;">
         <div>
-          <span style="font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.22); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 9999px !important; display: inline-block; color: #FFFFFF;">
-            🤖 AI & MCP PROTOKOL
+          <span style="font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; background: rgba(255,255,255,0.22); backdrop-filter: blur(8px); padding: 6px 14px; border-radius: 9999px !important; display: inline-flex; align-items: center; gap: 6px; color: #FFFFFF;">
+            <i class="fa-solid fa-robot"></i> AI & MCP PROTOKOL
           </span>
           <h3 class="font-heading" style="font-size: 26px; margin-top: 14px; margin-bottom: 8px; color: #FFFFFF !important; text-shadow: 0 2px 4px rgba(0,0,0,0.25);">
             Claude & Chatbot Ulanishi
@@ -260,7 +260,7 @@
         </div>
         <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
           <span style="font-size: 13px; font-weight: 700; color: #FFFFFF; text-decoration: underline;">Ulanish siri →</span>
-          <span style="font-size: 44px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));">🚀</span>
+          <span style="font-size: 38px; color: #FFFFFF; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));"><i class="fa-solid fa-rocket"></i></span>
         </div>
       </div>
 
@@ -270,10 +270,10 @@
     <div id="quizzesSection" class="bento-card bento-card-surface" style="padding: 32px; border-radius: 28px !important; border: 1.5px solid var(--border-subtle); box-shadow: var(--shadow-card);">
       <div class="quizzes-header-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
         <h2 class="font-heading" style="font-size: 24px; color: var(--text-main); display: flex; align-items: center; gap: 10px; margin: 0;">
-          <span>📚</span> Sizning Viktorinalaringiz
+          <i class="fa-solid fa-book-open"></i> Sizning Viktorinalaringiz
         </h2>
       <div class="quizzes-search-controls" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-        <input type="text" id="quizSearchInput" placeholder="🔍 Qidirish..." oninput="filterQuizzes(this.value)" style="height: 40px; border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 0 16px; font-size: 13px; font-weight: 600; outline: none; width: 180px;">
+        <input type="text" id="quizSearchInput" placeholder="Qidirish..." oninput="filterQuizzes(this.value)" style="height: 40px; border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 0 16px; font-size: 13px; font-weight: 600; outline: none; width: 180px;">
         <span class="quiz-total-badge" style="font-size: 14px; color: var(--text-muted); background: var(--bg-surface-subtle); padding: 6px 18px; border-radius: 9999px !important; font-weight: 700; border: 1.5px solid var(--border-subtle);">
           Jami: <strong id="totalQuizzesCount" style="color: var(--primary-orange);">{{ quizzes|length|default:"0" }}</strong> ta test
         </span>
@@ -303,13 +303,13 @@
 
             <div class="quiz-item-actions" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
               <a href="/editor/{{ quiz.id }}/" class="pill-button-secondary" style="height: 42px; padding: 0 18px; font-size: 13px; border-radius: 9999px !important; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                <span>✏️</span> Tahrirlash
+                <i class="fa-solid fa-pen-to-square"></i> Tahrirlash
               </a>
               <button onclick="startLiveRoom('{{ quiz.id }}', this)" class="pill-button-green" style="height: 42px; padding: 0 20px; font-size: 13px; border-radius: 9999px !important; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-                <span>🚀</span> Jonli Xona
+                <i class="fa-solid fa-play"></i> Jonli Xona
               </button>
-              <button onclick="deleteQuiz('{{ quiz.id }}', '{{ quiz.title|escapejs }}', this)" title="Viktorinani o'chirish" style="height: 42px; width: 42px; border-radius: 50% !important; background: rgba(239,68,68,0.12); color: #EF4444; border: 1.5px solid #F87171; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;">
-                🗑️
+              <button onclick="deleteQuiz('{{ quiz.id }}', '{{ quiz.title|escapejs }}', this)" title="Viktorinani o'chirish" style="height: 42px; width: 42px; border-radius: 50% !important; background: rgba(239,68,68,0.12); color: #EF4444; border: 1.5px solid #F87171; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                <i class="fa-solid fa-trash"></i>
               </button>
             </div>
           </div>
@@ -317,15 +317,15 @@
       </div>
     {% else %}
       <div style="text-align: center; padding: 56px 16px;">
-        <div style="font-size: 56px; margin-bottom: 16px;">📝</div>
+        <div style="font-size: 48px; margin-bottom: 16px; color: var(--text-muted);"><i class="fa-solid fa-file-circle-plus"></i></div>
         <h3 class="font-heading" style="font-size: 22px; color: var(--text-main); margin-bottom: 8px;">
           Hozircha hech qanday viktorina yaratilmagan
         </h3>
         <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 24px; max-width: 480px; margin-left: auto; margin-right: auto;">
           Darsni boshlash uchun birinchi viktorinangizni yarating yoki AI yordamida avtomatik generatsiya qiling.
         </p>
-        <a href="/editor/new/" class="pill-button-primary" style="text-decoration: none; height: 50px; padding: 0 32px; font-size: 15px; border-radius: 9999px !important;">
-          <span>✨</span> Yangi Viktorina Yaratish
+        <a href="/editor/new/" class="pill-button-primary" style="text-decoration: none; height: 50px; padding: 0 32px; font-size: 15px; border-radius: 9999px !important; display: inline-flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-plus"></i> Yangi Viktorina Yaratish
         </a>
       </div>
     {% endif %}
@@ -341,9 +341,9 @@
   <div class="bento-card bento-card-surface" style="width: 600px; max-width: 95vw; padding: 32px; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle); box-shadow: var(--shadow-modal);">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
       <h3 class="font-heading" style="font-size: 22px; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px;">
-        <span>🎮</span> O‘yin Rejimini Tanlang
+        <i class="fa-solid fa-gamepad"></i> O‘yin Rejimini Tanlang
       </h3>
-      <button onclick="document.getElementById('gameModesModal').style.display='none'" style="background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer;">✕</button>
+      <button onclick="document.getElementById('gameModesModal').style.display='none'" style="background: none; border: none; font-size: 18px; color: var(--text-muted); cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
     </div>
     
     <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 22px;">
@@ -354,28 +354,28 @@
       
       <!-- Mode 1: Classic -->
       <div style="padding: 16px; border-radius: 20px; background: var(--bg-surface-subtle); border: 2px solid var(--border-subtle); cursor: pointer;" onclick="selectMode('classic')">
-        <div style="font-size: 28px; margin-bottom: 6px;">🏆</div>
+        <div style="font-size: 24px; margin-bottom: 6px; color: #F59E0B;"><i class="fa-solid fa-trophy"></i></div>
         <h4 style="font-size: 16px; color: var(--text-main); margin-bottom: 4px;">Classic Shohsupa</h4>
         <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Har bir o‘quvchi o‘z tezligida javob beradi va 3D shohsupada o‘rin talashadi.</p>
       </div>
 
       <!-- Mode 2: Gold Quest -->
       <div style="padding: 16px; border-radius: 20px; background: rgba(245,158,11,0.1); border: 2px solid #F59E0B; cursor: pointer;" onclick="selectMode('gold_quest')">
-        <div style="font-size: 28px; margin-bottom: 6px;">💰</div>
+        <div style="font-size: 24px; margin-bottom: 6px; color: #D97706;"><i class="fa-solid fa-coins"></i></div>
         <h4 style="font-size: 16px; color: #D97706; margin-bottom: 4px;">Gold Quest</h4>
         <p style="font-size: 12px; color: var(--text-muted); margin: 0;">To‘g‘ri javob uchun sirli sandiq ochiladi va raqiblardan tangalar o‘g‘irlanadi!</p>
       </div>
 
       <!-- Mode 3: Boss Battle -->
       <div style="padding: 16px; border-radius: 20px; background: rgba(239,68,68,0.1); border: 2px solid #EF4444; cursor: pointer;" onclick="selectMode('boss_battle')">
-        <div style="font-size: 28px; margin-bottom: 6px;">👾</div>
+        <div style="font-size: 24px; margin-bottom: 6px; color: #DC2626;"><i class="fa-solid fa-dragon"></i></div>
         <h4 style="font-size: 16px; color: #DC2626; margin-bottom: 4px;">Katta Jang (Boss)</h4>
         <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Butun sinf birlashib ulkan virus yoki ajdarga qarshi birgalikda zarba beradi.</p>
       </div>
 
       <!-- Mode 4: Submarine Squad -->
       <div style="padding: 16px; border-radius: 20px; background: rgba(36,129,204,0.1); border: 2px solid var(--tg-blue); cursor: pointer;" onclick="selectMode('submarine')">
-        <div style="font-size: 28px; margin-bottom: 6px;">🌊</div>
+        <div style="font-size: 24px; margin-bottom: 6px; color: var(--tg-blue);"><i class="fa-solid fa-shield-halved"></i></div>
         <h4 style="font-size: 16px; color: var(--tg-blue); margin-bottom: 4px;">Suvosti Qayig‘i</h4>
         <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Har bir xatosiz javob kemani chuqurlikka sho‘ng‘itadi va yangi xazinalarni ochadi.</p>
       </div>
@@ -395,13 +395,13 @@
   <div class="bento-card bento-card-surface" style="width: 580px; max-width: 95vw; padding: 32px; border-radius: 28px !important; background: var(--card-bg); border: 1.5px solid var(--border-subtle); box-shadow: var(--shadow-modal);">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
       <h3 class="font-heading" style="font-size: 22px; color: var(--text-main); margin: 0; display: flex; align-items: center; gap: 8px;">
-        <span>🤖</span> Claude Desktop & MCP Ulanishi
+        <i class="fa-solid fa-robot"></i> Claude Desktop & MCP Ulanishi
       </h3>
-      <button onclick="document.getElementById('mcpModal').style.display='none'" style="background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer;">✕</button>
+      <button onclick="document.getElementById('mcpModal').style.display='none'" style="background: none; border: none; font-size: 18px; color: var(--text-muted); cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <div style="background: rgba(46,166,58,0.12); color: #2EA63A; padding: 8px 16px; border-radius: 9999px; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 16px;">
-      <span>🟢</span> MCP Server Faol: http://127.0.0.1:8000/mcp/sse
+      <i class="fa-solid fa-circle" style="font-size: 10px;"></i> MCP Server Faol: http://127.0.0.1:8000/mcp/sse
     </div>
 
     <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 14px;">
@@ -418,8 +418,8 @@
     }
   }
 }</pre>
-      <button id="copyMcpBtn" onclick="copyMcpConfig()" style="position: absolute; top: 10px; right: 10px; background: #242F3D; color: #FFFFFF; border: 1px solid #334458; border-radius: 9999px; padding: 4px 12px; font-size: 11px; font-weight: 700; cursor: pointer;">
-        📋 Nusxa Olish
+      <button id="copyMcpBtn" onclick="copyMcpConfig()" style="position: absolute; top: 10px; right: 10px; background: #242F3D; color: #FFFFFF; border: 1px solid #334458; border-radius: 9999px; padding: 4px 12px; font-size: 11px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+        <i class="fa-solid fa-copy"></i> Nusxa Olish
       </button>
     </div>
 
@@ -478,8 +478,8 @@
     const jsonStr = `{\n  "mcpServers": {\n    "eduself-teacher": {\n      "command": "python",\n      "args": ["-m", "mcp.server.sse", "http://127.0.0.1:8000/mcp/sse"]\n    }\n  }\n}`;
     navigator.clipboard.writeText(jsonStr).then(() => {
       const btn = document.getElementById('copyMcpBtn');
-      btn.textContent = '✅ Nusxalandi!';
-      setTimeout(() => { btn.textContent = '📋 Nusxa Olish'; }, 2500);
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Nusxalandi!';
+      setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-copy"></i> Nusxa Olish'; }, 2500);
       if (window.eduAudio && typeof window.eduAudio.playCoin === 'function') {
         window.eduAudio.playCoin();
       }
@@ -493,7 +493,7 @@
 
     if (btn) {
       btn.disabled = true;
-      btn.innerHTML = '<span>⏳</span> Ochilmoqda...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ochilmoqda...';
     }
 
     try {
@@ -518,7 +518,7 @@
         alert(data.error || 'Jonli xona ochishda xatolik yuz berdi.');
         if (btn) {
           btn.disabled = false;
-          btn.innerHTML = '<span>🚀</span> Jonli Xona Ochish';
+          btn.innerHTML = '<i class="fa-solid fa-play"></i> Jonli Xona Ochish';
         }
       }
     } catch (e) {
@@ -526,7 +526,7 @@
       alert('Tarmoq xatosi yuz berdi. Qayta urinib ko\'ring.');
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<span>🚀</span> Jonli Xona Ochish';
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> Jonli Xona Ochish';
       }
     }
   }

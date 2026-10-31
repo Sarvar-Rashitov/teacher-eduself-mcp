@@ -153,10 +153,30 @@ class EduPlayGameClient {
         this.emit("state_sync", payload);
         break;
 
+      case "session.started":
+        this.state.status = "active";
+        this.emit("session_started", payload);
+        this.emit("session.started", payload);
+        break;
+
       case "participant.joined":
-        this.state.participants.push(payload.participant);
+        this.state.participants.push(payload.participant || payload);
         if (window.eduAudio) window.eduAudio.playCoin();
         this.emit("participant_joined", payload);
+        this.emit("participant.joined", payload);
+        break;
+
+      case "question.opened":
+        this.state.status = "question_active";
+        this.state.currentQuestion = payload;
+        this.state.answered = false;
+        this.emit("question_opened", payload);
+        this.emit("question.opened", payload);
+        break;
+
+      case "answer.count_updated":
+        this.emit("answer_count_updated", payload);
+        this.emit("answer.count_updated", payload);
         break;
 
       case "question.start":
