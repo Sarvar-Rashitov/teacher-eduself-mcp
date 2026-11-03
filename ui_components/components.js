@@ -39,9 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     muteBtn.addEventListener('click', () => {
       const isMuted = window.eduAudio ? window.eduAudio.toggleMute() : false;
       state.soundEnabled = !isMuted;
-      muteBtn.innerHTML = isMuted 
-        ? '<span>🔇</span> Tovush: O‘chiq' 
-        : '<span>🔊</span> Tovush: Yoqilgan';
+      const icon = isMuted ? 'icons/speaker_off.svg' : 'icons/speaker_on.svg';
+      const text = isMuted ? 'Tovush: O‘chiq' : 'Tovush: Yoqilgan';
+      muteBtn.innerHTML = `<img src="${icon}" alt="Ovoz" class="svg-icon svg-icon-sm"> <span>${text}</span>`;
       muteBtn.style.background = isMuted ? '#FEE2E2' : '#FFFFFF';
     });
   }
@@ -221,10 +221,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Handle Mythological Options in Simulator
+  window.handleSimAnswer = function(btnEl, isCorrect) {
+    if (state.quizAnswered) return;
+
+    if (isCorrect) {
+      btnEl.classList.add('correct-glow');
+      if (window.eduAudio) {
+        window.eduAudio.playCorrect();
+        setTimeout(() => window.eduAudio.playCoin(), 300);
+      }
+      updateCoinDisplay(2185);
+      stopQuizTimer();
+      state.quizAnswered = true;
+
+      setTimeout(() => {
+        window.openVictoryModal(2185);
+      }, 900);
+    } else {
+      btnEl.classList.add('wrong-shake');
+      if (window.eduAudio) {
+        window.eduAudio.playWrong();
+      }
+      setTimeout(() => btnEl.classList.remove('wrong-shake'), 600);
+    }
+  };
+
   // Reset Quiz State
   window.resetQuizSimulator = function() {
     state.quizAnswered = false;
-    quizOptions.forEach(opt => {
+    document.querySelectorAll('.answer-card, .quiz-option-btn').forEach(opt => {
       opt.classList.remove('correct-glow', 'wrong-shake');
     });
     startQuizTimer();
@@ -242,3 +268,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+

@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}EduSelf — AI & Gamified Learning Platform{% endblock %}</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- EduPlay 3D Design System Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/eduplay_3d.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+  <!-- ================= Dual Floating Islands Navigation Bar ================= -->
+  {% block navbar %}
+  <header class="app-navbar app-navbar-container">
+    <!-- Left Floating Island: EduSelf Teacher Brand Capsule -->
+    <div class="navbar-island navbar-island-brand">
+      <a href="/" class="brand-wrapper" title="EduSelf Bosh Sahifasi">
+        <img src="{% static 'img/eduself_teacher_logo.svg' %}" alt="EduSelf Teacher" class="brand-logo-img brand-logo-default">
+        <img src="{% static 'img/eduself_teacher_logo_white.svg' %}" alt="EduSelf Teacher" class="brand-logo-img brand-logo-white">
+      </a>
+    </div>
+
+    <!-- Center Floating Island: Search Capsule (Faqat tizimga kirgan ustozlar uchun) -->
+    {% if user.is_authenticated %}
+    <div class="navbar-island navbar-island-search" id="navbarSearchIsland">
+      <div class="search-input-wrapper">
+        <img src="{% static 'img/icons/search.svg' %}" alt="Qidiruv" class="search-icon">
+        <input type="text" id="globalSearchInput" placeholder="Viktorina, mavzu yoki sahifani qidirish..." autocomplete="off">
+        <kbd class="search-shortcut-badge"><span class="kbd-key">⌘</span>K</kbd>
+      </div>
+      <!-- Quick Search Results Dropdown -->
+      <div class="search-results-dropdown" id="searchResultsDropdown" style="display: none;"></div>
+    </div>
+    {% endif %}
+
+    <!-- Right Floating Island: Navigation & Quick Actions Capsule -->
+    <div class="navbar-island navbar-island-actions">
+      <!-- Quick Play Arena Link with Pulsing Beacon -->
+      <a href="/play/" class="nav-play-pill" title="O'quvchi sifatida jonli o'yinga ulanish">
+        <span class="nav-play-pulse"></span>
+        <img src="{% static 'img/icons/play.svg' %}" alt="Play" class="svg-icon svg-icon-sm" style="filter: brightness(0) invert(1);">
+        <span>Play Arena</span>
+      </a>
+
+      <!-- Radial CircleMenu Navigation Trigger -->
+      <div data-circle-menu id="headerCircleMenu"></div>
+
+      {% if user.is_authenticated %}
+        <a href="/profile/" class="audio-toggle-btn" style="text-decoration: none; border-color: var(--primary-orange);">
+          <img src="{% static 'img/icons/user.svg' %}" alt="Profil" class="svg-icon svg-icon-sm" style="color: var(--primary-orange);">
+          <span>{{ user.first_name|default:user.username }}</span>
+        </a>
+      {% else %}
+        <a href="/login/" class="pill-btn btn-primary-orange btn-sm" style="height: 38px; padding: 0 20px; font-size: 13.5px; width: auto; text-decoration: none;">
+          Kirish
+        </a>
+      {% endif %}
+    </div>
+  </header>
+  {% endblock navbar %}
+
+  <!-- ================= Main Content Block ================= -->
+  <main class="main-content-wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ================= Global Toast Container ================= -->
+  <div id="globalToastContainer"></div>
+
+  <!-- ================= Floating Bottom-Right AI Assistant Widget (Faqat tizimga kirgan ustozlar uchun) ================= -->
+  {% if user.is_authenticated %}
+  <div class="floating-ai-widget" id="floatingAiWidget">
+    <!-- Popover AI Command Modal -->
+    <div class="ai-command-modal" id="aiCommandModal" style="display: none;">
+      <div class="ai-modal-header">
+        <div class="ai-modal-identity">
+          <div class="ai-avatar-badge">
+            <img src="{% static 'img/icons/sparkles.svg' %}" alt="AI" class="svg-icon">
+          </div>
+          <div>
+            <div class="ai-modal-title">EduSelf AI Assistent</div>
+            <div class="ai-modal-status"><span class="ai-status-dot"></span> Claude 3.5 / DeepSeek • LIVE</div>
+          </div>
+        </div>
+        <button type="button" class="ai-modal-close" id="aiModalCloseBtn" aria-label="Yopish">
+          <img src="{% static 'img/icons/cross.svg' %}" alt="Yopish" class="svg-icon svg-icon-sm">
+        </button>
+      </div>
+
+      <!-- Quick Action Command Chips for Platform Control -->
+      <div class="ai-command-chips-row">
+        <button type="button" class="ai-chip" data-ai-action="new-quiz">⚡ Yangi Viktorina</button>
+        <button type="button" class="ai-chip" data-ai-action="live-game">🎮 Jonli O‘yin</button>
+        <button type="button" class="ai-chip" data-ai-action="analytics">📊 Sinf Tahlili</button>
+        <button type="button" class="ai-chip" data-ai-action="sound-toggle">🔊 Tovush</button>
+        <button type="button" class="ai-chip" data-ai-action="leaderboard">🏆 Peshqadamlar</button>
+      </div>
+
+      <!-- Chat Body -->
+      <div class="ai-chat-body" id="aiChatBody">
+        <div class="ai-chat-bubble ai-bubble">
+          Salom, ustoz! Men sizning AI yordamchingizman. Platformadagi barcha amallarni (viktorina tuzish, jonli dars boshlash, tahlil qilish) tezkor bajara olaman. Xohlagan mavzuingizni yozing!
+        </div>
+      </div>
+
+      <!-- Input Bar -->
+      <div class="ai-modal-footer">
+        <input type="text" id="aiModalInput" class="ai-modal-input" placeholder="Mavzuni yozing (masalan: 8-sinf Fizika Zichlik 5 ta test)..." autocomplete="off">
+        <button type="button" id="aiModalSendBtn" class="ai-send-btn" title="Yuborish">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Trigger Button in Bottom-Right Corner -->
+    <button class="floating-ai-trigger" id="floatingAiTrigger" type="button" aria-label="EduSelf AI Asistent" title="AI Asistent • Platformani Boshqarish">
+      <span class="ai-pulse-dot"></span>
+      <div class="ai-trigger-icon-wrap">
+        <img src="{% static 'img/icons/sparkles.svg' %}" alt="AI" class="svg-icon">
+      </div>
+      <span class="ai-trigger-text">AI Asistent</span>
+    </button>
+  </div>
+  {% endif %}
+
+  <!-- Core Scripts -->
+  <script src="{% static 'js/audio.js' %}"></script>
+  <script src="{% static 'js/components.js' %}"></script>
+  <script src="{% static 'js/circle_menu.js' %}"></script>
+  <script src="{% static 'js/globe_3d.js' %}"></script>
+  {% if user.is_authenticated %}
+  <script src="{% static 'js/search.js' %}"></script>
+  <script src="{% static 'js/ai_assistant.js' %}"></script>
+  {% endif %}
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

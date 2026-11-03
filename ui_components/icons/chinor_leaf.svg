@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <!-- Boqiy Chinor (Oriental Plane Tree Leaf) -->
+  <path d="M24 6L28 14L36 12L34 20L42 24L34 28L36 36L28 34L24 42L20 34L12 36L14 28L6 24L14 20L12 12L20 14L24 6Z" fill="url(#chinor_green)" />
+  <!-- Central Leaf Vein -->
+  <path d="M24 8V42M24 16L32 20M24 24L34 28M24 32L30 35M24 16L16 20M24 24L14 28M24 32L18 35" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.85" />
+  <defs>
+    <linearGradient id="chinor_green" x1="24" y1="6" x2="24" y2="42" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A7F3D0" />
+      <stop offset="0.4" stop-color="#10B981" />
+      <stop offset="1" stop-color="#047857" />
+    </linearGradient>
+  </defs>
+</svg>

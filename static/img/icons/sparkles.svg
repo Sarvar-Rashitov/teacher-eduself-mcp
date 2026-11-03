@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z" fill="url(#sparkle_grad)" />
+  <path d="M19 16L19.9 19.1L23 20L19.9 20.9L19 24L18.1 20.9L15 20L18.1 19.1L19 16Z" fill="#F59E0B" />
+  <path d="M5 3L5.6 5.4L8 6L5.6 6.6L5 9L4.4 6.6L2 6L4.4 5.4L5 3Z" fill="#FCD34D" />
+  <defs>
+    <linearGradient id="sparkle_grad" x1="4" y1="2" x2="20" y2="18" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD154" />
+      <stop offset="1" stop-color="#FF7527" />
+    </linearGradient>
+  </defs>
+</svg>

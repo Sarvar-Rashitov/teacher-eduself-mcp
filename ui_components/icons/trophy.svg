@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Cup body -->
+  <path d="M8 5H24V14C24 18.4 20.4 22 16 22C11.6 22 8 18.4 8 14V5Z" fill="url(#trophy_gold)" stroke="#B45309" stroke-width="1.2" />
+  <!-- Handles -->
+  <path d="M8 8H5C3.9 8 3 8.9 3 10V12C3 14.8 5.2 17 8 17M24 8H27C28.1 8 29 8.9 29 10V12C29 14.8 26.8 17 24 17" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" />
+  <!-- Stem & Base -->
+  <path d="M14 22H18V26H14V22Z" fill="#F59E0B" stroke="#B45309" stroke-width="1" />
+  <rect x="10" y="26" width="12" height="4" rx="2" fill="#78350F" />
+  <!-- Star on Cup -->
+  <path d="M16 10L17 12.5L19.5 13L17.5 14.8L18 17L16 15.6L14 17L14.5 14.8L12.5 13L15 12.5L16 10Z" fill="#FFFFFF" fill-opacity="0.9" />
+  <defs>
+    <linearGradient id="trophy_gold" x1="8" y1="5" x2="24" y2="22" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF08A" />
+      <stop offset="0.5" stop-color="#FACC15" />
+      <stop offset="1" stop-color="#D97706" />
+    </linearGradient>
+  </defs>
+</svg>

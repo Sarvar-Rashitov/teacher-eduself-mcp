@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="56" height="56" fill="none">
+  <defs>
+    <linearGradient id="badgeGradSq" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF8A3D"/>
+      <stop offset="50%" stop-color="#FF6B18"/>
+      <stop offset="100%" stop-color="#E04D00"/>
+    </linearGradient>
+    <linearGradient id="goldGradSq" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE27A"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <filter id="badgeShadowSq" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#FF6B18" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+
+  <!-- Container -->
+  <rect x="4" y="4" width="48" height="48" rx="14" fill="url(#badgeGradSq)" filter="url(#badgeShadowSq)"/>
+  <path d="M8 18C8 12.4772 12.4772 8 18 8H38C43.5228 8 48 12.4772 48 18C48 20 42 16 28 16C14 16 8 20 8 18Z" fill="white" opacity="0.35"/>
+
+  <!-- Open Book -->
+  <path d="M28 37.5C25 36 20 35.5 17 36.5V24C20 23 25 23.5 28 25V37.5Z" fill="#FFF2EB" opacity="0.95"/>
+  <path d="M28 36C25 34.5 20.5 34 18 35V25C20.5 24 25 24.5 28 26V36Z" fill="white"/>
+  <path d="M28 37.5C31 36 36 35.5 39 36.5V24C36 23 31 23.5 28 25V37.5Z" fill="#FFF2EB" opacity="0.95"/>
+  <path d="M28 36C31 34.5 35.5 34 38 35V25C35.5 24 31 24.5 28 26V36Z" fill="white"/>
+  <line x1="28" y1="24" x2="28" y2="38" stroke="#FF7527" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Academic Cap -->
+  <g transform="translate(20, 15)">
+    <polygon points="8,0 16,3.5 8,7 0,3.5" fill="url(#goldGradSq)"/>
+    <polygon points="8,1 14.5,3.5 8,6 1.5,3.5" fill="#FFFBEB" opacity="0.4"/>
+    <path d="M3.5 4.5V7C3.5 9 8 10.5 8 10.5C8 10.5 12.5 9 12.5 7V4.5" fill="url(#goldGradSq)" opacity="0.85"/>
+    <path d="M8 3.5L3 5.5V8.5" stroke="#FFE27A" stroke-width="1" stroke-linecap="round"/>
+    <circle cx="3" cy="9" r="0.8" fill="#FFE27A"/>
+  </g>
+
+  <!-- Sparkle -->
+  <path d="M42 16L43 18.5L45.5 19.5L43 20.5L42 23L41 20.5L38.5 19.5L41 18.5L42 16Z" fill="#FFE27A" opacity="0.9"/>
+</svg>

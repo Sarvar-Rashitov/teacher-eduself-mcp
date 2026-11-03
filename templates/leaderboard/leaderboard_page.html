@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}EduSelf — Milliy Peshqadamlar Shohsupasi (Leaderboard){% endblock %}
+
+{% block content %}
+<div class="dashboard-container" style="max-width: 1100px; margin: 0 auto; padding-top: 12px;">
+
+  <!-- Hero Title -->
+  <div style="text-align: center; margin-bottom: 28px;">
+    <div class="dual-portal-badge" style="margin-bottom: 10px;">
+      <img src="{% static 'img/icons/trophy.svg' %}" alt="Shohsupa" class="svg-icon svg-icon-sm">
+      <span>EduSelf Respublika Reytingi & Jonli Musobaqalar</span>
+    </div>
+    <h1 style="font-size: 36px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">
+      Peshqadamlar Shohsupasi
+    </h1>
+    <p style="font-size: 15px; color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+      O‘zbekiston maktablari va faol o‘quvchilari o‘rtasidagi haftalik intellektual bellashuv natijalari.
+    </p>
+  </div>
+
+  <!-- 3D Leaderboard Podium (1st, 2nd, 3rd) -->
+  <div class="podium-section" style="margin-bottom: 40px;">
+    <!-- 2nd Place: Silver / Qanotli Tulpor -->
+    <div class="podium-column">
+      <div class="podium-avatar-wrap">
+        <div style="width: 58px; height: 58px; border-radius: 50%; background: #E2E8F0; border: 3px solid #94A3B8; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(148, 163, 184, 0.3);">
+          <img src="{% static 'img/icons/trophy.svg' %}" alt="2-o'rin" class="svg-icon svg-icon-md" style="filter: grayscale(1) brightness(1.2);">
+        </div>
+        <div class="podium-badge-pill" style="background: #94A3B8; color: white;">2</div>
+      </div>
+      <div class="podium-player-name">{{ top_3.1.nickname }}</div>
+      <div class="podium-player-pts">{{ top_3.1.score }} ball</div>
+      <div class="podium-accolade-tag" style="background: #F1F5F9; color: #475569; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-pill); margin-bottom: 6px;">
+        {{ top_3.1.accolade }}
+      </div>
+      <div class="podium-pillar pillar-silver" style="height: 120px;">
+        <span class="pillar-rank-text">2</span>
+      </div>
+    </div>
+
+    <!-- 1st Place: Gold / Humo Qanoti -->
+    <div class="podium-column" style="z-index: 5;">
+      <div class="podium-avatar-wrap">
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: #FEF3C7; border: 3.5px solid #F59E0B; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 24px rgba(245, 158, 11, 0.35);">
+          <img src="{% static 'img/icons/trophy.svg' %}" alt="1-o'rin" class="svg-icon svg-icon-lg">
+        </div>
+        <div class="podium-badge-pill" style="background: #F59E0B; color: white; width: 28px; height: 28px; font-size: 14px;">1</div>
+      </div>
+      <div class="podium-player-name" style="font-size: 17px; font-weight: 800; color: #B45309;">{{ top_3.0.nickname }}</div>
+      <div class="podium-player-pts" style="font-size: 16px; font-weight: 800; color: var(--primary-orange);">{{ top_3.0.score }} ball</div>
+      <div class="podium-accolade-tag" style="background: #FEF3C7; color: #B45309; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: var(--radius-pill); margin-bottom: 6px;">
+        ✨ {{ top_3.0.accolade }}
+      </div>
+      <div class="podium-pillar pillar-gold" style="height: 165px;">
+        <span class="pillar-rank-text">1</span>
+      </div>
+    </div>
+
+    <!-- 3rd Place: Bronze / Uchqur Lochin -->
+    <div class="podium-column">
+      <div class="podium-avatar-wrap">
+        <div style="width: 54px; height: 54px; border-radius: 50%; background: #FFEDD5; border: 3px solid #EA580C; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(234, 88, 12, 0.25);">
+          <img src="{% static 'img/icons/trophy.svg' %}" alt="3-o'rin" class="svg-icon svg-icon-md" style="filter: sepia(1) saturate(3);">
+        </div>
+        <div class="podium-badge-pill" style="background: #EA580C; color: white;">3</div>
+      </div>
+      <div class="podium-player-name">{{ top_3.2.nickname }}</div>
+      <div class="podium-player-pts">{{ top_3.2.score }} ball</div>
+      <div class="podium-accolade-tag" style="background: #FFF7ED; color: #C2410C; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-pill); margin-bottom: 6px;">
+        {{ top_3.2.accolade }}
+      </div>
+      <div class="podium-pillar pillar-bronze" style="height: 90px;">
+        <span class="pillar-rank-text">3</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaderboard Rankings Table -->
+  <div style="background: #FFFFFF; border-radius: var(--radius-lg); border: 2px solid var(--border-subtle); box-shadow: 0 12px 36px rgba(30, 30, 36, 0.05); overflow: hidden; margin-bottom: 36px;">
+    <div style="padding: 18px 24px; border-bottom: 1.5px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; background: #FAF9F6;">
+      <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main);">
+        Top 100 Qatnashchilar
+      </h3>
+      <a href="/play/" class="nav-play-pill" style="height: 38px; padding: 0 18px; font-size: 13px;">
+        <span class="nav-play-pulse"></span>
+        <span>Musobaqaga Qo‘shilish</span>
+      </a>
+    </div>
+
+    <div style="display: flex; flex-direction: column;">
+      {% for r in rankings %}
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid #F1F5F9; transition: background 0.15s ease;" onmouseover="this.style.background='#FFFBF8'" onmouseout="this.style.background='transparent'">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span style="width: 28px; font-size: 15px; font-weight: 800; color: var(--text-muted); text-align: center;">#{{ r.rank }}</span>
+          <div>
+            <div style="font-size: 15px; font-weight: 700; color: var(--text-main);">{{ r.nickname }}</div>
+            <div style="font-size: 12px; color: var(--text-muted);">{{ r.school }}</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div style="text-align: right;">
+            <div style="font-size: 15px; font-weight: 800; color: var(--primary-orange);">{{ r.score }} ball</div>
+            <div style="font-size: 11.5px; color: #10B981; font-weight: 600;">Aniqlik: {{ r.accuracy }}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Dynamic Flame -->
+  <path d="M16 2C16 2 20 8 20 13C20 15 22 17 24 18C26 19 28 22 28 25C28 28.8 24.8 32 20 32C11 32 4 25 8 16C10 12 14 9 14 9C14 9 13 13 15 15C16 16 17 15 17 13C17 9 16 2 16 2Z" fill="url(#fire_outer)" />
+  <path d="M18 16C18 16 20 19 20 22C20 24.2 18.2 26 16 26C13.8 26 12 24.2 12 22C12 18 16 15 18 16Z" fill="url(#fire_inner)" />
+  <defs>
+    <linearGradient id="fire_outer" x1="16" y1="2" x2="16" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FCD34D" />
+      <stop offset="0.3" stop-color="#F97316" />
+      <stop offset="1" stop-color="#EF4444" />
+    </linearGradient>
+    <linearGradient id="fire_inner" x1="16" y1="16" x2="16" y2="26" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FEF08A" />
+      <stop offset="1" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+</svg>
