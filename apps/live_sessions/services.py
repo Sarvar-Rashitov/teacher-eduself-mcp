@@ -59,9 +59,10 @@ class LiveSessionService:
 
     @classmethod
     @transaction.atomic
-    def join_session(cls, room_code: str, nickname: str) -> Tuple[Participant, LiveSession]:
+    def join_session(cls, room_code: str, nickname: str, avatar: str = "fa-solid fa-dog") -> Tuple[Participant, LiveSession]:
         clean_pin = str(room_code).strip()
         clean_name = str(nickname).strip()
+        clean_avatar = str(avatar).strip() if avatar else "fa-solid fa-dog"
 
         if not clean_name:
             raise ValidationError("Taxallus (nickname) kiritilishi shart.")
@@ -89,6 +90,7 @@ class LiveSessionService:
         participant = Participant.objects.create(
             session=session,
             nickname=candidate_name,
+            team_name=clean_avatar,
             anonymous_token=token,
             score=0,
             streak=0,

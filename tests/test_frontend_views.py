@@ -147,3 +147,38 @@ class TestFrontendMVTViews:
         }, content_type="application/json")
         assert res_bad.status_code == 400
         assert "error" in res_bad.json()
+
+    def test_student_join_reflects_in_host_screen_and_state(self):
+        """O'quvchi qo'shilganda soni va taxallusi /state/ va /live/ da ko'rinadi."""
+        res_join = self.client.post("/api/sessions/join/", data={
+            "room_code": self.session.room_code,
+            "nickname": "Malika",
+            "avatar": "fa-solid fa-cat",
+        }, content_type="application/json")
+        assert res_join.status_code == 200
+        join_data = res_join.json()
+        assert join_data["avatar"] == "fa-solid fa-cat"
+
+        # State endpoint tekshiruvi
+        res_state = self.client.get(f"/api/sessions/{self.session.room_code}/state/")
+        assert res_state.status_code == 200
+        state_data = res_state.json()
+        assert state_data["total_participants"] == 1
+        assert state_data["participants"][0]["nickname"] == "Malika"
+        assert state_data["participants"][0]["avatar"] == "fa-solid fa-cat"
+
+        # Host screen view tekshiruvi
+        res_host = self.client.get(f"/live/{self.session.room_code}/")
+        assert res_host.status_code == 200
+        host_content = res_host.content.decode("utf-8")
+        assert "Malika" in host_content
+        assert "fa-solid fa-cat" in host_content
+        assert "1 o‘quvchi" in host_content
+
+    def test_katex_assets_present_in_base(self):
+        """KaTeX matematika formulalari yuklash kutubxonasi mavjudligi."""
+        res = self.client.get("/auth/login/")
+        content = res.content.decode("utf-8")
+        assert "katex.min.css" in content
+        assert "katex.min.js" in content
+        assert "renderMath" in content

@@ -55,10 +55,15 @@ class ClassroomGameConsumer(AsyncJsonWebsocketConsumer):
             })
             return
 
-        # O'quvchi xonaga qo'shilishi
-        elif msg_type == "participant.join":
+        # O'quvchi xonaga qo'shilishi yoki qayta ulanishi
+        elif msg_type in ("participant.join", "participant.reconnect"):
             nickname = payload.get("nickname", "Anonim")
             participant_id = payload.get("participant_id")
+            avatar = payload.get("avatar") or "fa-solid fa-dog"
+
+            session = await sync_to_async(LiveSession.objects.filter(room_code=self.room_code).first)()
+            total_count = await sync_to_async(lambda: session.participants.count() if session else 1)()
+
             await self.channel_layer.group_send(
                 self.room_group,
                 {
@@ -68,6 +73,8 @@ class ClassroomGameConsumer(AsyncJsonWebsocketConsumer):
                         "payload": {
                             "nickname": nickname,
                             "participant_id": participant_id,
+                            "avatar": avatar,
+                            "total_count": total_count,
                             "joined_at": int(time.time() * 1000),
                         },
                     },

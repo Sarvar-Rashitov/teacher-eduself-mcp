@@ -728,7 +728,7 @@
           'Content-Type': 'application/json',
           'X-CSRFToken': csrfToken,
         },
-        body: JSON.stringify({ room_code: pin, nickname: nickname })
+        body: JSON.stringify({ room_code: pin, nickname: nickname, avatar: selectedBlook })
       });
 
       const data = await res.json();
@@ -885,6 +885,14 @@
     // Hide remaining options if fewer than 4
     for (let i = opts.length; i < 4; i++) {
       if (optButtons[i]) optButtons[i].style.display = 'none';
+    }
+
+    // Render KaTeX Math Formulas on Student Screen
+    if (typeof window.renderMath === 'function') {
+      window.renderMath(playerQPrompt);
+      textElements.forEach(el => {
+        if (el) window.renderMath(el);
+      });
     }
 
     // Start Timer

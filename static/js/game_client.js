@@ -72,11 +72,11 @@ class EduPlayGameClient {
       // Start ping/pong heartbeat every 20 seconds
       this.startHeartbeat();
 
-      // If reconnect token exists, reconnect
-      if (this.options.reconnectToken) {
+      // Send participant join if client is a student
+      if (!this.options.isHost && this.options.nickname) {
+        this.join(this.options.nickname, this.options.avatar, this.options.participantId);
+      } else if (this.options.reconnectToken) {
         this.reconnect(this.options.reconnectToken);
-      } else if (this.options.nickname && !this.options.isHost) {
-        this.join(this.options.nickname);
       }
     };
 
@@ -221,14 +221,25 @@ class EduPlayGameClient {
   }
 
   // Actions
-  join(nickname) {
+  join(nickname, avatar = null, participantId = null) {
     this.options.nickname = nickname;
-    this.send("participant.join", { nickname });
+    if (avatar) this.options.avatar = avatar;
+    if (participantId) this.options.participantId = participantId;
+    this.send("participant.join", {
+      nickname: nickname,
+      avatar: this.options.avatar || "fa-solid fa-dog",
+      participant_id: this.options.participantId || null
+    });
   }
 
   reconnect(token) {
     this.options.reconnectToken = token;
-    this.send("participant.reconnect", { token });
+    this.send("participant.reconnect", {
+      token: token,
+      nickname: this.options.nickname,
+      avatar: this.options.avatar || "fa-solid fa-dog",
+      participant_id: this.options.participantId || null
+    });
   }
 
   submitAnswer(submissionId, answer, timeTakenMs = 0) {

@@ -78,7 +78,7 @@
     <div class="host-status-right" style="display: flex; align-items: center; gap: 20px;">
       <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-surface-subtle); padding: 8px 18px; border-radius: 9999px; border: 1.5px solid var(--border-subtle);">
         <span style="font-size: 18px; color: var(--primary-orange);"><i class="fa-solid fa-users"></i></span>
-        <span style="font-size: 15px; font-weight: 800; color: var(--text-main);" id="studentCountBadge">0 o‘quvchi</span>
+        <span style="font-size: 15px; font-weight: 800; color: var(--text-main);" id="studentCountBadge">{{ participants_count|default:0 }} o‘quvchi</span>
       </div>
 
       <button id="hostActionBtn" onclick="handleHostAction()" class="pill-button-green" style="height: 48px; padding: 0 32px; font-size: 16px; font-weight: 800; width: auto; border-radius: 9999px !important; cursor: pointer; border-bottom: 5px solid #1C6B24 !important; display: inline-flex; align-items: center; gap: 8px;">
@@ -110,7 +110,16 @@
         Sinfdagi Blooklar (Ishtirokchilar):
       </h3>
       <div id="lobbyStudentsGrid" style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;">
-        <span style="font-size: 15px; color: var(--text-muted); font-style: italic;">Hali hech kim ulanmadi... Blooklar kutilmoqda!</span>
+        {% if participants %}
+          {% for p in participants %}
+            <div class="host-blook-card" data-participant-id="{{ p.id }}" data-nickname="{{ p.nickname }}">
+              <span><i class="{{ p.team_name|default:'fa-solid fa-dog' }}"></i></span>
+              <span>{{ p.nickname }}</span>
+            </div>
+          {% endfor %}
+        {% else %}
+          <span id="noStudentsPlaceholder" style="font-size: 15px; color: var(--text-muted); font-style: italic;">Hali hech kim ulanmadi... Blooklar kutilmoqda!</span>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -317,10 +326,14 @@
 
   if (client) {
     client.on('participant_joined', (data) => {
-      if (window.eduAudio) window.eduAudio.playCoin();
+      if (window.eduAudio && typeof window.eduAudio.playCoin === 'function') {
+        window.eduAudio.playCoin();
+      }
       const nick = data.nickname || data.participant?.nickname || 'O‘quvchi';
       const avatar = data.avatar || data.participant?.avatar || 'fa-solid fa-dog';
-      renderStudentPill(nick, avatar);
+      const pid = data.participant_id || data.participant?.id;
+      const count = data.total_count;
+      renderStudentPill(nick, avatar, pid, count);
     });
 
     client.on('answer_count_updated', () => {
@@ -330,18 +343,61 @@
     });
   }
 
-  function renderStudentPill(nickname, avatar = 'fa-solid fa-dog') {
+  function renderStudentPill(nickname, avatar = 'fa-solid fa-dog', participantId = null, totalCount = null) {
     if (!nickname) return;
+    const placeholder = document.getElementById('noStudentsPlaceholder');
+    if (placeholder) placeholder.remove();
     if (studentsGrid.innerHTML.includes('Hali hech kim ulanmadi')) {
       studentsGrid.innerHTML = '';
     }
-    const pill = document.createElement('div');
-    pill.className = 'host-blook-card';
+
+    // Check if participant card already exists to avoid duplicates
+    let existing = null;
+    if (participantId) {
+      existing = studentsGrid.querySelector(`[data-participant-id="${participantId}"]`);
+    }
+    if (!existing) {
+      existing = studentsGrid.querySelector(`[data-nickname="${nickname}"]`);
+    }
+
     const iconHtml = (avatar && avatar.includes('fa-')) ? `<i class="${avatar}"></i>` : `<i class="fa-solid fa-paw"></i>`;
-    pill.innerHTML = `<span>${iconHtml}</span> <span>${nickname}</span>`;
-    studentsGrid.appendChild(pill);
-    studentCountBadge.textContent = `${studentsGrid.children.length} o‘quvchi`;
+
+    if (existing) {
+      existing.innerHTML = `<span>${iconHtml}</span> <span>${nickname}</span>`;
+    } else {
+      const pill = document.createElement('div');
+      pill.className = 'host-blook-card';
+      if (participantId) pill.setAttribute('data-participant-id', participantId);
+      pill.setAttribute('data-nickname', nickname);
+      pill.innerHTML = `<span>${iconHtml}</span> <span>${nickname}</span>`;
+      studentsGrid.appendChild(pill);
+    }
+
+    const currentCount = totalCount !== null && totalCount !== undefined ? totalCount : studentsGrid.querySelectorAll('.host-blook-card').length;
+    studentCountBadge.textContent = `${currentCount} o‘quvchi`;
   }
+
+  // Periodic polling fallback for Lobby phase (Guaranteed synchronization even without WebSockets)
+  let lobbyPollInterval = setInterval(async () => {
+    if (currentPhase !== 'lobby') {
+      clearInterval(lobbyPollInterval);
+      return;
+    }
+    try {
+      const res = await fetch(`/api/sessions/${roomCode}/state/`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.participants) {
+          data.participants.forEach(p => {
+            renderStudentPill(p.nickname, p.avatar || 'fa-solid fa-dog', p.id);
+          });
+          studentCountBadge.textContent = `${data.total_participants} o‘quvchi`;
+        }
+      }
+    } catch (e) {
+      // quiet fallback
+    }
+  }, 2500);
 
   // Host Action Handler (Start game or next question)
   function handleHostAction() {
@@ -414,6 +470,12 @@
     document.getElementById('optTextB').textContent = opts[1]?.text || opts[1] || 'Variant B';
     document.getElementById('optTextC').textContent = opts[2]?.text || opts[2] || 'Variant C';
     document.getElementById('optTextD').textContent = opts[3]?.text || opts[3] || 'Variant D';
+
+    // Render KaTeX Math Formulas if present
+    if (typeof window.renderMath === 'function') {
+      window.renderMath(document.getElementById('hostQuestionPrompt'));
+      window.renderMath(document.getElementById('questionPhase'));
+    }
 
     document.getElementById('answersReceivedBadge').textContent = "Javoblar qabul qilinmoqda...";
 

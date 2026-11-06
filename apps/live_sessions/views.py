@@ -1,9 +1,12 @@
+import time
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 from apps.authentication.permissions import IsTeacher
 from apps.quizzes.models import Quiz
@@ -51,6 +54,7 @@ def session_join_view(request):
     """
     room_code = request.data.get("room_code") or request.data.get("pin")
     nickname = request.data.get("nickname")
+    avatar = request.data.get("avatar") or "fa-solid fa-dog"
 
     if not room_code or not nickname:
         return Response(
@@ -59,7 +63,35 @@ def session_join_view(request):
         )
 
     try:
-        participant, session = LiveSessionService.join_session(room_code=room_code, nickname=nickname)
+        participant, session = LiveSessionService.join_session(
+            room_code=room_code,
+            nickname=nickname,
+            avatar=avatar,
+        )
+
+        # Real-time WebSocket broadcast to host screen
+        try:
+            channel_layer = get_channel_layer()
+            if channel_layer:
+                async_to_sync(channel_layer.group_send)(
+                    f"room_{session.room_code}",
+                    {
+                        "type": "event.broadcast",
+                        "content": {
+                            "type": "participant.joined",
+                            "payload": {
+                                "nickname": participant.nickname,
+                                "participant_id": str(participant.id),
+                                "avatar": participant.team_name or avatar,
+                                "joined_at": int(time.time() * 1000),
+                                "total_count": session.participants.count(),
+                            },
+                        },
+                    },
+                )
+        except Exception:
+            pass
+
         questions = []
         if session.quiz:
             for q in session.quiz.questions.all().order_by("order_index"):
@@ -83,6 +115,7 @@ def session_join_view(request):
             "quiz_title": session.quiz.title if session.quiz else "",
             "participant_id": str(participant.id),
             "nickname": participant.nickname,
+            "avatar": participant.team_name or avatar,
             "anonymous_token": participant.anonymous_token,
             "session_status": session.status,
             "questions": questions,
@@ -141,6 +174,7 @@ def session_state_view(request, room_code):
             {
                 "id": str(p.id),
                 "nickname": p.nickname,
+                "avatar": p.team_name or "fa-solid fa-dog",
                 "score": p.score,
                 "is_connected": p.is_connected,
             }

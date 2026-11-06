@@ -100,6 +100,40 @@
   <!-- FontAwesome SVG Auto-replacement fallback -->
   <script src="{% static 'vendor/fontawesome/js/all.min.js' %}" defer></script>
 
+  <!-- KaTeX for Scientific & Mathematical Formula Rendering (LaTeX) -->
+  <link rel="stylesheet" href="{% static 'vendor/katex/katex.min.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script src="{% static 'vendor/katex/katex.min.js' %}" defer></script>
+  <script src="{% static 'vendor/katex/auto-render.min.js' %}" defer></script>
+  <script>
+    // Global KaTeX renderer helper for dynamic formula updates
+    window.renderMath = function(targetElement) {
+      const el = targetElement || document.body;
+      if (window.renderMathInElement) {
+        try {
+          window.renderMathInElement(el, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false,
+            ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+          });
+        } catch (e) {
+          console.warn('KaTeX render error:', e);
+        }
+      } else {
+        // Retry when deferred KaTeX script finishes loading
+        window.addEventListener('load', () => window.renderMath(targetElement), { once: true });
+      }
+    };
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => window.renderMath(), 100);
+    });
+  </script>
+
   <!-- Core Critical Telegram Theme & Round-Button Fallback -->
   <style id="critical-telegram-theme">
     /* Telegram Theme Variables */

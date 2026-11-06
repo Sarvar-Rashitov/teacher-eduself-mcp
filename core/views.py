@@ -69,10 +69,13 @@ def host_screen_view(request, room_code):
                 "time_limit_seconds": q.time_limit_seconds,
                 "points": q.points,
             })
+    participants = list(session.participants.all()) if session else []
     return render(request, "live/host_screen.html", {
         "room_code": room_code,
         "session": session,
         "quiz": quiz,
+        "participants": participants,
+        "participants_count": len(participants),
         "questions_json": json.dumps(questions_data, ensure_ascii=False),
     })
 

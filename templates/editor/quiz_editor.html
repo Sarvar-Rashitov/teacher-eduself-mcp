@@ -9,8 +9,8 @@
   <!-- Editor Top Bar -->
   <div class="editor-top-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
     <div class="editor-top-left" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-      <a href="/dashboard/" class="pill-button-secondary" style="height: 44px; padding: 0 20px; text-decoration: none; border-radius: 9999px !important;">
-        <span>←</span> Boshqaruvga
+      <a href="/dashboard/" class="pill-button-secondary" style="height: 44px; padding: 0 20px; text-decoration: none; border-radius: 9999px !important; display: inline-flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-arrow-left"></i> Boshqaruvga
       </a>
       
       <!-- Quiz Title & Subject Inputs -->
@@ -85,6 +85,14 @@
       <div style="margin-bottom: 22px;">
         <label style="display: block; font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 8px;">Savol Matni</label>
         <textarea id="questionPromptInput" rows="3" style="width: 100%; border-radius: 20px; background: var(--bg-surface-subtle); color: var(--text-main); border: 2px solid var(--border-subtle); padding: 14px 18px; font-size: 15px; font-family: inherit; outline: none; transition: all 0.2s;" placeholder="Savolingizni shu yerga yozing..." onfocus="this.style.borderColor='var(--tg-blue)'" onblur="this.style.borderColor='var(--border-subtle)'"></textarea>
+        
+        <!-- Live KaTeX Math Preview for Question Prompt -->
+        <div id="mathPromptPreview" style="display: none; margin-top: 10px; background: rgba(36,129,204,0.08); border: 1.5px dashed var(--tg-blue); border-radius: 16px; padding: 12px 18px; font-size: 16px; color: var(--text-main);">
+          <div style="font-size: 12px; font-weight: 800; color: var(--tg-blue); text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-square-root-variable"></i> Matematik Formula Ko‘rinishi (LaTeX Formula Preview):
+          </div>
+          <div id="mathPromptPreviewContent" style="font-size: 17px; line-height: 1.5;"></div>
+        </div>
       </div>
 
       <!-- Question Media / Image Section -->
@@ -151,6 +159,14 @@
             <input type="radio" name="correct_answer_radio" value="3" title="To'g'ri javob deb belgilash" style="width: 20px; height: 20px; accent-color: var(--primary-orange); cursor: pointer;">
           </div>
         </div>
+
+        <!-- Live KaTeX Math Preview for Options -->
+        <div id="mathOptionsPreview" style="display: none; margin-top: 12px; background: rgba(16,185,129,0.08); border: 1.5px dashed #10B981; border-radius: 16px; padding: 12px 18px; font-size: 14px; color: var(--text-main);">
+          <div style="font-size: 12px; font-weight: 800; color: #10B981; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-square-root-variable"></i> Variantlar Formulalari Ko‘rinishi:
+          </div>
+          <div id="mathOptionsPreviewGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+        </div>
       </div>
 
       <!-- Settings: Time & Points -->
@@ -158,10 +174,15 @@
         <div>
           <label style="font-size: 13px; font-weight: 800; color: var(--text-muted); display: block; margin-bottom: 6px;"><i class="fa-solid fa-stopwatch"></i> Vaqt (soniya)</label>
           <select id="questionTimeSelect" style="border-radius: 9999px !important; background: var(--bg-surface-subtle); color: var(--text-main); border: 1.5px solid var(--border-subtle); padding: 8px 18px; font-size: 14px; font-weight: 700; outline: none;">
+            <option value="5">5 soniya</option>
+            <option value="10">10 soniya</option>
             <option value="15">15 soniya</option>
+            <option value="20">20 soniya</option>
             <option value="30" selected>30 soniya</option>
+            <option value="45">45 soniya</option>
             <option value="60">60 soniya</option>
             <option value="90">90 soniya</option>
+            <option value="120">120 soniya</option>
           </select>
         </div>
 
@@ -370,6 +391,64 @@
 
       sidebarList.appendChild(item);
     });
+
+    if (typeof window.renderMath === 'function') {
+      window.renderMath(sidebarList);
+    }
+  }
+
+  // Live KaTeX Math Formula Previews for Editor
+  function updateMathPreviews() {
+    // Prompt preview
+    const promptText = promptInput.value || '';
+    const hasMathPrompt = promptText.includes('$') || promptText.includes('\\');
+    const previewWrap = document.getElementById('mathPromptPreview');
+    const previewContent = document.getElementById('mathPromptPreviewContent');
+    if (previewWrap && previewContent) {
+      if (hasMathPrompt) {
+        previewWrap.style.display = 'block';
+        previewContent.textContent = promptText;
+        if (typeof window.renderMath === 'function') {
+          window.renderMath(previewContent);
+        }
+      } else {
+        previewWrap.style.display = 'none';
+      }
+    }
+
+    // Options preview
+    const optPreviewsWrap = document.getElementById('mathOptionsPreview');
+    const optGrid = document.getElementById('mathOptionsPreviewGrid');
+    if (optPreviewsWrap && optGrid) {
+      let anyMathOpt = false;
+      optGrid.innerHTML = '';
+      const optLabels = ['▲ A: ', '◆ B: ', '● C: ', '■ D: '];
+      const colors = ['#EF4444', 'var(--tg-blue)', '#F59E0B', 'var(--primary-green)'];
+
+      optInputs.forEach((inp, idx) => {
+        const val = inp.value || '';
+        if (val.includes('$') || val.includes('\\')) {
+          anyMathOpt = true;
+          const optDiv = document.createElement('div');
+          optDiv.style.padding = '6px 12px';
+          optDiv.style.background = 'var(--bg-surface)';
+          optDiv.style.border = '1px solid var(--border-subtle)';
+          optDiv.style.borderRadius = '12px';
+          optDiv.style.fontSize = '15px';
+          optDiv.innerHTML = `<strong style="color: ${colors[idx]}; margin-right: 6px;">${optLabels[idx]}</strong><span>${val}</span>`;
+          optGrid.appendChild(optDiv);
+        }
+      });
+
+      if (anyMathOpt) {
+        optPreviewsWrap.style.display = 'block';
+        if (typeof window.renderMath === 'function') {
+          window.renderMath(optGrid);
+        }
+      } else {
+        optPreviewsWrap.style.display = 'none';
+      }
+    }
   }
 
   // Load Active Question Data to Form
@@ -414,9 +493,22 @@
       r.checked = (idx === matchedRadio);
     });
 
-    timeSelect.value = q.time_limit_seconds || 30;
+    // Ensure timeSelect option exists so it is NEVER blank
+    const timeVal = String(q.time_limit_seconds || 30);
+    let optExists = Array.from(timeSelect.options).some(o => o.value === timeVal);
+    if (!optExists) {
+      const newOpt = document.createElement('option');
+      newOpt.value = timeVal;
+      newOpt.textContent = `${timeVal} soniya`;
+      timeSelect.appendChild(newOpt);
+    }
+    timeSelect.value = timeVal;
+
     pointsSelect.value = q.points || 1000;
     lockCheckbox.checked = !!q.is_locked;
+
+    // Trigger LaTeX Preview update
+    updateMathPreviews();
   }
 
   // Save Form Inputs into Memory State
@@ -605,11 +697,20 @@
     });
   }
 
-  // Real-time synchronization for options and settings
+  // Real-time synchronization for prompt, options and settings
+  promptInput.addEventListener('input', () => {
+    if (questions[activeIndex]) {
+      questions[activeIndex].prompt = promptInput.value;
+      renderSidebar();
+      updateMathPreviews();
+    }
+  });
+
   optInputs.forEach((inp, idx) => {
     inp.addEventListener('input', () => {
       if (questions[activeIndex] && questions[activeIndex].options[idx]) {
         questions[activeIndex].options[idx].text = inp.value.trim();
+        updateMathPreviews();
       }
     });
   });
