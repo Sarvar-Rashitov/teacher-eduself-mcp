@@ -172,70 +172,189 @@ INFORMATICS_CODING_BANK = [
     }
 ]
 
+FRACTIONS_NUMBER_BANK = [
+    {
+        "prompt": r"Kasrni eng sodda (qisqarmas) ko‘rinishga keltiring: $\frac{24}{36}$",
+        "correct": r"$\frac{2}{3}$",
+        "distractors": [r"$\frac{3}{4}$", r"$\frac{4}{5}$", r"$\frac{1}{2}$"],
+        "explanation": r"Surat va maxraj 12 ga bo‘linadi: $24/12 = 2$, $36/12 = 3$, natija: $2/3$."
+    },
+    {
+        "prompt": r"Hisoblang: $\frac{1}{4} + \frac{2}{4}$",
+        "correct": r"$\frac{3}{4}$",
+        "distractors": [r"$\frac{3}{8}$", r"$\frac{2}{8}$", r"$1$"],
+        "explanation": r"Maxrajlar teng: $(1+2)/4 = 3/4$."
+    },
+    {
+        "prompt": r"Hisoblang: $\frac{5}{6} - \frac{1}{3}$",
+        "correct": r"$\frac{1}{2}$",
+        "distractors": [r"$\frac{4}{3}$", r"$\frac{2}{3}$", r"$\frac{1}{3}$"],
+        "explanation": r"Umumiy maxraj 6: $5/6 - 2/6 = 3/6 = 1/2$."
+    },
+    {
+        "prompt": r"Hisoblang: $\frac{2}{3} \times \frac{3}{4}$",
+        "correct": r"$\frac{1}{2}$",
+        "distractors": [r"$\frac{5}{7}$", r"$\frac{6}{7}$", r"$\frac{2}{4}$"],
+        "explanation": r"Ko‘paytiriladi va qisqartiriladi: $(2 \times 3)/(3 \times 4) = 6/12 = 1/2$."
+    },
+    {
+        "prompt": r"Hisoblang: $\frac{3}{4} \div \frac{1}{2}$",
+        "correct": r"$\frac{3}{2}$",
+        "distractors": [r"$\frac{3}{8}$", r"$\frac{1}{2}$", r"$\frac{2}{3}$"],
+        "explanation": r"Bo‘lish ko‘paytirishga aylanadi: $3/4 \times 2/1 = 6/4 = 3/2$."
+    },
+    {
+        "prompt": r"$60$ sonining $\frac{2}{3}$ qismi nechaga teng?",
+        "correct": r"$40$",
+        "distractors": [r"$30$", r"$20$", r"$50$"],
+        "explanation": r"$(60 \div 3) \times 2 = 20 \times 2 = 40$."
+    },
+    {
+        "prompt": r"Kasrni qisqartiring: $\frac{15}{25}$",
+        "correct": r"$\frac{3}{5}$",
+        "distractors": [r"$\frac{2}{5}$", r"$\frac{3}{4}$", r"$\frac{1}{5}$"],
+        "explanation": r"Surat va maxraj 5 ga bo‘linadi: $15/25 = 3/5$."
+    },
+    {
+        "prompt": r"Hisoblang: $\frac{3}{8} + \frac{2}{8}$",
+        "correct": r"$\frac{5}{8}$",
+        "distractors": [r"$\frac{5}{16}$", r"$\frac{6}{8}$", r"$\frac{1}{2}$"],
+        "explanation": r"Bir xil maxrajli kasrlar: $(3+2)/8 = 5/8$."
+    },
+    {
+        "prompt": r"Hisoblang: $\frac{7}{10} - \frac{2}{5}$",
+        "correct": r"$\frac{3}{10}$",
+        "distractors": [r"$\frac{5}{5}$", r"$\frac{1}{2}$", r"$\frac{1}{10}$"],
+        "explanation": r"$7/10 - 4/10 = 3/10$."
+    },
+    {
+        "prompt": r"Kasrni qisqartiring: $\frac{28}{42}$",
+        "correct": r"$\frac{2}{3}$",
+        "distractors": [r"$\frac{4}{7}$", r"$\frac{3}{4}$", r"$\frac{1}{2}$"],
+        "explanation": r"Surat va maxraj 14 ga bo‘linadi: $28/14 = 2$, $42/14 = 3$, natija: $2/3$."
+    },
+    {
+        "prompt": r"Hisoblang: $\frac{3}{5} \times \frac{5}{6}$",
+        "correct": r"$\frac{1}{2}$",
+        "distractors": [r"$\frac{8}{11}$", r"$\frac{3}{6}$", r"$\frac{2}{3}$"],
+        "explanation": r"5 lar qisqaradi: $3/6 = 1/2$."
+    },
+    {
+        "prompt": r"$84$ sonining $\frac{2}{7}$ qismi nechaga teng?",
+        "correct": r"$24$",
+        "distractors": [r"$12$", r"$28$", r"$32$"],
+        "explanation": r"$(84 \div 7) \times 2 = 12 \times 2 = 24$."
+    },
+    {
+        "prompt": r"$\frac{17}{5}$ noto‘g‘ri kasrni aralash songa aylantiring:",
+        "correct": r"$3\frac{2}{5}$",
+        "distractors": [r"$2\frac{3}{5}$", r"$3\frac{1}{5}$", r"$4\frac{2}{5}$"],
+        "explanation": r"$17 \div 5 = 3$ (qoldiq 2), shuning uchun: $3\frac{2}{5}$."
+    },
+    {
+        "prompt": r"Kasrni qisqartiring: $\frac{35}{49}$",
+        "correct": r"$\frac{5}{7}$",
+        "distractors": [r"$\frac{5}{8}$", r"$\frac{4}{7}$", r"$\frac{3}{7}$"],
+        "explanation": r"Surat va maxraj 7 ga bo‘linadi: $35/7 = 5$, $49/7 = 7$, natija: $5/7$."
+    },
+    {
+        "prompt": r"Hisoblang: $\frac{1}{2} + \frac{1}{4}$",
+        "correct": r"$\frac{3}{4}$",
+        "distractors": [r"$\frac{2}{6}$", r"$\frac{2}{4}$", r"$1$"],
+        "explanation": r"$2/4 + 1/4 = 3/4$."
+    },
+    {
+        "prompt": r"Hisoblang: $\frac{2}{5} \div \frac{4}{15}$",
+        "correct": r"$\frac{3}{2}$",
+        "distractors": [r"$\frac{8}{75}$", r"$\frac{2}{3}$", r"$\frac{4}{5}$"],
+        "explanation": r"$2/5 \times 15/4 = 30/20 = 3/2$."
+    },
+    {
+        "prompt": r"$100$ sonining $\frac{3}{5}$ qismi nechaga teng?",
+        "correct": r"$60$",
+        "distractors": [r"$50$", r"$40$", r"$70$"],
+        "explanation": r"$(100 \div 5) \times 3 = 20 \times 3 = 60$."
+    },
+    {
+        "prompt": r"Kasrni qisqartiring: $\frac{45}{60}$",
+        "correct": r"$\frac{3}{4}$",
+        "distractors": [r"$\frac{2}{3}$", r"$\frac{4}{5}$", r"$\frac{5}{6}$"],
+        "explanation": r"Surat va maxraj 15 ga bo‘linadi: $45/15 = 3$, $60/15 = 4$."
+    },
+    {
+        "prompt": r"Hisoblang: $\frac{5}{12} + \frac{1}{4}$",
+        "correct": r"$\frac{2}{3}$",
+        "distractors": [r"$\frac{6}{16}$", r"$\frac{3}{4}$", r"$\frac{1}{2}$"],
+        "explanation": r"$5/12 + 3/12 = 8/12 = 2/3$."
+    },
+    {
+        "prompt": r"$120$ sonining $\frac{5}{6}$ qismi nechaga teng?",
+        "correct": r"$100$",
+        "distractors": [r"$90$", r"$110$", r"$80$"],
+        "explanation": r"$(120 \div 6) \times 5 = 20 \times 5 = 100$."
+    }
+]
+
 MATH_ALGEBRA_BANK = [
     {
-        "prompt": "Oddiy kasrning maxraji nimani bildiradi?",
-        "correct": "Butun narsa necha teng bo‘lakka bo‘linganligini",
-        "distractors": [
-            "Nechta bo'lak olinganligini",
-            "Kasrning qiymati doim birdan katta ekanligini",
-            "Faqat ko'paytirish amalini"
-        ],
-        "explanation": "Kasr maxraji butun birlik necha teng qismga ajratilganini, surati esa shulardan nechta olinganini ko'rsatadi."
+        "prompt": r"$2x + 6 = 16$ chiziqli tenglamada $x$ ning qiymatini toping:",
+        "correct": r"$x = 5$",
+        "distractors": [r"$x = 10$", r"$x = 3$", r"$x = 8$"],
+        "explanation": r"$2x = 16 - 6 \Rightarrow 2x = 10 \Rightarrow x = 5$."
     },
     {
-        "prompt": "$\frac{1}{4} + \frac{2}{4}$ oddiy kasrlar yig‘indisi nechaga teng?",
-        "correct": "$\frac{3}{4}$",
-        "distractors": ["$\frac{3}{8}$", "$\frac{2}{8}$", "$1$"],
-        "explanation": "Maxrajlari bir xil kasrlar qo'shilganda maxraj o'zgarmaydi, suratlar qo'shiladi: (1+2)/4 = 3/4."
+        "prompt": r"Hisoblang: $25 \times 4 - 36 \div 6$",
+        "correct": r"$94$",
+        "distractors": [r"$84$", r"$96$", r"$100$"],
+        "explanation": r"$25 \times 4 = 100$, $36 \div 6 = 6$, $100 - 6 = 94$."
     },
     {
-        "prompt": "Surati maxrajidan kichik bo‘lgan oddiy kasr qanday kasr deyiladi?",
-        "correct": "To‘g‘ri kasr",
-        "distractors": ["Noto'g'ri kasr", "Aralash son", "O'nli kasr"],
-        "explanation": "To'g'ri kasrning qiymati har doim 1 dan kichik bo'ladi (masalan, 3/5 < 1)."
+        "prompt": r"Hisoblang: $\frac{1}{4} + \frac{2}{4}$",
+        "correct": r"$\frac{3}{4}$",
+        "distractors": [r"$\frac{3}{8}$", r"$\frac{2}{8}$", r"$1$"],
+        "explanation": r"$(1+2)/4 = 3/4$."
     },
     {
-        "prompt": "$2x + 6 = 16$ chiziqli tenglamada $x$ ning qiymatini toping:",
-        "correct": "$x = 5$",
-        "distractors": ["$x = 10$", "$x = 3$", "$x = 8$"],
-        "explanation": "$2x = 16 - 6 \Rightarrow 2x = 10 \Rightarrow x = 5$."
+        "prompt": r"$3x - 5 = 16$ tenglamani yeching:",
+        "correct": r"$x = 7$",
+        "distractors": [r"$x = 6$", r"$x = 8$", r"$x = 9$"],
+        "explanation": r"$3x = 16 + 5 = 21 \Rightarrow x = 7$."
     },
     {
-        "prompt": "Ixtiyoriy uchburchakning ichki burchaklari yig‘indisi necha gradusga teng?",
-        "correct": "$180^\\circ$",
-        "distractors": ["$90^\\circ$", "$360^\\circ$", "$270^\\circ$"],
-        "explanation": "Evklid geometriyasida har qanday tekis uchburchakning ichki burchaklari yig'indisi doim 180 gradusga teng."
+        "prompt": r"Sonning $1\%$ i uning qanday arifmetik qismiga teng bo‘ladi?",
+        "correct": r"$\frac{1}{100}$",
+        "distractors": [r"$\frac{1}{10}$", r"$\frac{1}{2}$", r"$\frac{1}{1000}$"],
+        "explanation": r"Foiz - yuzdan bir qismdir."
     },
     {
-        "prompt": "Sonning 1 foizi (1%) uning qanday arifmetik qismiga teng bo‘ladi?",
-        "correct": "$\frac{1}{100}$ qismiga",
-        "distractors": ["$\frac{1}{10}$ qismiga", "$\frac{1}{2}$ qismiga", "$\frac{1}{1000}$ qismiga"],
-        "explanation": "Foiz so'zi lotincha 'per centum' - yuzdan bir degan ma'noni anglatadi."
+        "prompt": r"Tomonlari $a = 6 \text{ sm}$ va $b = 4 \text{ sm}$ bo‘lgan to‘g‘ri to‘rtburchakning yuzasi nechaga teng?",
+        "correct": r"$24 \text{ sm}^2$",
+        "distractors": [r"$20 \text{ sm}^2$", r"$10 \text{ sm}^2$", r"$12 \text{ sm}^2$"],
+        "explanation": r"$S = a \cdot b = 6 \cdot 4 = 24 \text{ sm}^2$."
     },
     {
-        "prompt": "Tomonlari $a = 6 \\text{ sm}$ va $b = 4 \\text{ sm}$ bo‘lgan to‘g‘ri to‘rtburchakning yuzasi nechaga teng?",
-        "correct": "$24 \\text{ sm}^2$",
-        "distractors": ["$20 \\text{ sm}^2$", "$10 \\text{ sm}^2$", "$12 \\text{ sm}^2$"],
-        "explanation": "To'g'ri to'rtburchak yuzi formula bo'yicha: $S = a \cdot b = 6 \cdot 4 = 24 \\text{ sm}^2$."
+        "prompt": r"Hisoblang: $(45 + 35) \div 4$",
+        "correct": r"$20$",
+        "distractors": [r"$15$", r"$25$", r"$30$"],
+        "explanation": r"$(45+35) = 80$, $80 \div 4 = 20$."
     },
     {
-        "prompt": "To‘g‘ri burchakli uchburchakda gipotenuza kvadratining katetlar kvadratlari yig‘indisiga tengligi qaysi teorema?",
-        "correct": "Pifagor teoremasi",
-        "distractors": ["Fales teoremasi", "Viyet teoremasi", "Nyuton qonuni"],
-        "explanation": "Pifagor teoremasi: $c^2 = a^2 + b^2$."
+        "prompt": r"$\sqrt{144}$ ning qiymati nechaga teng?",
+        "correct": r"$12$",
+        "distractors": [r"$14$", r"$11$", r"$16$"],
+        "explanation": r"$12 \times 12 = 144$, shuning uchun $\sqrt{144} = 12$."
     },
     {
-        "prompt": "Ikkita manfiy sonni o‘zaro ko‘paytirganda qanday ishorali son hosil bo‘ladi?",
-        "correct": "Musbat son (+)",
-        "distractors": ["Manfiy son (-)", "Har doim nol (0)", "Ishorasiz son"],
-        "explanation": "Matematika qoidasiga ko'ra: $(-a) \cdot (-b) = +ab$."
+        "prompt": r"$30$ ning $\frac{2}{3}$ qismi nechaga teng?",
+        "correct": r"$20$",
+        "distractors": [r"$15$", r"$10$", r"$25$"],
+        "explanation": r"$(30 \div 3) \times 2 = 20$."
     },
     {
-        "prompt": "Sinfda 30 ta o‘quvchi bor. Ularning $\frac{2}{3}$ qismi matematika to‘garagiga qatnashadi. Nechta o‘quvchi to‘garakka boradi?",
-        "correct": "20 ta",
-        "distractors": ["15 ta", "10 ta", "25 ta"],
-        "explanation": "30 ning 2/3 qismi: $(30 \cdot 2) / 3 = 60 / 3 = 20$."
+        "prompt": r"Kasrni qisqartiring: $\frac{24}{36}$",
+        "correct": r"$\frac{2}{3}$",
+        "distractors": [r"$\frac{3}{4}$", r"$\frac{4}{5}$", r"$\frac{1}{2}$"],
+        "explanation": r"$24/12 = 2$, $36/12 = 3$, javob: $2/3$."
     }
 ]
 
@@ -325,17 +444,171 @@ class AIQuizGenerator:
         return "general"
 
     def _select_bank_for_request(self, request: GenerateQuizRequest) -> list[dict[str, Any]]:
-        text_match = f"{request.topic or ''} {request.subject or ''}".lower()
-        tokens = set(text_match.replace(".", " ").replace(",", " ").split())
+        text_match = f"{request.topic or ''} {request.subject or ''} {request.prompt or ''}".lower()
+        tokens = set(text_match.replace(".", " ").replace(",", " ").replace("'", " ").replace("‘", " ").split())
         if any(w in text_match for w in ["quyosh", "sayyora", "fazov", "kosmos", "gravitats", "astronom", "yulduz"]) or "oy" in tokens:
             return ASTRONOMY_SPACE_BANK
         if any(w in text_match for w in ["informatika", "python", "dastur", "algoritm", "kompyuter", "kod", "tarmoq", "axborot"]):
             return INFORMATICS_CODING_BANK
-        if any(w in text_match for w in ["matematika", "algebra", "geometriya", "kasr", "tenglama", "foiz", "arifmetika"]) or "son" in tokens or "sonlar" in tokens:
+        if any(w in text_match for w in ["kasr", "kasrlar"]):
+            return FRACTIONS_NUMBER_BANK
+        math_words = ["matematika", "matimatik", "algebra", "geometriya", "tenglama", "foiz", "arifmetika", "hisob", "hisoblash", "ildiz", "daraja"]
+        if any(w in text_match for w in math_words) or any(t in tokens for t in ["son", "sonlar", "math", "raqam", "raqamlar"]):
             return MATH_ALGEBRA_BANK
         if any(w in text_match for w in ["tarix", "temur", "bobur", "navoiy", "alloma", "samarqand"]):
             return HISTORY_CULTURE_BANK
         return []
+
+    def _generate_dynamic_math_problem(self, index: int) -> dict[str, Any]:
+        """
+        Matematika, kasrlar va sonlar mavzusida 100% ANIQ SONLAR,
+        kasrlar va hisoblash masalalarini dinamik yaratuvchi generator.
+        """
+        types = [
+            "fraction_simplify", "fraction_add", "fraction_sub",
+            "fraction_mul", "fraction_div", "of_number",
+            "equation", "arithmetic"
+        ]
+        chosen_type = types[index % len(types)]
+
+        if chosen_type == "fraction_simplify":
+            simplifications = [
+                (12, 18, 2, 3), (24, 36, 2, 3), (15, 20, 3, 4), (18, 24, 3, 4),
+                (20, 25, 4, 5), (35, 49, 5, 7), (28, 42, 2, 3), (45, 60, 3, 4),
+                (16, 24, 2, 3), (32, 48, 2, 3), (21, 28, 3, 4), (48, 64, 3, 4),
+                (14, 21, 2, 3), (25, 35, 5, 7), (40, 50, 4, 5), (27, 36, 3, 4),
+                (15, 25, 3, 5), (30, 45, 2, 3), (18, 30, 3, 5), (24, 32, 3, 4),
+            ]
+            num, den, s_num, s_den = simplifications[index % len(simplifications)]
+            return {
+                "prompt": f"Kasrni eng sodda (qisqarmas) ko‘rinishga keltiring: $\\frac{{{num}}}{{{den}}}$",
+                "correct": f"$\\frac{{{s_num}}}{{{s_den}}}$",
+                "distractors": [
+                    f"$\\frac{{{s_num+1}}}{{{s_den}}}$" if s_num + 1 != s_den else f"$\\frac{{{s_num}}}{{{s_den+1}}}$",
+                    f"$\\frac{{{s_num}}}{{{s_den+2}}}$",
+                    f"$\\frac{{{s_den}}}{{{s_num}}}$",
+                ],
+                "explanation": f"Surat va maxrajni ularning eng katta umumiy bo‘luvchisiga qisqartiramiz: $\\frac{{{num}}}{{{den}}} = \\frac{{{s_num}}}{{{s_den}}}$."
+            }
+        elif chosen_type == "fraction_add":
+            adds = [
+                (1, 5, 2, 5, 3, 5), (3, 8, 2, 8, 5, 8), (1, 4, 1, 4, 1, 2),
+                (2, 7, 3, 7, 5, 7), (1, 6, 2, 6, 1, 2), (3, 10, 4, 10, 7, 10),
+                (1, 2, 1, 4, 3, 4), (2, 3, 1, 6, 5, 6), (1, 3, 1, 2, 5, 6),
+                (2, 5, 3, 10, 7, 10), (1, 4, 3, 8, 5, 8), (5, 12, 1, 4, 2, 3),
+            ]
+            n1, d1, n2, d2, sn, sd = adds[index % len(adds)]
+            return {
+                "prompt": f"Hisoblang: $\\frac{{{n1}}}{{{d1}}} + \\frac{{{n2}}}{{{d2}}}$",
+                "correct": f"$\\frac{{{sn}}}{{{sd}}}$",
+                "distractors": [
+                    f"$\\frac{{{sn+1}}}{{{sd}}}$",
+                    f"$\\frac{{{sn}}}{{{sd+1}}}$",
+                    f"$\\frac{{{n1+n2}}}{{{d1+d2}}}$",
+                ],
+                "explanation": f"Umumiy maxrajga keltirib qo‘shamiz: $\\frac{{{n1}}}{{{d1}}} + \\frac{{{n2}}}{{{d2}}} = \\frac{{{sn}}}{{{sd}}}$."
+            }
+        elif chosen_type == "fraction_sub":
+            subs = [
+                (4, 5, 1, 5, 3, 5), (7, 8, 3, 8, 1, 2), (5, 6, 1, 3, 1, 2),
+                (3, 4, 1, 2, 1, 4), (9, 10, 2, 5, 1, 2), (5, 8, 1, 4, 3, 8),
+                (7, 9, 4, 9, 1, 3), (11, 12, 5, 12, 1, 2), (2, 3, 1, 6, 1, 2),
+            ]
+            n1, d1, n2, d2, sn, sd = subs[index % len(subs)]
+            return {
+                "prompt": f"Hisoblang: $\\frac{{{n1}}}{{{d1}}} - \\frac{{{n2}}}{{{d2}}}$",
+                "correct": f"$\\frac{{{sn}}}{{{sd}}}$",
+                "distractors": [
+                    f"$\\frac{{{sn+1}}}{{{sd}}}$",
+                    f"$\\frac{{{sn}}}{{{sd+2}}}$",
+                    f"$\\frac{{{abs(n1-n2)}}}{{{d1+d2}}}$",
+                ],
+                "explanation": f"Maxrajlar tenglashtirilib ayiriladi: $\\frac{{{n1}}}{{{d1}}} - \\frac{{{n2}}}{{{d2}}} = \\frac{{{sn}}}{{{sd}}}$."
+            }
+        elif chosen_type == "fraction_mul":
+            muls = [
+                (2, 3, 3, 4, 1, 2), (3, 5, 5, 6, 1, 2), (4, 7, 7, 8, 1, 2),
+                (1, 2, 4, 5, 2, 5), (3, 4, 2, 5, 3, 10), (5, 6, 3, 10, 1, 4),
+                (2, 5, 5, 8, 1, 4), (3, 7, 14, 15, 2, 5),
+            ]
+            n1, d1, n2, d2, sn, sd = muls[index % len(muls)]
+            return {
+                "prompt": f"Hisoblang: $\\frac{{{n1}}}{{{d1}}} \\times \\frac{{{n2}}}{{{d2}}}$",
+                "correct": f"$\\frac{{{sn}}}{{{sd}}}$",
+                "distractors": [
+                    f"$\\frac{{{sn+1}}}{{{sd}}}$",
+                    f"$\\frac{{{sn}}}{{{sd+1}}}$",
+                    f"$\\frac{{{n1*n2+1}}}{{{d1*d2}}}$",
+                ],
+                "explanation": f"Surat suratga, maxraj maxrajga ko‘paytiriladi va qisqartiriladi: $\\frac{{{sn}}}{{{sd}}}$."
+            }
+        elif chosen_type == "fraction_div":
+            divs = [
+                (3, 4, 1, 2, 3, 2), (2, 5, 4, 15, 3, 2), (5, 6, 5, 12, 2, 1),
+                (4, 9, 2, 3, 2, 3), (7, 8, 7, 16, 2, 1), (1, 2, 1, 4, 2, 1),
+            ]
+            n1, d1, n2, d2, sn, sd = divs[index % len(divs)]
+            ans_str = f"${sn}$" if sd == 1 else f"$\\frac{{{sn}}}{{{sd}}}$"
+            d1_str = f"${sn+1}$" if sd == 1 else f"$\\frac{{{sn+1}}}{{{sd}}}$"
+            d2_str = f"$\\frac{{{sd}}}{{{sn}}}$"
+            d3_str = f"$\\frac{{{sn}}}{{{sd+1}}}$" if sd != 1 else f"${sn+2}$"
+            return {
+                "prompt": f"Hisoblang: $\\frac{{{n1}}}{{{d1}}} \\div \\frac{{{n2}}}{{{d2}}}$",
+                "correct": ans_str,
+                "distractors": [d1_str, d2_str, d3_str],
+                "explanation": f"Bo‘lish amali ikkinchi kasrni teskari aylantirib ko‘paytirish bilan bajariladi: {ans_str}."
+            }
+        elif chosen_type == "of_number":
+            nums = [
+                (60, 2, 3, 40), (80, 3, 4, 60), (100, 3, 5, 60),
+                (75, 2, 5, 30), (120, 5, 6, 100), (90, 4, 9, 40),
+                (48, 3, 8, 18), (70, 4, 7, 40), (84, 2, 7, 24),
+                (50, 7, 10, 35), (96, 3, 8, 36), (150, 2, 3, 100),
+            ]
+            total, n, d, ans = nums[index % len(nums)]
+            return {
+                "prompt": f"${total}$ sonining $\\frac{{{n}}}{{{d}}}$ qismini toping:",
+                "correct": f"${ans}$",
+                "distractors": [f"${ans+10}$", f"${ans-10}$", f"${ans+5}$"],
+                "explanation": f"Sonni maxrajga bo‘lib suratga ko‘paytiramiz: $({total} \\div {d}) \\times {n} = {ans}$."
+            }
+        elif chosen_type == "equation":
+            eqs = [
+                ("2x + 6 = 16", "x = 5", ["x = 6", "x = 4", "x = 8"]),
+                ("3x - 5 = 16", "x = 7", ["x = 6", "x = 8", "x = 9"]),
+                ("4x + 8 = 32", "x = 6", ["x = 5", "x = 7", "x = 8"]),
+                ("5x - 10 = 25", "x = 7", ["x = 6", "x = 5", "x = 8"]),
+                ("2x - 7 = 19", "x = 13", ["x = 12", "x = 14", "x = 10"]),
+                ("3x + 12 = 30", "x = 6", ["x = 5", "x = 7", "x = 4"]),
+                ("\\frac{x}{4} = 8", "x = 32", ["x = 24", "x = 28", "x = 36"]),
+                ("\\frac{x}{5} = 12", "x = 60", ["x = 50", "x = 55", "x = 65"]),
+                ("6x - 18 = 18", "x = 6", ["x = 5", "x = 7", "x = 8"]),
+            ]
+            eq_text, c_ans, dists = eqs[index % len(eqs)]
+            return {
+                "prompt": f"Tenglamani yeching: ${eq_text}$",
+                "correct": f"${c_ans}$",
+                "distractors": [f"${d}$" for d in dists],
+                "explanation": f"Tenglamani noma'lum $x$ ga nisbatan yechamiz: ${c_ans}$."
+            }
+        else:
+            ariths = [
+                ("25 \\times 4 - 36 \\div 6", "94", ["84", "96", "100"]),
+                ("(45 + 35) \\div 4", "20", ["15", "25", "30"]),
+                ("15 \\times 6 - 28", "62", ["52", "72", "68"]),
+                ("120 \\div 6 + 18 \\times 2", "56", ["46", "66", "52"]),
+                ("14 \\times 5 - 50", "20", ["15", "25", "30"]),
+                ("8 \\times 12 - 36 \\div 3", "84", ["74", "94", "88"]),
+                ("250 - 35 \\times 4", "110", ["100", "120", "115"]),
+                ("18 \\times 5 + 45 \\div 9", "95", ["85", "105", "90"]),
+            ]
+            ar_text, c_ans, dists = ariths[index % len(ariths)]
+            return {
+                "prompt": f"Hisoblang: ${ar_text}$",
+                "correct": f"${c_ans}$",
+                "distractors": [f"${d}$" for d in dists],
+                "explanation": f"Amallar tartibi bo‘yicha hisoblaymiz: ${ar_text} = {c_ans}$."
+            }
 
     def _generate_intelligent_pedagogical_quiz(self, request: GenerateQuizRequest) -> AIGeneratedQuiz:
         """
@@ -352,10 +625,25 @@ class AIQuizGenerator:
             random.shuffle(pool)
             chosen_items = pool[:target_count]
 
-        # If bank had fewer items or no bank matched, generate Bloom-level questions
+        # If bank had fewer items or no bank matched, generate questions
         if len(chosen_items) < target_count:
-            topic_clean = (request.topic or request.subject or (request.prompt[:40] if request.prompt else "") or "Fan mavzusi").strip()
-            bloom_templates = [
+            text_match = f"{request.topic or ''} {request.subject or ''} {request.prompt or ''}".lower()
+            tokens = set(text_match.replace(".", " ").replace(",", " ").replace("'", " ").replace("‘", " ").split())
+            math_words = [
+                "matematika", "matimatik", "algebra", "geometriya", "kasr", "kasrlar",
+                "tenglama", "foiz", "arifmetika", "hisob", "hisoblash", "ildiz", "daraja"
+            ]
+            is_math = (bank is MATH_ALGEBRA_BANK) or any(w in text_match for w in math_words) or any(t in tokens for t in ["son", "sonlar", "math", "raqam", "raqamlar"])
+
+            if is_math:
+                math_idx = len(chosen_items)
+                while len(chosen_items) < target_count:
+                    item = self._generate_dynamic_math_problem(math_idx)
+                    chosen_items.append(item)
+                    math_idx += 1
+            else:
+                topic_clean = (request.topic or request.subject or (request.prompt[:40] if request.prompt else "") or "Fan mavzusi").strip()
+                bloom_templates = [
                 {
                     "prompt": f"{topic_clean} tushunchasining asosiy ilmiy ta'rifi va mohiyati nima?",
                     "correct": f"{topic_clean}ning asosiy qonuniyati va mohiyatini to'liq ifodalovchi tushuncha",
@@ -608,25 +896,25 @@ class AIQuizGenerator:
                 }
             ]
 
-            needed = target_count - len(chosen_items)
-            prefixes = [
-                "",
-                "Kengaytirilgan tahlil: ",
-                "Chuqurlashtirilgan bosqich: ",
-                "Pedagogik vaziyat: ",
-            ]
-            for i in range(needed):
-                tmpl_idx = i % len(bloom_templates)
-                cycle_num = i // len(bloom_templates)
-                prefix = prefixes[cycle_num % len(prefixes)]
-                tmpl = bloom_templates[tmpl_idx]
-                opt_suffix = f" (variant #{cycle_num + 1})" if cycle_num > 0 else ""
-                chosen_items.append({
-                    "prompt": prefix + tmpl["prompt"],
-                    "correct": tmpl["correct"] + opt_suffix,
-                    "distractors": [d + opt_suffix for d in tmpl["distractors"]],
-                    "explanation": tmpl["explanation"]
-                })
+                needed = target_count - len(chosen_items)
+                prefixes = [
+                    "",
+                    "Kengaytirilgan tahlil: ",
+                    "Chuqurlashtirilgan bosqich: ",
+                    "Pedagogik vaziyat: ",
+                ]
+                for i in range(needed):
+                    tmpl_idx = i % len(bloom_templates)
+                    cycle_num = i // len(bloom_templates)
+                    prefix = prefixes[cycle_num % len(prefixes)]
+                    tmpl = bloom_templates[tmpl_idx]
+                    opt_suffix = f" (variant #{cycle_num + 1})" if cycle_num > 0 else ""
+                    chosen_items.append({
+                        "prompt": prefix + tmpl["prompt"],
+                        "correct": tmpl["correct"] + opt_suffix,
+                        "distractors": [d + opt_suffix for d in tmpl["distractors"]],
+                        "explanation": tmpl["explanation"]
+                    })
 
         # Build final AIGeneratedQuestion objects with randomized options
         questions_list: list[AIGeneratedQuestion] = []
