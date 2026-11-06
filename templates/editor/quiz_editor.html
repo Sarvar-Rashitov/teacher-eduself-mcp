@@ -282,6 +282,35 @@
 <script>
 (function() {
   const quizId = "{{ quiz.id|default:'' }}";
+
+  function stripDollars(str) {
+    if (!str || typeof str !== 'string') return str || '';
+    let s = str.trim();
+    while (s.startsWith('$') && s.endsWith('$') && s.length >= 2) {
+      s = s.slice(1, -1).trim();
+    }
+    s = s.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '$1/$2');
+    s = s.replace(/\$/g, '').trim();
+    return s;
+  }
+
+  function cleanQuestionObj(q) {
+    if (!q) return q;
+    q.prompt = stripDollars(q.prompt || '');
+    if (q.options && Array.isArray(q.options)) {
+      q.options = q.options.map(opt => {
+        if (typeof opt === 'string') {
+          return stripDollars(opt);
+        }
+        return {
+          ...opt,
+          text: stripDollars(opt.text || '')
+        };
+      });
+    }
+    return q;
+  }
+
   let rawQuestions = [];
   try {
     const rawDataEl = document.getElementById('editorQuestionsData');
@@ -290,6 +319,7 @@
     console.warn("Could not parse questions JSON:", e);
     rawQuestions = [];
   }
+  rawQuestions = (rawQuestions || []).map(cleanQuestionObj);
 
   // Fallback initial state if new quiz
   let questions = (rawQuestions && rawQuestions.length > 0) ? rawQuestions : [
@@ -457,7 +487,7 @@
     if (!q) return;
 
     currentTitle.textContent = `${activeIndex + 1}-savolni tahrirlash`;
-    promptInput.value = q.prompt || '';
+    promptInput.value = stripDollars(q.prompt || '');
 
     // Image preview & URL input
     const imgUrl = q.media_url || '';
@@ -476,7 +506,7 @@
     const opts = q.options || [];
     for (let i = 0; i < 4; i++) {
       const textVal = opts[i] ? (typeof opts[i] === 'string' ? opts[i] : (opts[i].text || '')) : '';
-      optInputs[i].value = textVal;
+      optInputs[i].value = stripDollars(textVal);
     }
 
     // Correct Answer Radio
@@ -515,7 +545,7 @@
   function saveCurrentFormToActive() {
     if (!questions[activeIndex]) return;
 
-    const promptVal = promptInput.value.trim();
+    const promptVal = stripDollars(promptInput.value);
     const opts = [];
     let chosenAnswerId = "opt_1";
 
@@ -523,7 +553,7 @@
       const optId = `opt_${i + 1}`;
       opts.push({
         id: optId,
-        text: optInputs[i].value.trim() || `Variant ${String.fromCharCode(65 + i)}`
+        text: stripDollars(optInputs[i].value) || `Variant ${String.fromCharCode(65 + i)}`
       });
       if (radioButtons[i].checked) {
         chosenAnswerId = optId;
@@ -706,10 +736,26 @@
     }
   });
 
+  promptInput.addEventListener('blur', () => {
+    promptInput.value = stripDollars(promptInput.value);
+    if (questions[activeIndex]) {
+      questions[activeIndex].prompt = promptInput.value;
+      renderSidebar();
+      updateMathPreviews();
+    }
+  });
+
   optInputs.forEach((inp, idx) => {
     inp.addEventListener('input', () => {
       if (questions[activeIndex] && questions[activeIndex].options[idx]) {
         questions[activeIndex].options[idx].text = inp.value.trim();
+        updateMathPreviews();
+      }
+    });
+    inp.addEventListener('blur', () => {
+      inp.value = stripDollars(inp.value);
+      if (questions[activeIndex] && questions[activeIndex].options[idx]) {
+        questions[activeIndex].options[idx].text = inp.value;
         updateMathPreviews();
       }
     });
@@ -927,15 +973,15 @@
         generatedItems = data.questions.map((q, idx) => ({
           id: null,
           type: "single_choice",
-          prompt: q.prompt,
+          prompt: stripDollars(q.prompt),
           options: (q.options && q.options.length >= 2) ? q.options.map((opt, oi) => ({
             id: opt.id || `opt_${oi+1}`,
-            text: typeof opt === 'string' ? opt : (opt.text || `Variant ${oi+1}`)
+            text: stripDollars(typeof opt === 'string' ? opt : (opt.text || `Variant ${oi+1}`))
           })) : [
-            { id: "opt_1", text: "Asosiy tushuncha" },
-            { id: "opt_2", text: "Ikkilamchi omil" },
-            { id: "opt_3", text: "Qo'shimcha belgi" },
-            { id: "opt_4", text: "Taqqoslash natijasi" }
+            { id: "opt_1", text: "Variant A" },
+            { id: "opt_2", text: "Variant B" },
+            { id: "opt_3", text: "Variant C" },
+            { id: "opt_4", text: "Variant D" }
           ],
           correct_answer: q.correct_answer || "opt_1",
           time_limit_seconds: q.time_limit_seconds || 30,
@@ -947,68 +993,127 @@
       } else {
         // High-Quality Diverse Pedagogical Fallback Generator (Zero-Duplication)
         const activeTopic = topic || (customPrompt ? customPrompt.slice(0, 40) : "Fan mavzusi");
-        const bloomAspects = [
-          {
-            prompt: `${activeTopic} tushunchasining asosiy ilmiy mohiyati va ta'rifi nima?`,
-            correct: `${activeTopic}ning asosiy qonuniyati va tamoyilini to'liq ifodalovchi tushuncha`,
-            distractors: [
-              `Faqat laboratoriyada o'lchanadigan tasodifiy omil`,
-              `Tashqi ko'rinishdagi o'zgaruvchan parametr`,
-              `Nisbiy va isbotsiz taxminiy model`
-            ]
-          },
-          {
-            prompt: `${activeTopic}ning eng muhim belgisi va uni boshqa hodisalardan ajratib turuvchi xususiyati qaysi?`,
-            correct: `${activeTopic}ga xos bo'lgan barqaror ichki funksional xususiyat`,
-            distractors: [
-              `Barcha jarayonlarda bir xil takrorlanuvchi umumiy holat`,
-              `Faqat vaqtinchalik mavjud bo'lgan tashqi belgi`,
-              `Tajribada o'zgarib turuvchi xalaqit`
-            ]
-          },
-          {
-            prompt: `${activeTopic} jarayonining yuzaga kelishiga asosiy sabab nima?`,
-            correct: `${activeTopic}ning asosiy harakatlantiruvchi kuchi va tabiiy mexanizmi`,
-            distractors: [
-              `Tashqi tasodifiy sabablar yig'indisi`,
-              `Ichki qonuniyatlarga bog'liq bo'lmagan hodisa`,
-              `Faqat gipotetik taxmin`
-            ]
-          },
-          {
-            prompt: `${activeTopic} insoniyat hayoti va zamonaviy ilm-fanda qanday amaliy ahamiyatga ega?`,
-            correct: `Amaliy muammolarni yechish va ilmiy taraqqiyotni ta'minlash`,
-            distractors: [
-              `Faqat arxiv ma'lumotlarini to'plash`,
-              `Amaliyotda hech qanday qo'llanishga ega emas`,
-              `Faqat tor doiradagi nazariy qiziqish`
-            ]
-          },
-          {
-            prompt: `${activeTopic}ga oid qaysi ilmiy xulosa to'g'ri va amalda isbotlangan?`,
-            correct: `${activeTopic} qonuniyatlari amaliy tajriba va ilmiy dalillar bilan tasdiqlangan`,
-            distractors: [
-              `Mavzu bo'yicha hech qanday aniq qonuniyat yo'q`,
-              `Faqat matematik hisob-kitoblar bilan cheklangan`,
-              `Zamonaviy fanda butunlay inkor etilgan`
-            ]
-          }
-        ];
+        const subjText = document.getElementById('quizSubjectInput').value || '';
+        const isMath = /matemat|kasr|algebra|geometr|hisob|son|raqam|tenglama/i.test(`${activeTopic} ${subjText}`);
+
+        let templatesList = [];
+        if (isMath) {
+          templatesList = [
+            {
+              prompt: "Kasrni eng sodda (qisqarmas) ko‘rinishga keltiring: 24/36",
+              correct: "2/3",
+              distractors: ["3/4", "4/5", "1/2"]
+            },
+            {
+              prompt: "Hisoblang: 1/4 + 2/4",
+              correct: "3/4",
+              distractors: ["3/8", "2/8", "1"]
+            },
+            {
+              prompt: "Hisoblang: 5/6 - 1/3",
+              correct: "1/2",
+              distractors: ["4/3", "2/3", "1/3"]
+            },
+            {
+              prompt: "Hisoblang: 2/3 * 3/4",
+              correct: "1/2",
+              distractors: ["5/7", "6/7", "2/4"]
+            },
+            {
+              prompt: "Hisoblang: 3/4 : 1/2",
+              correct: "3/2",
+              distractors: ["3/8", "1/2", "2/3"]
+            },
+            {
+              prompt: "60 sonining 2/3 qismi nechaga teng?",
+              correct: "40",
+              distractors: ["30", "20", "50"]
+            },
+            {
+              prompt: "2x + 6 = 16 chiziqli tenglamada x ning qiymatini toping:",
+              correct: "x = 5",
+              distractors: ["x = 10", "x = 3", "x = 8"]
+            },
+            {
+              prompt: "Hisoblang: 25 * 4 - 36 / 6",
+              correct: "94",
+              distractors: ["84", "96", "100"]
+            },
+            {
+              prompt: "Kasrni qisqartiring: 15/25",
+              correct: "3/5",
+              distractors: ["2/5", "3/4", "1/5"]
+            },
+            {
+              prompt: "ildiz(144) ning qiymati nechaga teng?",
+              correct: "12",
+              distractors: ["14", "11", "16"]
+            }
+          ];
+        } else {
+          templatesList = [
+            {
+              prompt: `${activeTopic} tushunchasining asosiy ilmiy mohiyati va ta'rifi nima?`,
+              correct: `${activeTopic}ning asosiy qonuniyati va tamoyilini to'liq ifodalovchi tushuncha`,
+              distractors: [
+                `Faqat laboratoriyada o'lchanadigan tasodifiy omil`,
+                `Tashqi ko'rinishdagi o'zgaruvchan parametr`,
+                `Nisbiy va isbotsiz taxminiy model`
+              ]
+            },
+            {
+              prompt: `${activeTopic}ning eng muhim belgisi va uni boshqa hodisalardan ajratib turuvchi xususiyati qaysi?`,
+              correct: `${activeTopic}ga xos bo'lgan barqaror ichki funksional xususiyat`,
+              distractors: [
+                `Barcha jarayonlarda bir xil takrorlanuvchi umumiy holat`,
+                `Faqat vaqtinchalik mavjud bo'lgan tashqi belgi`,
+                `Tajribada o'zgarib turuvchi xalaqit`
+              ]
+            },
+            {
+              prompt: `${activeTopic} jarayonining yuzaga kelishiga asosiy sabab nima?`,
+              correct: `${activeTopic}ning asosiy harakatlantiruvchi kuchi va tabiiy mexanizmi`,
+              distractors: [
+                `Tashqi tasodifiy sabablar yig'indisi`,
+                `Ichki qonuniyatlarga bog'liq bo'lmagan hodisa`,
+                `Faqat gipotetik taxmin`
+              ]
+            },
+            {
+              prompt: `${activeTopic} insoniyat hayoti va zamonaviy ilm-fanda qanday amaliy ahamiyatga ega?`,
+              correct: `Amaliy muammolarni yechish va ilmiy taraqqiyotni ta'minlash`,
+              distractors: [
+                `Faqat arxiv ma'lumotlarini to'plash`,
+                `Amaliyotda hech qanday qo'llanishga ega emas`,
+                `Faqat tor doiradagi nazariy qiziqish`
+              ]
+            },
+            {
+              prompt: `${activeTopic}ga oid qaysi ilmiy xulosa to'g'ri va amalda isbotlangan?`,
+              correct: `${activeTopic} qonuniyatlari amaliy tajriba va ilmiy dalillar bilan tasdiqlangan`,
+              distractors: [
+                `Mavzu bo'yicha hech qanday aniq qonuniyat yo'q`,
+                `Faqat matematik hisob-kitoblar bilan cheklangan`,
+                `Zamonaviy fanda butunlay inkor etilgan`
+              ]
+            }
+          ];
+        }
 
         for (let i = 0; i < count; i++) {
-          const t = bloomAspects[i % bloomAspects.length];
-          const cycleNum = Math.floor(i / bloomAspects.length) + 1;
-          const suffix = (i >= bloomAspects.length) ? ` (qo'shimcha tahlil #${i+1})` : '';
-          const optSuffix = (i >= bloomAspects.length) ? ` (#${cycleNum})` : '';
-          const correctText = t.correct + optSuffix;
-          const pool = [correctText, ...t.distractors.map(d => d + optSuffix)].sort(() => Math.random() - 0.5);
+          const t = templatesList[i % templatesList.length];
+          const cycleNum = Math.floor(i / templatesList.length) + 1;
+          const suffix = (!isMath && i >= templatesList.length) ? ` (qo'shimcha tahlil #${i+1})` : '';
+          const optSuffix = (!isMath && i >= templatesList.length) ? ` (#${cycleNum})` : '';
+          const correctText = stripDollars(t.correct + optSuffix);
+          const pool = [correctText, ...t.distractors.map(d => stripDollars(d + optSuffix))].sort(() => Math.random() - 0.5);
           const opts = pool.map((text, idx) => ({ id: `opt_${idx+1}`, text: text }));
           const correctOpt = opts.find(o => o.text === correctText);
 
           generatedItems.push({
             id: null,
             type: "single_choice",
-            prompt: t.prompt + suffix,
+            prompt: stripDollars(t.prompt + suffix),
             options: opts,
             correct_answer: correctOpt ? correctOpt.id : "opt_1",
             time_limit_seconds: 30,
@@ -1019,6 +1124,8 @@
           });
         }
       }
+
+      generatedItems = generatedItems.map(cleanQuestionObj);
 
       // Filter out any duplicates against existing questions
       const existingPrompts = new Set(questions.map(q => q.prompt.trim().toLowerCase()));

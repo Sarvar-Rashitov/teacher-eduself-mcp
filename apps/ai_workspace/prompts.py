@@ -20,13 +20,13 @@ ASOSIY TALABLAR (DOC-70):
    - Agar mavzu matematika, kasrlar, algebra, geometriya, fizika yoki hisoblashga oid bo'lsa (masalan: kasr, sonlar, tenglama, hisoblang):
    - SAVOLLAR VA BARCHA JAVOBLAR FAQAT VA FAQAT ANIQ SONLAR, KASRLAR VA MATEMATIK HISOBLASHLAR BILAN BO'LISHI SHART!
    - Quruq so'zlar, qoidaning ta'rifi yoki "ilmiy mohiyati nima?", "qonuniyat nima?", "tasodifiy omil" kabi soxta falsafiy matnlarni yozish QAT'IYAN TAQIQLANADI!
+   - DOLLAR ($) BELGISI TAQIQLANADI: Savol matnida va javob variantlarida hech qachon dollar ($) belgisini ishlatma! Boshida ham, oxirida ham $ bo'lmasin. Oddiy va toza qilib yozing (masalan: `2/3`, `24/36`, `(2x+1)(x+2)`, `x = 5`, `40`).
    - Har bir savol aniq hisoblash misoli yoki amaliy masala bo'lsin:
      Masalan:
-     * "Kasrni qisqartiring: $\\frac{24}{36}$" -> To'g'ri: "$\\frac{2}{3}$", Noto'g'ri: "$\\frac{3}{4}$", "$\\frac{4}{5}$", "$\\frac{1}{2}$"
-     * "Hisoblang: $\\frac{3}{8} + \\frac{2}{8}$" -> To'g'ri: "$\\frac{5}{8}$", Noto'g'ri: "$\\frac{5}{16}$", "$\\frac{6}{8}$", "$\\frac{1}{2}$"
-     * "$60$ sonining $\\frac{2}{3}$ qismini toping:" -> To'g'ri: "$40$", Noto'g'ri: "$30$", "$20$", "$50$"
-     * "Tenglamani yeching: $3x + 12 = 30$" -> To'g'ri: "$x = 6$", Noto'g'ri: "$x = 8$", "$x = 5$", "$x = 4$"
-   - Barcha formulalar, fizik kattaliklar, kasrlar va matematik ifodalar toza LaTeX formatida yozilsin (masalan: $\\frac{a}{b}$, $\\sqrt{x}$).
+     * "Kasrni qisqartiring: 24/36" -> To'g'ri: "2/3", Noto'g'ri: "3/4", "4/5", "1/2"
+     * "Hisoblang: 3/8 + 2/8" -> To'g'ri: "5/8", Noto'g'ri: "5/16", "6/8", "1/2"
+     * "60 sonining 2/3 qismini toping:" -> To'g'ri: "40", Noto'g'ri: "30", "20", "50"
+     * "Tenglamani yeching: 3x + 12 = 30" -> To'g'ri: "x = 6", Noto'g'ri: "x = 8", "x = 5", "x = 4"
 
 5. DIVERSIFIKATSIYA VA TAKRORLANMASLIK (ZERO DUPLICATION):
    - Har bir savol mavzuning mutlaqo boshqa-boshqa tushunchasi, qoidasi yoki faktini qamrab olishi SHART.

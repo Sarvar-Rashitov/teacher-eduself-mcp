@@ -1,4 +1,5 @@
 import os
+import re
 import logging
 import random
 from typing import Optional, Any
@@ -172,189 +173,208 @@ INFORMATICS_CODING_BANK = [
     }
 ]
 
+def strip_all_dollar_wrappers(text: str) -> str:
+    """
+    Savol va variantlar matnidagi old va orqadagi dollar ($) belgilarini
+    hamda LaTeX \frac qoliplarini toza 2/3, (2x+1)(x+2) ko'rinishiga keltiradi.
+    """
+    if not text:
+        return ""
+    s = str(text).strip()
+    # Old va orqadagi $ belgilarini tozalash
+    while s.startswith("$") and s.endswith("$") and len(s) >= 2:
+        s = s[1:-1].strip()
+    s = s.strip("$").strip()
+    # \frac{a}{b} ni a/b ko'rinishiga aylantirish
+    s = re.sub(r'\\frac\{([^}]+)\}\{([^}]+)\}', r'\1/\2', s)
+    # Qolgan barcha $ belgilarini olib tashlash
+    s = s.replace("$", "").strip()
+    return s
+
+
 FRACTIONS_NUMBER_BANK = [
     {
-        "prompt": r"Kasrni eng sodda (qisqarmas) ko‘rinishga keltiring: $\frac{24}{36}$",
-        "correct": r"$\frac{2}{3}$",
-        "distractors": [r"$\frac{3}{4}$", r"$\frac{4}{5}$", r"$\frac{1}{2}$"],
-        "explanation": r"Surat va maxraj 12 ga bo‘linadi: $24/12 = 2$, $36/12 = 3$, natija: $2/3$."
+        "prompt": "Kasrni eng sodda (qisqarmas) ko‘rinishga keltiring: 24/36",
+        "correct": "2/3",
+        "distractors": ["3/4", "4/5", "1/2"],
+        "explanation": "Surat va maxraj 12 ga bo‘linadi: 24/12 = 2, 36/12 = 3, natija: 2/3."
     },
     {
-        "prompt": r"Hisoblang: $\frac{1}{4} + \frac{2}{4}$",
-        "correct": r"$\frac{3}{4}$",
-        "distractors": [r"$\frac{3}{8}$", r"$\frac{2}{8}$", r"$1$"],
-        "explanation": r"Maxrajlar teng: $(1+2)/4 = 3/4$."
+        "prompt": "Hisoblang: 1/4 + 2/4",
+        "correct": "3/4",
+        "distractors": ["3/8", "2/8", "1"],
+        "explanation": "Maxrajlar teng: (1+2)/4 = 3/4."
     },
     {
-        "prompt": r"Hisoblang: $\frac{5}{6} - \frac{1}{3}$",
-        "correct": r"$\frac{1}{2}$",
-        "distractors": [r"$\frac{4}{3}$", r"$\frac{2}{3}$", r"$\frac{1}{3}$"],
-        "explanation": r"Umumiy maxraj 6: $5/6 - 2/6 = 3/6 = 1/2$."
+        "prompt": "Hisoblang: 5/6 - 1/3",
+        "correct": "1/2",
+        "distractors": ["4/3", "2/3", "1/3"],
+        "explanation": "Umumiy maxraj 6: 5/6 - 2/6 = 3/6 = 1/2."
     },
     {
-        "prompt": r"Hisoblang: $\frac{2}{3} \times \frac{3}{4}$",
-        "correct": r"$\frac{1}{2}$",
-        "distractors": [r"$\frac{5}{7}$", r"$\frac{6}{7}$", r"$\frac{2}{4}$"],
-        "explanation": r"Ko‘paytiriladi va qisqartiriladi: $(2 \times 3)/(3 \times 4) = 6/12 = 1/2$."
+        "prompt": "Hisoblang: 2/3 * 3/4",
+        "correct": "1/2",
+        "distractors": ["5/7", "6/7", "2/4"],
+        "explanation": "Ko‘paytiriladi va qisqartiriladi: (2 * 3)/(3 * 4) = 6/12 = 1/2."
     },
     {
-        "prompt": r"Hisoblang: $\frac{3}{4} \div \frac{1}{2}$",
-        "correct": r"$\frac{3}{2}$",
-        "distractors": [r"$\frac{3}{8}$", r"$\frac{1}{2}$", r"$\frac{2}{3}$"],
-        "explanation": r"Bo‘lish ko‘paytirishga aylanadi: $3/4 \times 2/1 = 6/4 = 3/2$."
+        "prompt": "Hisoblang: 3/4 : 1/2",
+        "correct": "3/2",
+        "distractors": ["3/8", "1/2", "2/3"],
+        "explanation": "Bo‘lish ko‘paytirishga aylanadi: 3/4 * 2/1 = 6/4 = 3/2."
     },
     {
-        "prompt": r"$60$ sonining $\frac{2}{3}$ qismi nechaga teng?",
-        "correct": r"$40$",
-        "distractors": [r"$30$", r"$20$", r"$50$"],
-        "explanation": r"$(60 \div 3) \times 2 = 20 \times 2 = 40$."
+        "prompt": "60 sonining 2/3 qismi nechaga teng?",
+        "correct": "40",
+        "distractors": ["30", "20", "50"],
+        "explanation": "(60 / 3) * 2 = 20 * 2 = 40."
     },
     {
-        "prompt": r"Kasrni qisqartiring: $\frac{15}{25}$",
-        "correct": r"$\frac{3}{5}$",
-        "distractors": [r"$\frac{2}{5}$", r"$\frac{3}{4}$", r"$\frac{1}{5}$"],
-        "explanation": r"Surat va maxraj 5 ga bo‘linadi: $15/25 = 3/5$."
+        "prompt": "Kasrni qisqartiring: 15/25",
+        "correct": "3/5",
+        "distractors": ["2/5", "3/4", "1/5"],
+        "explanation": "Surat va maxraj 5 ga bo‘linadi: 15/25 = 3/5."
     },
     {
-        "prompt": r"Hisoblang: $\frac{3}{8} + \frac{2}{8}$",
-        "correct": r"$\frac{5}{8}$",
-        "distractors": [r"$\frac{5}{16}$", r"$\frac{6}{8}$", r"$\frac{1}{2}$"],
-        "explanation": r"Bir xil maxrajli kasrlar: $(3+2)/8 = 5/8$."
+        "prompt": "Hisoblang: 3/8 + 2/8",
+        "correct": "5/8",
+        "distractors": ["5/16", "6/8", "1/2"],
+        "explanation": "Bir xil maxrajli kasrlar: (3+2)/8 = 5/8."
     },
     {
-        "prompt": r"Hisoblang: $\frac{7}{10} - \frac{2}{5}$",
-        "correct": r"$\frac{3}{10}$",
-        "distractors": [r"$\frac{5}{5}$", r"$\frac{1}{2}$", r"$\frac{1}{10}$"],
-        "explanation": r"$7/10 - 4/10 = 3/10$."
+        "prompt": "Hisoblang: 7/10 - 2/5",
+        "correct": "3/10",
+        "distractors": ["5/5", "1/2", "1/10"],
+        "explanation": "7/10 - 4/10 = 3/10."
     },
     {
-        "prompt": r"Kasrni qisqartiring: $\frac{28}{42}$",
-        "correct": r"$\frac{2}{3}$",
-        "distractors": [r"$\frac{4}{7}$", r"$\frac{3}{4}$", r"$\frac{1}{2}$"],
-        "explanation": r"Surat va maxraj 14 ga bo‘linadi: $28/14 = 2$, $42/14 = 3$, natija: $2/3$."
+        "prompt": "Kasrni qisqartiring: 28/42",
+        "correct": "2/3",
+        "distractors": ["4/7", "3/4", "1/2"],
+        "explanation": "Surat va maxraj 14 ga bo‘linadi: 28/14 = 2, 42/14 = 3, natija: 2/3."
     },
     {
-        "prompt": r"Hisoblang: $\frac{3}{5} \times \frac{5}{6}$",
-        "correct": r"$\frac{1}{2}$",
-        "distractors": [r"$\frac{8}{11}$", r"$\frac{3}{6}$", r"$\frac{2}{3}$"],
-        "explanation": r"5 lar qisqaradi: $3/6 = 1/2$."
+        "prompt": "Hisoblang: 3/5 * 5/6",
+        "correct": "1/2",
+        "distractors": ["8/11", "3/6", "2/3"],
+        "explanation": "5 lar qisqaradi: 3/6 = 1/2."
     },
     {
-        "prompt": r"$84$ sonining $\frac{2}{7}$ qismi nechaga teng?",
-        "correct": r"$24$",
-        "distractors": [r"$12$", r"$28$", r"$32$"],
-        "explanation": r"$(84 \div 7) \times 2 = 12 \times 2 = 24$."
+        "prompt": "84 sonining 2/7 qismi nechaga teng?",
+        "correct": "24",
+        "distractors": ["12", "28", "32"],
+        "explanation": "(84 / 7) * 2 = 12 * 2 = 24."
     },
     {
-        "prompt": r"$\frac{17}{5}$ noto‘g‘ri kasrni aralash songa aylantiring:",
-        "correct": r"$3\frac{2}{5}$",
-        "distractors": [r"$2\frac{3}{5}$", r"$3\frac{1}{5}$", r"$4\frac{2}{5}$"],
-        "explanation": r"$17 \div 5 = 3$ (qoldiq 2), shuning uchun: $3\frac{2}{5}$."
+        "prompt": "17/5 noto‘g‘ri kasrni aralash songa aylantiring:",
+        "correct": "3 2/5",
+        "distractors": ["2 3/5", "3 1/5", "4 2/5"],
+        "explanation": "17 / 5 = 3 (qoldiq 2), shuning uchun: 3 2/5."
     },
     {
-        "prompt": r"Kasrni qisqartiring: $\frac{35}{49}$",
-        "correct": r"$\frac{5}{7}$",
-        "distractors": [r"$\frac{5}{8}$", r"$\frac{4}{7}$", r"$\frac{3}{7}$"],
-        "explanation": r"Surat va maxraj 7 ga bo‘linadi: $35/7 = 5$, $49/7 = 7$, natija: $5/7$."
+        "prompt": "Kasrni qisqartiring: 35/49",
+        "correct": "5/7",
+        "distractors": ["5/8", "4/7", "3/7"],
+        "explanation": "Surat va maxraj 7 ga bo‘linadi: 35/7 = 5, 49/7 = 7, natija: 5/7."
     },
     {
-        "prompt": r"Hisoblang: $\frac{1}{2} + \frac{1}{4}$",
-        "correct": r"$\frac{3}{4}$",
-        "distractors": [r"$\frac{2}{6}$", r"$\frac{2}{4}$", r"$1$"],
-        "explanation": r"$2/4 + 1/4 = 3/4$."
+        "prompt": "Hisoblang: 1/2 + 1/4",
+        "correct": "3/4",
+        "distractors": ["2/6", "2/4", "1"],
+        "explanation": "2/4 + 1/4 = 3/4."
     },
     {
-        "prompt": r"Hisoblang: $\frac{2}{5} \div \frac{4}{15}$",
-        "correct": r"$\frac{3}{2}$",
-        "distractors": [r"$\frac{8}{75}$", r"$\frac{2}{3}$", r"$\frac{4}{5}$"],
-        "explanation": r"$2/5 \times 15/4 = 30/20 = 3/2$."
+        "prompt": "Hisoblang: 2/5 : 4/15",
+        "correct": "3/2",
+        "distractors": ["8/75", "2/3", "4/5"],
+        "explanation": "2/5 * 15/4 = 30/20 = 3/2."
     },
     {
-        "prompt": r"$100$ sonining $\frac{3}{5}$ qismi nechaga teng?",
-        "correct": r"$60$",
-        "distractors": [r"$50$", r"$40$", r"$70$"],
-        "explanation": r"$(100 \div 5) \times 3 = 20 \times 3 = 60$."
+        "prompt": "100 sonining 3/5 qismi nechaga teng?",
+        "correct": "60",
+        "distractors": ["50", "40", "70"],
+        "explanation": "(100 / 5) * 3 = 20 * 3 = 60."
     },
     {
-        "prompt": r"Kasrni qisqartiring: $\frac{45}{60}$",
-        "correct": r"$\frac{3}{4}$",
-        "distractors": [r"$\frac{2}{3}$", r"$\frac{4}{5}$", r"$\frac{5}{6}$"],
-        "explanation": r"Surat va maxraj 15 ga bo‘linadi: $45/15 = 3$, $60/15 = 4$."
+        "prompt": "Kasrni qisqartiring: 45/60",
+        "correct": "3/4",
+        "distractors": ["2/3", "4/5", "5/6"],
+        "explanation": "Surat va maxraj 15 ga bo‘linadi: 45/15 = 3, 60/15 = 4."
     },
     {
-        "prompt": r"Hisoblang: $\frac{5}{12} + \frac{1}{4}$",
-        "correct": r"$\frac{2}{3}$",
-        "distractors": [r"$\frac{6}{16}$", r"$\frac{3}{4}$", r"$\frac{1}{2}$"],
-        "explanation": r"$5/12 + 3/12 = 8/12 = 2/3$."
+        "prompt": "Hisoblang: 5/12 + 1/4",
+        "correct": "2/3",
+        "distractors": ["6/16", "3/4", "1/2"],
+        "explanation": "5/12 + 3/12 = 8/12 = 2/3."
     },
     {
-        "prompt": r"$120$ sonining $\frac{5}{6}$ qismi nechaga teng?",
-        "correct": r"$100$",
-        "distractors": [r"$90$", r"$110$", r"$80$"],
-        "explanation": r"$(120 \div 6) \times 5 = 20 \times 5 = 100$."
+        "prompt": "120 sonining 5/6 qismi nechaga teng?",
+        "correct": "100",
+        "distractors": ["90", "110", "80"],
+        "explanation": "(120 / 6) * 5 = 20 * 5 = 100."
     }
 ]
 
 MATH_ALGEBRA_BANK = [
     {
-        "prompt": r"$2x + 6 = 16$ chiziqli tenglamada $x$ ning qiymatini toping:",
-        "correct": r"$x = 5$",
-        "distractors": [r"$x = 10$", r"$x = 3$", r"$x = 8$"],
-        "explanation": r"$2x = 16 - 6 \Rightarrow 2x = 10 \Rightarrow x = 5$."
+        "prompt": "2x + 6 = 16 chiziqli tenglamada x ning qiymatini toping:",
+        "correct": "x = 5",
+        "distractors": ["x = 10", "x = 3", "x = 8"],
+        "explanation": "2x = 16 - 6 => 2x = 10 => x = 5."
     },
     {
-        "prompt": r"Hisoblang: $25 \times 4 - 36 \div 6$",
-        "correct": r"$94$",
-        "distractors": [r"$84$", r"$96$", r"$100$"],
-        "explanation": r"$25 \times 4 = 100$, $36 \div 6 = 6$, $100 - 6 = 94$."
+        "prompt": "Hisoblang: 25 * 4 - 36 / 6",
+        "correct": "94",
+        "distractors": ["84", "96", "100"],
+        "explanation": "25 * 4 = 100, 36 / 6 = 6, 100 - 6 = 94."
     },
     {
-        "prompt": r"Hisoblang: $\frac{1}{4} + \frac{2}{4}$",
-        "correct": r"$\frac{3}{4}$",
-        "distractors": [r"$\frac{3}{8}$", r"$\frac{2}{8}$", r"$1$"],
-        "explanation": r"$(1+2)/4 = 3/4$."
+        "prompt": "Hisoblang: 1/4 + 2/4",
+        "correct": "3/4",
+        "distractors": ["3/8", "2/8", "1"],
+        "explanation": "(1+2)/4 = 3/4."
     },
     {
-        "prompt": r"$3x - 5 = 16$ tenglamani yeching:",
-        "correct": r"$x = 7$",
-        "distractors": [r"$x = 6$", r"$x = 8$", r"$x = 9$"],
-        "explanation": r"$3x = 16 + 5 = 21 \Rightarrow x = 7$."
+        "prompt": "3x - 5 = 16 tenglamani yeching:",
+        "correct": "x = 7",
+        "distractors": ["x = 6", "x = 8", "x = 9"],
+        "explanation": "3x = 16 + 5 = 21 => x = 7."
     },
     {
-        "prompt": r"Sonning $1\%$ i uning qanday arifmetik qismiga teng bo‘ladi?",
-        "correct": r"$\frac{1}{100}$",
-        "distractors": [r"$\frac{1}{10}$", r"$\frac{1}{2}$", r"$\frac{1}{1000}$"],
-        "explanation": r"Foiz - yuzdan bir qismdir."
+        "prompt": "Sonning 1% i uning qanday arifmetik qismiga teng bo‘ladi?",
+        "correct": "1/100",
+        "distractors": ["1/10", "1/2", "1/1000"],
+        "explanation": "Foiz - yuzdan bir qismdir."
     },
     {
-        "prompt": r"Tomonlari $a = 6 \text{ sm}$ va $b = 4 \text{ sm}$ bo‘lgan to‘g‘ri to‘rtburchakning yuzasi nechaga teng?",
-        "correct": r"$24 \text{ sm}^2$",
-        "distractors": [r"$20 \text{ sm}^2$", r"$10 \text{ sm}^2$", r"$12 \text{ sm}^2$"],
-        "explanation": r"$S = a \cdot b = 6 \cdot 4 = 24 \text{ sm}^2$."
+        "prompt": "Tomonlari a = 6 sm va b = 4 sm bo‘lgan to‘g‘ri to‘rtburchakning yuzasi nechaga teng?",
+        "correct": "24 sm²",
+        "distractors": ["20 sm²", "10 sm²", "12 sm²"],
+        "explanation": "S = a * b = 6 * 4 = 24 sm²."
     },
     {
-        "prompt": r"Hisoblang: $(45 + 35) \div 4$",
-        "correct": r"$20$",
-        "distractors": [r"$15$", r"$25$", r"$30$"],
-        "explanation": r"$(45+35) = 80$, $80 \div 4 = 20$."
+        "prompt": "Hisoblang: (45 + 35) / 4",
+        "correct": "20",
+        "distractors": ["15", "25", "30"],
+        "explanation": "(45+35) = 80, 80 / 4 = 20."
     },
     {
-        "prompt": r"$\sqrt{144}$ ning qiymati nechaga teng?",
-        "correct": r"$12$",
-        "distractors": [r"$14$", r"$11$", r"$16$"],
-        "explanation": r"$12 \times 12 = 144$, shuning uchun $\sqrt{144} = 12$."
+        "prompt": "ildiz(144) ning qiymati nechaga teng?",
+        "correct": "12",
+        "distractors": ["14", "11", "16"],
+        "explanation": "12 * 12 = 144, shuning uchun ildiz 12."
     },
     {
-        "prompt": r"$30$ ning $\frac{2}{3}$ qismi nechaga teng?",
-        "correct": r"$20$",
-        "distractors": [r"$15$", r"$10$", r"$25$"],
-        "explanation": r"$(30 \div 3) \times 2 = 20$."
+        "prompt": "30 ning 2/3 qismi nechaga teng?",
+        "correct": "20",
+        "distractors": ["15", "10", "25"],
+        "explanation": "(30 / 3) * 2 = 20."
     },
     {
-        "prompt": r"Kasrni qisqartiring: $\frac{24}{36}$",
-        "correct": r"$\frac{2}{3}$",
-        "distractors": [r"$\frac{3}{4}$", r"$\frac{4}{5}$", r"$\frac{1}{2}$"],
-        "explanation": r"$24/12 = 2$, $36/12 = 3$, javob: $2/3$."
+        "prompt": "Kasrni qisqartiring: 24/36",
+        "correct": "2/3",
+        "distractors": ["3/4", "4/5", "1/2"],
+        "explanation": "24/12 = 2, 36/12 = 3, javob: 2/3."
     }
 ]
 
@@ -481,14 +501,14 @@ class AIQuizGenerator:
             ]
             num, den, s_num, s_den = simplifications[index % len(simplifications)]
             return {
-                "prompt": f"Kasrni eng sodda (qisqarmas) ko‘rinishga keltiring: $\\frac{{{num}}}{{{den}}}$",
-                "correct": f"$\\frac{{{s_num}}}{{{s_den}}}$",
+                "prompt": f"Kasrni eng sodda (qisqarmas) ko‘rinishga keltiring: {num}/{den}",
+                "correct": f"{s_num}/{s_den}",
                 "distractors": [
-                    f"$\\frac{{{s_num+1}}}{{{s_den}}}$" if s_num + 1 != s_den else f"$\\frac{{{s_num}}}{{{s_den+1}}}$",
-                    f"$\\frac{{{s_num}}}{{{s_den+2}}}$",
-                    f"$\\frac{{{s_den}}}{{{s_num}}}$",
+                    f"{s_num+1}/{s_den}" if s_num + 1 != s_den else f"{s_num}/{s_den+1}",
+                    f"{s_num}/{s_den+2}",
+                    f"{s_den}/{s_num}",
                 ],
-                "explanation": f"Surat va maxrajni ularning eng katta umumiy bo‘luvchisiga qisqartiramiz: $\\frac{{{num}}}{{{den}}} = \\frac{{{s_num}}}{{{s_den}}}$."
+                "explanation": f"Surat va maxrajni ularning eng katta umumiy bo‘luvchisiga qisqartiramiz: {num}/{den} = {s_num}/{s_den}."
             }
         elif chosen_type == "fraction_add":
             adds = [
@@ -499,14 +519,14 @@ class AIQuizGenerator:
             ]
             n1, d1, n2, d2, sn, sd = adds[index % len(adds)]
             return {
-                "prompt": f"Hisoblang: $\\frac{{{n1}}}{{{d1}}} + \\frac{{{n2}}}{{{d2}}}$",
-                "correct": f"$\\frac{{{sn}}}{{{sd}}}$",
+                "prompt": f"Hisoblang: {n1}/{d1} + {n2}/{d2}",
+                "correct": f"{sn}/{sd}",
                 "distractors": [
-                    f"$\\frac{{{sn+1}}}{{{sd}}}$",
-                    f"$\\frac{{{sn}}}{{{sd+1}}}$",
-                    f"$\\frac{{{n1+n2}}}{{{d1+d2}}}$",
+                    f"{sn+1}/{sd}",
+                    f"{sn}/{sd+1}",
+                    f"{n1+n2}/{d1+d2}",
                 ],
-                "explanation": f"Umumiy maxrajga keltirib qo‘shamiz: $\\frac{{{n1}}}{{{d1}}} + \\frac{{{n2}}}{{{d2}}} = \\frac{{{sn}}}{{{sd}}}$."
+                "explanation": f"Umumiy maxrajga keltirib qo‘shamiz: {n1}/{d1} + {n2}/{d2} = {sn}/{sd}."
             }
         elif chosen_type == "fraction_sub":
             subs = [
@@ -516,14 +536,14 @@ class AIQuizGenerator:
             ]
             n1, d1, n2, d2, sn, sd = subs[index % len(subs)]
             return {
-                "prompt": f"Hisoblang: $\\frac{{{n1}}}{{{d1}}} - \\frac{{{n2}}}{{{d2}}}$",
-                "correct": f"$\\frac{{{sn}}}{{{sd}}}$",
+                "prompt": f"Hisoblang: {n1}/{d1} - {n2}/{d2}",
+                "correct": f"{sn}/{sd}",
                 "distractors": [
-                    f"$\\frac{{{sn+1}}}{{{sd}}}$",
-                    f"$\\frac{{{sn}}}{{{sd+2}}}$",
-                    f"$\\frac{{{abs(n1-n2)}}}{{{d1+d2}}}$",
+                    f"{sn+1}/{sd}",
+                    f"{sn}/{sd+2}",
+                    f"{abs(n1-n2)}/{d1+d2}",
                 ],
-                "explanation": f"Maxrajlar tenglashtirilib ayiriladi: $\\frac{{{n1}}}{{{d1}}} - \\frac{{{n2}}}{{{d2}}} = \\frac{{{sn}}}{{{sd}}}$."
+                "explanation": f"Maxrajlar tenglashtirilib ayiriladi: {n1}/{d1} - {n2}/{d2} = {sn}/{sd}."
             }
         elif chosen_type == "fraction_mul":
             muls = [
@@ -533,14 +553,14 @@ class AIQuizGenerator:
             ]
             n1, d1, n2, d2, sn, sd = muls[index % len(muls)]
             return {
-                "prompt": f"Hisoblang: $\\frac{{{n1}}}{{{d1}}} \\times \\frac{{{n2}}}{{{d2}}}$",
-                "correct": f"$\\frac{{{sn}}}{{{sd}}}$",
+                "prompt": f"Hisoblang: {n1}/{d1} * {n2}/{d2}",
+                "correct": f"{sn}/{sd}",
                 "distractors": [
-                    f"$\\frac{{{sn+1}}}{{{sd}}}$",
-                    f"$\\frac{{{sn}}}{{{sd+1}}}$",
-                    f"$\\frac{{{n1*n2+1}}}{{{d1*d2}}}$",
+                    f"{sn+1}/{sd}",
+                    f"{sn}/{sd+1}",
+                    f"{n1*n2+1}/{d1*d2}",
                 ],
-                "explanation": f"Surat suratga, maxraj maxrajga ko‘paytiriladi va qisqartiriladi: $\\frac{{{sn}}}{{{sd}}}$."
+                "explanation": f"Surat suratga, maxraj maxrajga ko‘paytiriladi va qisqartiriladi: {sn}/{sd}."
             }
         elif chosen_type == "fraction_div":
             divs = [
@@ -548,12 +568,12 @@ class AIQuizGenerator:
                 (4, 9, 2, 3, 2, 3), (7, 8, 7, 16, 2, 1), (1, 2, 1, 4, 2, 1),
             ]
             n1, d1, n2, d2, sn, sd = divs[index % len(divs)]
-            ans_str = f"${sn}$" if sd == 1 else f"$\\frac{{{sn}}}{{{sd}}}$"
-            d1_str = f"${sn+1}$" if sd == 1 else f"$\\frac{{{sn+1}}}{{{sd}}}$"
-            d2_str = f"$\\frac{{{sd}}}{{{sn}}}$"
-            d3_str = f"$\\frac{{{sn}}}{{{sd+1}}}$" if sd != 1 else f"${sn+2}$"
+            ans_str = f"{sn}" if sd == 1 else f"{sn}/{sd}"
+            d1_str = f"{sn+1}" if sd == 1 else f"{sn+1}/{sd}"
+            d2_str = f"{sd}/{sn}"
+            d3_str = f"{sn}/{sd+1}" if sd != 1 else f"{sn+2}"
             return {
-                "prompt": f"Hisoblang: $\\frac{{{n1}}}{{{d1}}} \\div \\frac{{{n2}}}{{{d2}}}$",
+                "prompt": f"Hisoblang: {n1}/{d1} : {n2}/{d2}",
                 "correct": ans_str,
                 "distractors": [d1_str, d2_str, d3_str],
                 "explanation": f"Bo‘lish amali ikkinchi kasrni teskari aylantirib ko‘paytirish bilan bajariladi: {ans_str}."
@@ -567,10 +587,10 @@ class AIQuizGenerator:
             ]
             total, n, d, ans = nums[index % len(nums)]
             return {
-                "prompt": f"${total}$ sonining $\\frac{{{n}}}{{{d}}}$ qismini toping:",
-                "correct": f"${ans}$",
-                "distractors": [f"${ans+10}$", f"${ans-10}$", f"${ans+5}$"],
-                "explanation": f"Sonni maxrajga bo‘lib suratga ko‘paytiramiz: $({total} \\div {d}) \\times {n} = {ans}$."
+                "prompt": f"{total} sonining {n}/{d} qismini toping:",
+                "correct": f"{ans}",
+                "distractors": [f"{ans+10}", f"{ans-10}", f"{ans+5}"],
+                "explanation": f"Sonni maxrajga bo‘lib suratga ko‘paytiramiz: ({total} : {d}) * {n} = {ans}."
             }
         elif chosen_type == "equation":
             eqs = [
@@ -580,34 +600,34 @@ class AIQuizGenerator:
                 ("5x - 10 = 25", "x = 7", ["x = 6", "x = 5", "x = 8"]),
                 ("2x - 7 = 19", "x = 13", ["x = 12", "x = 14", "x = 10"]),
                 ("3x + 12 = 30", "x = 6", ["x = 5", "x = 7", "x = 4"]),
-                ("\\frac{x}{4} = 8", "x = 32", ["x = 24", "x = 28", "x = 36"]),
-                ("\\frac{x}{5} = 12", "x = 60", ["x = 50", "x = 55", "x = 65"]),
+                ("x/4 = 8", "x = 32", ["x = 24", "x = 28", "x = 36"]),
+                ("x/5 = 12", "x = 60", ["x = 50", "x = 55", "x = 65"]),
                 ("6x - 18 = 18", "x = 6", ["x = 5", "x = 7", "x = 8"]),
             ]
             eq_text, c_ans, dists = eqs[index % len(eqs)]
             return {
-                "prompt": f"Tenglamani yeching: ${eq_text}$",
-                "correct": f"${c_ans}$",
-                "distractors": [f"${d}$" for d in dists],
-                "explanation": f"Tenglamani noma'lum $x$ ga nisbatan yechamiz: ${c_ans}$."
+                "prompt": f"Tenglamani yeching: {eq_text}",
+                "correct": f"{c_ans}",
+                "distractors": [f"{d}" for d in dists],
+                "explanation": f"Tenglamani noma'lum x ga nisbatan yechamiz: {c_ans}."
             }
         else:
             ariths = [
-                ("25 \\times 4 - 36 \\div 6", "94", ["84", "96", "100"]),
-                ("(45 + 35) \\div 4", "20", ["15", "25", "30"]),
-                ("15 \\times 6 - 28", "62", ["52", "72", "68"]),
-                ("120 \\div 6 + 18 \\times 2", "56", ["46", "66", "52"]),
-                ("14 \\times 5 - 50", "20", ["15", "25", "30"]),
-                ("8 \\times 12 - 36 \\div 3", "84", ["74", "94", "88"]),
-                ("250 - 35 \\times 4", "110", ["100", "120", "115"]),
-                ("18 \\times 5 + 45 \\div 9", "95", ["85", "105", "90"]),
+                ("25 * 4 - 36 / 6", "94", ["84", "96", "100"]),
+                ("(45 + 35) / 4", "20", ["15", "25", "30"]),
+                ("15 * 6 - 28", "62", ["52", "72", "68"]),
+                ("120 / 6 + 18 * 2", "56", ["46", "66", "52"]),
+                ("14 * 5 - 50", "20", ["15", "25", "30"]),
+                ("8 * 12 - 36 / 3", "84", ["74", "94", "88"]),
+                ("250 - 35 * 4", "110", ["100", "120", "115"]),
+                ("18 * 5 + 45 / 9", "95", ["85", "105", "90"]),
             ]
             ar_text, c_ans, dists = ariths[index % len(ariths)]
             return {
-                "prompt": f"Hisoblang: ${ar_text}$",
-                "correct": f"${c_ans}$",
-                "distractors": [f"${d}$" for d in dists],
-                "explanation": f"Amallar tartibi bo‘yicha hisoblaymiz: ${ar_text} = {c_ans}$."
+                "prompt": f"Hisoblang: {ar_text}",
+                "correct": f"{c_ans}",
+                "distractors": [f"{d}" for d in dists],
+                "explanation": f"Amallar tartibi bo‘yicha hisoblaymiz: {ar_text} = {c_ans}."
             }
 
     def _generate_intelligent_pedagogical_quiz(self, request: GenerateQuizRequest) -> AIGeneratedQuiz:
@@ -919,23 +939,26 @@ class AIQuizGenerator:
         # Build final AIGeneratedQuestion objects with randomized options
         questions_list: list[AIGeneratedQuestion] = []
         for idx, item in enumerate(chosen_items, start=1):
-            opts_pool = [item["correct"]] + item["distractors"]
+            clean_prompt = strip_all_dollar_wrappers(item["prompt"])
+            clean_correct = strip_all_dollar_wrappers(item["correct"])
+            clean_distractors = [strip_all_dollar_wrappers(d) for d in item["distractors"]]
+            opts_pool = [clean_correct] + clean_distractors
             random.shuffle(opts_pool)
 
             options = [
                 AIGeneratedOption(id=f"opt_{i+1}", text=text)
                 for i, text in enumerate(opts_pool)
             ]
-            correct_id = next(opt.id for opt in options if opt.text == item["correct"])
+            correct_id = next(opt.id for opt in options if opt.text == clean_correct)
 
             questions_list.append(
                 AIGeneratedQuestion(
                     order=idx,
-                    prompt=item["prompt"],
+                    prompt=clean_prompt,
                     type="single_choice",
                     options=options,
                     correct_answer=correct_id,
-                    explanation=item["explanation"],
+                    explanation=strip_all_dollar_wrappers(item.get("explanation", "")),
                     difficulty="medium",
                     time_limit_seconds=30,
                     points=1000,
@@ -994,6 +1017,13 @@ class AIQuizGenerator:
                     fq.order = len(unique_questions) + 1
                     seen_prompts.append(clean_fq)
                     unique_questions.append(fq)
+
+        for q in unique_questions:
+            q.prompt = strip_all_dollar_wrappers(q.prompt)
+            if q.explanation:
+                q.explanation = strip_all_dollar_wrappers(q.explanation)
+            for opt in q.options:
+                opt.text = strip_all_dollar_wrappers(opt.text)
 
         quiz.questions = unique_questions
         return quiz
