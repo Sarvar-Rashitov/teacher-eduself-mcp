@@ -659,6 +659,7 @@
   let currentStreak = 0;
   let maxStreak = 0;
   let correctCount = 0;
+  let wrongCount = 0;
   let isAnswered = false;
   let currentTimer = 15;
   let maxTimer = 15;
@@ -983,8 +984,20 @@
     }
 
     // Submit to WebSocket if connected
+    const currentQId = currentQ ? (currentQ.id || null) : null;
+    const nextCorrect = correctCount + (isCorrect ? 1 : 0);
+    const nextWrong = wrongCount + (isCorrect ? 0 : 1);
     if (gameClient) {
-      gameClient.submitAnswer(`sub_${Date.now()}`, choice, (maxTimer - currentTimer) * 1000);
+      gameClient.submitAnswer(
+        `sub_${Date.now()}`,
+        choice,
+        (maxTimer - currentTimer) * 1000,
+        currentQId,
+        isCorrect,
+        playerGold,
+        nextCorrect,
+        nextWrong
+      );
     }
 
     setTimeout(() => {
@@ -1005,6 +1018,10 @@
     correctCount++;
 
     playerStreakNum.textContent = currentStreak;
+
+    if (gameClient) {
+      gameClient.updateStats(playerGold, correctCount, wrongCount);
+    }
 
     // Show Chest Screen
     gameplayCard.style.display = 'none';
@@ -1039,6 +1056,10 @@
       playerGold += reward.amount;
       playerCoinsEl.textContent = playerGold.toLocaleString();
 
+      if (gameClient) {
+        gameClient.updateStats(playerGold, correctCount, wrongCount);
+      }
+
       // Show reward banner
       document.getElementById('rewardEmoji').innerHTML = reward.icon;
       document.getElementById('rewardTitle').textContent = reward.title;
@@ -1059,7 +1080,12 @@
     if (window.eduAudio) window.eduAudio.playWrong();
 
     currentStreak = 0;
+    wrongCount++;
     playerStreakNum.textContent = '0';
+
+    if (gameClient) {
+      gameClient.updateStats(playerGold, correctCount, wrongCount);
+    }
 
     // Find correct text
     let correctText = "To'g'ri javob";
@@ -1088,6 +1114,10 @@
     chestCard.style.display = 'none';
     wrongCard.style.display = 'none';
     gameOverCard.style.display = 'block';
+
+    if (gameClient) {
+      gameClient.updateStats(playerGold, correctCount, wrongCount);
+    }
 
     if (window.eduAudio) window.eduAudio.playVictory();
 

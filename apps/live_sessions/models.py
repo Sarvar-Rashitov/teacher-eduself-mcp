@@ -99,6 +99,8 @@ class Participant(models.Model):
         verbose_name="Anonim tiklanish tokeni"
     )
     score = models.IntegerField(default=0, db_index=True, verbose_name="To'plangan ball")
+    correct_answers_count = models.IntegerField(default=0, verbose_name="To'g'ri javoblar soni")
+    incorrect_answers_count = models.IntegerField(default=0, verbose_name="Noto'g'ri javoblar soni")
     streak = models.IntegerField(default=0, verbose_name="Ketma-ket to'g'ri javoblar")
     is_connected = models.BooleanField(default=True, verbose_name="Ulanganlik holati")
     joined_at = models.DateTimeField(auto_now_add=True)

@@ -242,7 +242,7 @@ class EduPlayGameClient {
     });
   }
 
-  submitAnswer(submissionId, answer, timeTakenMs = 0) {
+  submitAnswer(submissionId, answer, timeTakenMs = 0, questionId = null, isCorrect = null, score = 0, correctCount = 0, wrongCount = 0) {
     if (this.state.answered) return false;
     this.state.answered = true;
 
@@ -252,6 +252,21 @@ class EduPlayGameClient {
       submission_id: submissionId || `sub_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
       user_answer: answer,
       time_taken_ms: timeTakenMs,
+      participant_id: this.options.participantId || null,
+      question_id: questionId || null,
+      is_correct: isCorrect,
+      score: score,
+      correct_count: correctCount,
+      incorrect_count: wrongCount,
+    });
+  }
+
+  updateStats(score = 0, correctCount = 0, wrongCount = 0) {
+    return this.send("participant.stats_update", {
+      participant_id: this.options.participantId || null,
+      score: score,
+      correct_count: correctCount,
+      incorrect_count: wrongCount,
     });
   }
 

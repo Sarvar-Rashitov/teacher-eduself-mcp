@@ -145,7 +145,7 @@ class ClassroomGameConsumer(AsyncJsonWebsocketConsumer):
             )
 
         # Talaba javobini yuborishi
-        elif msg_type == "answer.submit":
+        elif msg_type in ("answer.submit", "participant.answer"):
             submission_res = await self._process_answer_submission(payload)
             # Talabaga shaxsiy ACK yuborish
             await self.send_json({
@@ -162,6 +162,31 @@ class ClassroomGameConsumer(AsyncJsonWebsocketConsumer):
                         "payload": {
                             "question_id": payload.get("question_id"),
                         },
+                    },
+                },
+            )
+            # O'qituvchiga ishtirokchi natijasi va balli yangilanganini yuborish
+            await self.channel_layer.group_send(
+                self.room_group,
+                {
+                    "type": "event.broadcast",
+                    "content": {
+                        "type": "participant.stats_updated",
+                        "payload": submission_res,
+                    },
+                },
+            )
+
+        # Talaba shaxsiy statistikalarini (ball, to'g'ri/noto'g'ri) sinxronlash
+        elif msg_type == "participant.stats_update":
+            stats_res = await self._process_stats_update(payload)
+            await self.channel_layer.group_send(
+                self.room_group,
+                {
+                    "type": "event.broadcast",
+                    "content": {
+                        "type": "participant.stats_updated",
+                        "payload": stats_res,
                     },
                 },
             )
@@ -216,27 +241,84 @@ class ClassroomGameConsumer(AsyncJsonWebsocketConsumer):
         question_id = payload.get("question_id")
         user_answer = payload.get("user_answer")
         time_taken_ms = payload.get("time_taken_ms", 0)
+        client_score = payload.get("score")
+        client_correct = payload.get("correct_count")
+        client_incorrect = payload.get("incorrect_count")
+        client_is_correct = payload.get("is_correct")
 
         session = LiveSession.objects.filter(room_code=self.room_code).first()
-        participant = Participant.objects.filter(pk=participant_id).first()
-        question = Question.objects.filter(pk=question_id).first()
+        participant = Participant.objects.filter(pk=participant_id).first() if participant_id else None
+        question = Question.objects.filter(pk=question_id).first() if question_id else None
 
-        if not (session and participant and question):
-            return {"status": "error", "message": "Ma'lumotlar to'liq emas"}
+        if not participant and session:
+            participant = session.participants.first()
 
-        sub, created = LiveSessionService.record_submission(
-            session=session,
-            participant=participant,
-            question=question,
-            submission_id=submission_id,
-            user_answer=user_answer,
-            time_taken_ms=time_taken_ms,
-        )
+        if participant:
+            if client_score is not None and client_score > participant.score:
+                participant.score = client_score
+            if client_correct is not None:
+                participant.correct_answers_count = max(participant.correct_answers_count, client_correct)
+            if client_incorrect is not None:
+                participant.incorrect_answers_count = max(participant.incorrect_answers_count, client_incorrect)
+
+        is_corr = False
+        awarded = 0
+        if session and participant and question:
+            sub, created = LiveSessionService.record_submission(
+                session=session,
+                participant=participant,
+                question=question,
+                submission_id=submission_id,
+                user_answer=user_answer,
+                time_taken_ms=time_taken_ms,
+            )
+            is_corr = sub.is_correct
+            awarded = sub.score_awarded
+        elif participant:
+            is_corr = bool(client_is_correct)
+            if client_correct is None:
+                if is_corr:
+                    participant.correct_answers_count += 1
+                else:
+                    participant.incorrect_answers_count += 1
+            participant.save(update_fields=["score", "correct_answers_count", "incorrect_answers_count"])
+
+        corr_total = participant.correct_answers_count if participant else (client_correct or 0)
+        incorr_total = participant.incorrect_answers_count if participant else (client_incorrect or 0)
+        score_total = participant.score if participant else (client_score or 0)
 
         return {
             "status": "recorded",
-            "submission_id": sub.submission_id,
-            "is_correct": sub.is_correct,
-            "score_awarded": sub.score_awarded,
-            "total_score": participant.score,
+            "participant_id": str(participant.id) if participant else participant_id,
+            "nickname": participant.nickname if participant else "O‘quvchi",
+            "avatar": (participant.team_name or "fa-solid fa-dog") if participant else "fa-solid fa-dog",
+            "score": score_total,
+            "correct_answers": corr_total,
+            "incorrect_answers": incorr_total,
+            "is_correct": is_corr,
+            "score_awarded": awarded,
+            "total_score": score_total,
         }
+
+    @sync_to_async
+    def _process_stats_update(self, payload):
+        participant_id = payload.get("participant_id")
+        session = LiveSession.objects.filter(room_code=self.room_code).first()
+        participant = Participant.objects.filter(pk=participant_id).first() if participant_id else (session.participants.first() if session else None)
+        if participant:
+            if "score" in payload and payload["score"] is not None:
+                participant.score = int(payload["score"])
+            if "correct_count" in payload and payload["correct_count"] is not None:
+                participant.correct_answers_count = int(payload["correct_count"])
+            if "incorrect_count" in payload and payload["incorrect_count"] is not None:
+                participant.incorrect_answers_count = int(payload["incorrect_count"])
+            participant.save(update_fields=["score", "correct_answers_count", "incorrect_answers_count"])
+            return {
+                "participant_id": str(participant.id),
+                "nickname": participant.nickname,
+                "avatar": participant.team_name or "fa-solid fa-dog",
+                "score": participant.score,
+                "correct_answers": participant.correct_answers_count,
+                "incorrect_answers": participant.incorrect_answers_count,
+            }
+        return payload

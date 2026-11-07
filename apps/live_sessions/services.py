@@ -163,8 +163,10 @@ class LiveSessionService:
         participant.score += awarded_points
         if is_correct:
             participant.streak += 1
+            participant.correct_answers_count += 1
         else:
             participant.streak = 0
-        participant.save(update_fields=["score", "streak"])
+            participant.incorrect_answers_count += 1
+        participant.save(update_fields=["score", "streak", "correct_answers_count", "incorrect_answers_count"])
 
         return submission, True
